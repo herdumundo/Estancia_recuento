@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".informe_menu">
+
+    <TextView
+
+        android:id="@+id/textView3"
+        android:layout_width="189dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="45dp"
+        android:text="ANIMALES ACTUALIZADOS"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_cant_animales2"
+        android:layout_width="187dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="209dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginEnd="15dp"
+        android:text="0"
+        android:textColor="@color/colorPrimaryDark"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btn_cant_animales"
+        android:layout_width="378dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="155dp"
+        android:layout_marginEnd="16dp"
+        android:text="INFORME ANIMALES DETALLE"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="165dp"
+        android:drawableLeft="@drawable/ic_action_reporte"
+        />
+
+    <Button
+        android:id="@+id/btn_pendientes"
+        android:layout_width="378dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="224dp"
+        android:layout_marginEnd="16dp"
+        android:text="REGISTROS ENVIOS PENDIENTES"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="165dp"
+        android:drawableLeft="@drawable/ic_action_nosincro"
+        />
+
+    <Button
+        android:id="@+id/btn_animales"
+        android:layout_width="378dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="306dp"
+        android:layout_marginEnd="14dp"
+        android:text="LISTADO DE ANIMALES ACTUALIZADOS"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="165dp"
+        android:drawableLeft="@drawable/ic_action_lista"
+        />
+
+    <Button
+        android:id="@+id/btn_detalle_registro"
+        android:layout_width="379dp"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="15dp"
+        android:text="INFORME ANIMALES RECUENTO"
+        tools:ignore="MissingConstraints"
+        android:drawableLeft="@drawable/ic_action_lista_number"
+        />
+
+    <TextView
+
+        android:layout_width="189dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="22dp"
+        android:layout_marginTop="20dp"
+        android:text="ANIMALES EN INVENTARIO"
+        android:textColor="@color/colorRed"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_cant_animales"
+        android:layout_width="187dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="208dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="16dp"
+        android:text="0"
+        android:textColor="@color/colorRed"
+        android:textStyle="bold" />
+</RelativeLayout>

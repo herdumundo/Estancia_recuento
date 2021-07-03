@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <resources>
+    <color name="colorPrimaryDark">#057E27</color>
+
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FFFFFF</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="color_marron_claro">#121111</color>
+    <color name="colorPrimary">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="colorAccent">#9AACAB</color>
+    <color name="colorDarkGray">#FFFFFF</color>
+    <color name="colorGray">#C9C9C9</color>
+    <color name="colorLightGray">#E9E7E7</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorRed">#CA0707</color>
+    <color name="naranja_claro">#FF6600</color>
+    <color name="azul">#01144A</color>
+    <color name="azul_claro">#082168</color>
+    <color name="azul_claro2">#0F2C80</color>
+    <color name="cel">#436DE8</color>
+    <color name="colorlogin">#383a97</color>
+    <color name="colorlogin2">#fb9c1f</color>
+
+    <color name="azul3">#021C67</color>
+    <color name="verde">#187A08</color>
+    <color name="celeste">#0998AA</color>
+    <color name="whiteTextColor">#FFFFFF</color>
+    <color name="primaryTextColor">#00a5ff</color>
+    <color name="red">#FFFFFF</color>
+
+    <color name="gray">#D1D0CE</color>
+
+    <color name="list_even">#0D5BF6</color>
+    <color name="list_odd">#1731B3</color>
+    <color name="list_selected">#7BFFF3</color>
+
+    <color name="stroke_border">#D7D7D7</color>
+</resources>

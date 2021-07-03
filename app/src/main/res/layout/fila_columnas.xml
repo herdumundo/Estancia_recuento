@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/relative"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimaryDark"
+
+        android:divider="@drawable/divider"
+        android:dividerPadding="0dip"
+
+        android:orientation="horizontal"
+        android:padding="0dp"
+        android:showDividers="middle"
+        tools:ignore="MissingConstraints"
+
+        tools:layout_editor_absoluteX="0dp"
+
+        >
+
+        <TextView
+            android:id="@+id/txt_bolo"
+
+            android:layout_width="380dp"
+            android:layout_height="20dp"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryDark"
+            android:text="CODIGO DE BOLO"
+            android:textColor="@color/white"
+            app:autoSizeMaxTextSize="18sp"
+            app:autoSizeMinTextSize="7sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+
+
+            ></TextView>
+
+        <TextView
+            android:id="@+id/txt_caravana"
+
+            android:layout_width="230dp"
+            android:layout_height="29dp"
+            android:layout_alignParentLeft="true"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryDark"
+            android:text="NRO CARAVANA"
+
+            android:textColor="@color/white"
+            app:autoSizeMaxTextSize="18sp"
+            app:autoSizeMinTextSize="9sp"
+            app:autoSizeStepGranularity="1sp"
+            app:autoSizeTextType="uniform"
+
+            ></TextView>
+
+        <TextView
+            android:id="@+id/txt_comprada"
+
+            android:layout_width="210dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryDark"
+            android:text="COMPRADA"
+            android:textColor="@color/white"
+            app:autoSizeMaxTextSize="18sp"
+            app:autoSizeMinTextSize="7sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"></TextView>
+
+        <Button
+            android:id="@+id/btnEliminar"
+
+            android:layout_width="50dp"
+            android:drawableStart="@drawable/ic_action_delete"
+            android:layout_height="wrap_content"
+             android:focusable="false" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical"
+    >
+
+    <Button
+        android:id="@+id/btn_list"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_alignParentStart="true"
+        android:textColor="@color/white"
+
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="49dp"
+        android:drawableLeft="@drawable/ic_action_visual"
+        android:onClick="click_visor"
+        android:background="@drawable/bordercolor"
+
+        android:text="INFORMES VARIOS" />
+
+
+    <Button
+        android:id="@+id/btnSincro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bnt_potrero"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="21dp"
+        android:background="@drawable/bordercolor"
+
+        android:drawableLeft="@drawable/ic_action_sincro"
+
+        android:text="SINCRONIZAR DATOS"
+        android:textColor="@color/white" />
+
+
+    <Button
+        android:id="@+id/idmovimiento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnSincro"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="23dp"
+        android:background="@drawable/bordercolor"
+        android:drawableLeft="@drawable/ic_action_ir"
+        android:text="IR A REGISTRO DE ANIMALES-POTREROS"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/bnt_potrero"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@+id/id_exportar"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/bordercolor"
+
+        android:drawableLeft="@drawable/ic_action_ir"
+        android:text="REGISTRAR POTREROS"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/id_exportar"
+
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_below="@+id/btn_list"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="16dp"
+
+        android:background="@drawable/bordercolor"
+        android:drawableLeft="@drawable/ic_action_export"
+        android:onClick="onClick_export"
+        android:text="EXPORTAR DATOS"
+        android:textColor="@color/white" />
+
+
+</RelativeLayout>
