@@ -51,7 +51,7 @@
             android:layout_weight="1"
             android:background="@color/colorPrimaryDark"
             android:text="NRO CARAVANA"
-
+            android:textAlignment="center"
             android:textColor="@color/white"
             app:autoSizeMaxTextSize="18sp"
             app:autoSizeMinTextSize="9sp"
@@ -62,7 +62,7 @@
 
         <TextView
             android:id="@+id/txt_comprada"
-
+            android:textAlignment="center"
             android:layout_width="210dp"
             android:layout_height="20dp"
             android:layout_alignParentRight="true"
@@ -75,13 +75,13 @@
             app:autoSizeStepGranularity="2sp"
             app:autoSizeTextType="uniform"></TextView>
 
-        <Button
+        <TextView
             android:id="@+id/btnEliminar"
-
+            android:textAlignment="center"
             android:layout_width="50dp"
+            android:layout_height="match_parent"
             android:drawableStart="@drawable/ic_action_delete"
-            android:layout_height="wrap_content"
-             android:focusable="false" />
+            android:focusable="false" />
 
     </LinearLayout>
 

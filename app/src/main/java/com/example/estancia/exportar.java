@@ -25,10 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Method;
+import java.net.NetworkInterface;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.Collections;
+import java.util.List;
 
 import Utilidades.Utilidades;
 
@@ -38,26 +41,23 @@ public class exportar extends AppCompatActivity {
     ConexionSQLiteHelper conn;
     private ProgressDialog prodialog,progress;
     String contador="";
-    String macAddress="";
-    TextView textView4;
+    String macAddress="",mensaje_registro="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exportar);
         boton_registrar=(Button) findViewById(R.id.btnex);
-        textView4=(TextView)findViewById(R.id.textView4);
 
+        getMacAddr();
 
-
-        WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+      /*  WifiManager wm = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         String WLANMAC = wm.getScanResults().toString();
-        textView4.setText(WLANMAC);
+*/
         boton_registrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* prodialog = ProgressDialog.show(exportar.this, "EXPORTANDO",
-                        "ENVIANDO...", true);*/
+
                 prodialog =  new ProgressDialog(exportar.this);
                 LayerDrawable progressBarDrawable = new LayerDrawable(
                         new Drawable[]{
@@ -101,6 +101,35 @@ public class exportar extends AppCompatActivity {
     };
 
 
+    private void  getMacAddr() {
+        try {
+            List<NetworkInterface> all = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface nif : all) {
+                if (!nif.getName().equalsIgnoreCase("wlan0")) continue;
+
+                byte[] macBytes = nif.getHardwareAddress();
+                if (macBytes == null) {
+                   // return "";
+                }
+
+                StringBuilder res1 = new StringBuilder();
+                for (byte b : macBytes) {
+                    res1.append(Integer.toHexString(b & 0xFF) + ":");
+                }
+
+                if (res1.length() > 0) {
+                    res1.deleteCharAt(res1.length() - 1);
+                }
+
+               // return res1.toString();
+                //Toast.makeText(exportar.this,res1,Toast.LENGTH_LONG).show();
+                macAddress=res1.toString();
+            }
+
+        } catch (Exception ex) {
+            //handle exception
+        }
+    }
 
     class hilo_regis extends Thread {
         @Override
@@ -114,15 +143,16 @@ public class exportar extends AppCompatActivity {
                     @Override
 
                     public void run() {
-                        Toast.makeText(exportar.this, "Proceso terminado", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(exportar.this, mensaje_registro, Toast.LENGTH_SHORT).show();
+
                         prodialog.dismiss();
-                    /* prodialog = ProgressDialog.show(exportar.this, "EXPORTANDO",
-                                "ENVIANDO...", true);
-                        new exportar.hilo_regis_animales_upd().start();*/
+
                      }
                 });
             } catch ( Exception e) {
-                e.printStackTrace();
+                prodialog.dismiss();
+                Toast.makeText(exportar.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
             }
         }
     }
@@ -231,20 +261,15 @@ public class exportar extends AppCompatActivity {
                         db1.execSQL(sql);
                         c++;
                         prodialog.setProgress(c);
-
+                        mensaje_registro="REGISTROS EXPORTADOS CON EXITO";
 
                     }
 
                 }
                 db3.execSQL(strSQL); }
-
-
-
-
-
-          }catch(Exception e){
-
-             Toast.makeText( this,e.toString(),Toast.LENGTH_LONG).show();
+         }catch(Exception e){
+             mensaje_registro=e.getMessage();
+            // Toast.makeText( this,e.toString(),Toast.LENGTH_LONG).show();
          }}
 
 

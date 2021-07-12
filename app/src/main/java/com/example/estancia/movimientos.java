@@ -58,7 +58,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     String variable_sexo="";
     String variable_comprada="";
     Spinner Combo_estancia,Combo_potrero;
-    TextView txt_cod_animal,txt_cantidad;
+    TextView txt_cod_animal,txt_cantidad,txt_fecha;
     ConexionSQLiteHelper conn;
     ArrayList<String> lista_estancia;
     ArrayList<Usuario> EstanciaList;
@@ -77,13 +77,9 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     private ListView ListView;
     Button cargar,registrar;
     DatePickerDialog picker;
-    EditText txt_fecha;
     SearchableSpinner spinner_estancia,spinner_potrero;
     private String name;
     private Bluetooth Bluetooth;
-    String parte1="";
-    String parte2="";
-    String posicion_parte="";
     String variable_estancia="0";
     String variable_potrero="0";
     String posicion_fila_lv2="";
@@ -94,8 +90,8 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//Bloquea el giro de pantalla
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movimientos);
-        txt_fecha=(EditText) findViewById(R.id.txt_fecha);
-        txt_fecha.setInputType(InputType.TYPE_NULL);
+        txt_fecha=(TextView) findViewById(R.id.txt_fecha);
+       // txt_fecha.setInputType(InputType.TYPE_NULL);
         txt_cod_animal=(TextView) findViewById(R.id.txt_cod_animal);
         txt_compra_si=(TextView) findViewById(R.id.txt_compra_si);
         txt_compra_no=(TextView) findViewById(R.id.txt_compra_no);
@@ -143,33 +139,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
 
         consulta_carga_animales_upd();
-    /*    ListView.setAdapter(new MyListAdaper(this, R.layout.fila_columnas, item));
-        consulta_carga_animales_upd();
 
-*/
-
-
-       /* ListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id)
-            {
-                String id_anim=(String) parent.getItemAtPosition(position);
-                String array_contenedor_fila []= id_anim.split("-");
-                parte1 =array_contenedor_fila[0];
-                parte2 =array_contenedor_fila[1];
-
-                if (parte1.trim().length()>0)
-                {
-                    posicion_parte=parte1;
-                }
-                else
-                {
-                    posicion_parte=parte2;
-                }
-                posicion_fila_lv2=String.valueOf(position);
-                ir_cuadro(posicion_parte.trim(),posicion_fila_lv2);
-            }
-        }); */
         spinner_estancia.setTitle("SELECCIONAR ESTANCIA");
         spinner_estancia.setPositiveButton("CERRAR");
         spinner_potrero.setTitle("SELECCIONAR POTRERO");
@@ -649,72 +619,67 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         txt_cod_animal.requestFocus();
     }
     private void registrar (){
-        String clickedItem="";
-        String posicion;
-        String posicion_estancia;
-        String itemText = (String) Combo_potrero.getSelectedItem();
-        String array []= itemText.split("-");
-        posicion=array[0];
-        String item_estancia = (String) Combo_estancia.getSelectedItem();
-        String array_item_estancia []= item_estancia.split("-");
-        posicion_estancia=array_item_estancia[0];
+        String idPotrero;
+        String idEstancia;
+        String arrayPotrero []= Combo_potrero.getSelectedItem().toString().split("-");
+        idPotrero=arrayPotrero[0];
+        String arrayEstancia []= Combo_estancia.getSelectedItem().toString().split("-");
+        idEstancia=arrayEstancia[0];
         ConexionSQLiteHelper conn=new ConexionSQLiteHelper(this,"bd_usuarios",null,1);
         SQLiteDatabase db1=conn.getReadableDatabase();
         ContentValues valor_cab=new ContentValues();
         Cursor cursor1=db1.rawQuery("SELECT  case  when count(*) = 0 then 1 else max(cod_interno) +1  end as d FROM   "+ Utilidades.TABLA_CABECERA_AP ,null);
-        String id= "";
+        String idCabecera= "";
         while (cursor1.moveToNext())
         {
-            id=cursor1.getString(0);
+            idCabecera=cursor1.getString(0);
         }
-        valor_cab.put(Utilidades.CAMPO_CABECERA_ID,id);
+        valor_cab.put(Utilidades.CAMPO_CABECERA_ID,idCabecera);
         valor_cab.put(Utilidades.CAMPO_FECHA,txt_fecha.getText().toString());
         valor_cab.put(Utilidades.CAMPO_CABECERA_CANTIDAD,txt_cantidad.getText().toString());
-        valor_cab.put(Utilidades.CAMPO_CABECERA_ID_POTRERO,posicion.toString());
-        valor_cab.put(Utilidades.CAMPO_CABECERA_ID_ESTANCIA,posicion_estancia.toString());
+        valor_cab.put(Utilidades.CAMPO_CABECERA_ID_POTRERO,idPotrero);
+        valor_cab.put(Utilidades.CAMPO_CABECERA_ID_ESTANCIA,idEstancia);
         valor_cab.put(Utilidades.CAMPO_CABECERA_ESTADO,"A");
         db1.insert(Utilidades.TABLA_CABECERA_AP,Utilidades.CAMPO_CABECERA_ID,valor_cab);
         db1.close();
-        for (int i = 0; i < ListView.getCount(); i++)
+        String identificadorAnimal="";
+        for (int i = 0; i < listInsertAnimal.size();)
         {
-            clickedItem = (String) ListView.getItemAtPosition(i);
-            String[] textElements = clickedItem.split("-");
-            String par="";
-            String  cod_bolo= textElements[0].trim();
-            String parte_caravana=textElements[1].trim();
-            if(clickedItem.trim().length()>=24)
+            if(listInsertAnimal.get(i).getId().length()>1)
             {
-                par=cod_bolo;
+                identificadorAnimal=listInsertAnimal.get(i).getId();
             }
             else
             {
-                par = parte_caravana;
+                identificadorAnimal = listInsertAnimal.get(i).getCaravana();
             }
 
             SQLiteDatabase db=conn.getWritableDatabase();
             ContentValues values=new ContentValues();
-            values.put(Utilidades.CAMPO_ID_CABECERA,id.toString());
-            values.put(Utilidades.CAMPO_DESC_ANIMAL,par.toString());
-            values.put(Utilidades.CAMPO_ID_POTRERO_ANIMAL,posicion.toString());
+            values.put(Utilidades.CAMPO_ID_CABECERA,idCabecera);
+            values.put(Utilidades.CAMPO_DESC_ANIMAL,identificadorAnimal);
+            values.put(Utilidades.CAMPO_ID_POTRERO_ANIMAL,idPotrero);
             values.put(Utilidades.CAMPO_DETALLE_ESTADO,"A");
             db.insert(Utilidades.TABLA_ANIMAL_POTRERO,Utilidades.CAMPO_ID_POTRERO_ANIMAL,values);
             db.close();
 
-            if(cod_bolo.length()<1)
+            if(listInsertAnimal.get(i).getId().length()<1)
             {
                 SQLiteDatabase db2=conn.getReadableDatabase();
-                String strSQL = "UPDATE animales_actualizados SET  estado='A', registro="+id.toString().trim()+"" +
-                        " WHERE nrocaravana='"+parte_caravana+"' and estado='O'";
+                String strSQL = "UPDATE animales_actualizados SET  estado='A', registro="+idCabecera.trim()+"" +
+                        " WHERE nrocaravana='"+listInsertAnimal.get(i).getCaravana().trim()+"' and estado='O'";
                 db2.execSQL(strSQL);
             }
             else
             {
                 SQLiteDatabase db2=conn.getReadableDatabase();
-                String strSQL = "UPDATE animales_actualizados SET  estado='A' , registro="+id.toString().trim()+"" +
-                        " WHERE id='"+cod_bolo+"' and estado='O'";
+                String strSQL = "UPDATE animales_actualizados SET  estado='A' , registro="+idCabecera.toString().trim()+"" +
+                        " WHERE id='"+listInsertAnimal.get(i).getId().trim()+"' and estado='O'";
                 db2.execSQL(strSQL);
             }
+            i++;
         }
+
     }
 
     @Override
@@ -741,8 +706,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
     private void eliminar_fila(int pos)
     {
-
-         if(listInsertAnimal.get(pos).getId().length()<1)
+        if(listInsertAnimal.get(pos).getId().length()<1)
         {
             SQLiteDatabase db1=conn.getReadableDatabase();
             db1.execSQL("UPDATE animales_actualizados SET  estado='P'" +
@@ -757,10 +721,10 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         }
         listInsertAnimal.remove(pos);
         ((BaseAdapter) ListView.getAdapter()).notifyDataSetChanged();
-       // contar_compradas();
+        contar_compradas();
     }
 
-    private class MyListAdaper extends ArrayAdapter<String> {
+ /*   private class MyListAdaper extends ArrayAdapter<String> {
         private int layout;
         private List<String> mObjects;
         private MyListAdaper(Context context, int resource, List<String> objects) {
@@ -805,7 +769,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
             return convertView;
         }
     }
-
+*/
     public class ViewHolder
     {
         TextView title;
@@ -1239,6 +1203,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
 
                     }
+                    contar_compradas();
                 }
             }
         });
@@ -1424,13 +1389,27 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     }
     private void contar_compradas()
     {
-        String contenido_grilla="";
-        String parte_compra="";
-        int c=0;
-        int n=0;
+
+        int compradas=0;
+        int criollas=0;
         txt_compra_si.setText("0");
         txt_compra_no.setText("0");
-        for (int i = 0; i < ListView.getCount(); i++)
+        for (int i = 0; i < listInsertAnimal.size(); )
+        {
+            if(listInsertAnimal.get(i).getComprada().equals("SI"))
+            {
+                compradas++;
+            }
+            else if (listInsertAnimal.get(i).getComprada().equals("NO"))
+            {
+                criollas++;
+            }
+            i++;
+        }
+        txt_compra_si.setText(String.valueOf(compradas));
+        txt_compra_no.setText(String.valueOf(criollas));
+
+    /*    for (int i = 0; i < ListView.getCount(); i++)
         {
             contenido_grilla = (String) ListView.getItemAtPosition(i);
             String[] array_grilla = contenido_grilla.split("-");
@@ -1446,7 +1425,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                 n++;
                 txt_compra_no.setText(String.valueOf(n));
             }
-        }
+        }*/
     }
 
     private void consulta_carga_animales_upd()
@@ -1507,7 +1486,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                     ///Toast.makeText(movimientos.this,nro_registro,Toast.LENGTH_LONG).show();
                 }
             });
-
+            contar_compradas();
         } catch (Exception e) {
             String asd=e.getMessage();
         }
@@ -1525,7 +1504,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                 TextView txt_bolo = (TextView) view.findViewById(R.id.txt_bolo);
                 TextView txt_caravana = (TextView) view.findViewById(R.id.txt_caravana);
                 TextView txt_comprada = (TextView) view.findViewById(R.id.txt_comprada);
-                Button btnEliminar = (Button) view.findViewById(R.id.btnEliminar);
+                TextView btnEliminar = (TextView) view.findViewById(R.id.btnEliminar);
 
                 txt_bolo.setText(""+listInsertAnimal.get(position).getId());
                 txt_caravana.setText(""+listInsertAnimal.get(position).getCaravana());

@@ -72,17 +72,10 @@ public class login2 extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 login();
-
-
-
-
             }
         });
                 }
-
-
 
      class Hilo_sincro extends Thread {
         @Override
@@ -96,7 +89,6 @@ public class login2 extends AppCompatActivity {
                     public void run() {
                         Toast.makeText(login2.this, "Proceso terminado", Toast.LENGTH_SHORT).show();
                         progress_sincro.dismiss();
-
                     }
                 });
             } catch ( Exception e) {

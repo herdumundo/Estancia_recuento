@@ -5,11 +5,90 @@
     android:layout_height="match_parent"
     android:minHeight="250dp">
 
-    <EditText
+    <LinearLayout
+        android:id="@+id/relative"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#0C4A02"
+
+        android:divider="@drawable/divider"
+        android:dividerPadding="0dip"
+
+        android:orientation="horizontal"
+        android:padding="0dp"
+        android:showDividers="middle"
+        app:layout_constraintTop_toBottomOf="@+id/btn_cargar"
+
+        tools:ignore="MissingConstraints"
+
+        tools:layout_editor_absoluteX="0dp">
+
+        <TextView
+            android:id="@+id/txt_bolo"
+
+            android:layout_width="380dp"
+            android:layout_height="20dp"
+            android:layout_weight="1"
+            android:background="#0C4A02"
+            android:text="CODIGO DE BOLO"
+            android:textColor="@color/white"
+            app:autoSizeMaxTextSize="18sp"
+            app:autoSizeMinTextSize="7sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+
+
+            ></TextView>
+
+        <TextView
+            android:id="@+id/txt_caravana"
+
+            android:layout_width="230dp"
+            android:layout_height="29dp"
+            android:layout_alignParentLeft="true"
+            android:layout_weight="1"
+            android:background="#0C4A02"
+            android:text="NRO CARAVANA"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            app:autoSizeMaxTextSize="18sp"
+            app:autoSizeMinTextSize="9sp"
+            app:autoSizeStepGranularity="1sp"
+            app:autoSizeTextType="uniform"
+
+            ></TextView>
+
+        <TextView
+            android:id="@+id/txt_comprada"
+            android:layout_width="210dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_weight="1"
+            android:background="#0C4A02"
+            android:text="COMPRADA"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            app:autoSizeMaxTextSize="18sp"
+            app:autoSizeMinTextSize="7sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"></TextView>
+
+        <TextView
+            android:id="@+id/btnEliminar"
+
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="ACCION"
+            android:textColor="@color/white"
+
+            android:focusable="false" />
+
+    </LinearLayout>
+
+    <TextView
         android:id="@+id/txt_fecha"
         android:layout_width="match_parent"
-        android:layout_height="67dp"
-        android:layout_marginTop="32dp"
+        android:layout_height="54dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="INGRESAR FECHA"
@@ -17,7 +96,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView6"
         tools:ignore="MissingConstraints" />
 
 
@@ -38,13 +117,12 @@
         android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="232dp"
-        android:layout_marginTop="24dp"
         android:background="@color/colorPrimary"
         android:backgroundTint="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_registrar"
+        app:layout_constraintTop_toBottomOf="@+id/relative"
         tools:ignore="MissingConstraints" />
 
     <TextView

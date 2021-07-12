@@ -29,25 +29,22 @@ import java.sql.Statement;
 
 import Utilidades.Utilidades;
 
-public class menu_sincro extends AppCompatActivity {
+public class menu_sincro extends AppCompatActivity
+{
+    private ProgressDialog prodialog,progress;
+    Connection connect;
+    ConexionSQLiteHelper conn;
+    Button  btn_sincro,btn_sincro_upd;
+    String contador_animales="";
+    String contador_animales_upd="",mensaje_registro="";
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_menu_sincro);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-
-        private ProgressDialog prodialog,progress;
-        Connection connect;
-        ConexionSQLiteHelper conn;
-        Button  btn_sincro,btn_sincro_upd;
-        String contador_animales="";
-        String contador_animales_upd="";
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_menu_sincro);
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-            // ConexionSQLiteHelper conn=new ConexionSQLiteHelper(this,"bd_usuarios",null,1);
-
-            btn_sincro= (Button)findViewById(R.id.btnSincro) ;
+        btn_sincro= (Button)findViewById(R.id.btnSincro) ;
             btn_sincro_upd= (Button)findViewById(R.id.btnSincro_upd) ;
             conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
             btn_sincro_upd.setOnClickListener(new View.OnClickListener() {
@@ -66,8 +63,7 @@ public class menu_sincro extends AppCompatActivity {
 
                         rs3.close();
                         connect.close();
-                    }catch(Exception e){
-                    }
+
 
                     new AlertDialog.Builder(menu_sincro.this)
                             .setIcon(android.R.drawable.ic_dialog_alert)
@@ -110,7 +106,12 @@ public class menu_sincro extends AppCompatActivity {
                             })
                             .setNegativeButton("NO", null)
                             .show();
+                    }catch(Exception e){
+                        Toast.makeText(menu_sincro.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
                  }
+
             });
 
 
@@ -131,8 +132,7 @@ public class menu_sincro extends AppCompatActivity {
                         }
 
 
-                    }catch(Exception e){
-                    }
+
 
                     new AlertDialog.Builder(menu_sincro.this)
                             .setIcon(android.R.drawable.ic_dialog_alert)
@@ -150,19 +150,21 @@ public class menu_sincro extends AppCompatActivity {
                             })
                             .setNegativeButton("NO", null)
                             .show();
-                    // Toast.makeText(MainActivity.this, contador_animales.toString(), Toast.LENGTH_SHORT).show();
+                    }catch(Exception e){
+                      Toast.makeText(menu_sincro.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
                 }
             });
         }
 
 
 
-        private void importar_colores() {
+    private void importar_colores()
+    {
             try {
-                String id="";
-                String color="";
-                //conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
-                SQLiteDatabase db=conn.getReadableDatabase();
+
+                 SQLiteDatabase db=conn.getReadableDatabase();
                 ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
                 connect = conexion.Connections();
                 Statement stmt = connect.createStatement();
@@ -175,15 +177,14 @@ public class menu_sincro extends AppCompatActivity {
                 }
                 db.close();
                 rs.close();
-
+                mensaje_registro="COLORES SINCRONIZADOS.";
             }catch(Exception e){
+                mensaje_registro=e.getMessage();
             }}
-//////////////////////////////////////////////////////////////////////////////////////////////////
-        private void importar_raza() {
+    private void importar_raza()
+    {
             try {
-                String id="";
-                String color="";
-              //  conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
+
                 SQLiteDatabase db=conn.getReadableDatabase();
                 ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
                 connect = conexion.Connections();
@@ -197,18 +198,13 @@ public class menu_sincro extends AppCompatActivity {
                 }
                 db.close();
                 rs.close();
-
+                mensaje_registro="RAZAS SINCRONIZADAS.";
             }catch(Exception e){
+                mensaje_registro=e.getMessage();
             }}
-        ///////////////////////////////////////////////////////////////////////////////////////////
-
-
-        private void importar_categoria()
-        {
+    private void importar_categoria()
+    {
             try {
-                String id="";
-                String color="";
-              //  conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
                 SQLiteDatabase db=conn.getReadableDatabase();
                 ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
                 connect = conexion.Connections();
@@ -222,19 +218,12 @@ public class menu_sincro extends AppCompatActivity {
                 }
                 db.close();
                 rs.close();
-
+                mensaje_registro="CATEGORIAS SINCRONIZADAS.";
             }catch(Exception e){
+                mensaje_registro=e.getMessage();
             }}
-
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-        private void importar_animales() {
+    private void importar_animales()
+    {
             try {
 
                 SQLiteDatabase db=conn.getReadableDatabase();
@@ -262,22 +251,81 @@ public class menu_sincro extends AppCompatActivity {
                     c++;
                     prodialog.setProgress(c);
                 }
-
+                mensaje_registro="ANIMALES SINCRONIZADOS.";
                 db.close();
                 rs.close();
 
 
             }catch(Exception e){
+                mensaje_registro=e.getMessage();
             }}
+    private void importar_potreros()
+    {
+        try {
+             SQLiteDatabase db=conn.getReadableDatabase();
+            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
+            connect = conexion.Connections();
+            String query = "select *  from  app_v_potreros";
+            Statement stmt = connect.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while ( rs.next()){
+                 ContentValues values=new ContentValues();
+                values.put(Utilidades.CAMPO_ID_POTRERO,rs.getString("CODPOT"));
+                values.put(Utilidades.CAMPO_ID_ESTANCIA_FK,rs.getString("CODEST"));
+                values.put(Utilidades.CAMPO_DESC_POTRERO,rs.getString("POTRERO"));
+                db.insert(Utilidades.TABLA_POTRERO, Utilidades.CAMPO_ID_POTRERO,values);
+            }
+            db.close();
+            mensaje_registro="POTREROS SINCRONIZADOS.";
+        }catch(Exception e){
+            mensaje_registro=e.getMessage();
+        }}
 
+    private void importar_animales_upd()
+    {
+        try {
+            SQLiteDatabase db_estado=conn.getReadableDatabase();
+            String strSQL_estado = "DELETE FROM animales_actualizados  WHERE   estado = 'C'";
+            db_estado.execSQL(strSQL_estado);
+            db_estado.close();
 
+            SQLiteDatabase db=conn.getReadableDatabase();
+            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
+            connect = conexion.Connections();
+            Statement stmt = connect.createStatement();
+            ResultSet rs = stmt.executeQuery("select *  from  animales_upd");
 
+            int c=0;
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private void registrar() {
+            while (rs.next())
+            {
+                ContentValues values=new ContentValues();
+                values.put("id",rs.getString("ide"));
+                values.put("id_sincro",rs.getString("codinterno"));
+                values.put("nrocaravana",rs.getString("nrocaravana"));
+                values.put("sexo",rs.getString("sexo"));
+                values.put("color",rs.getString("color"));
+                values.put("raza",rs.getString("raza"));
+                values.put("carimbo",rs.getString("carimbo"));
+                values.put("id_categoria",rs.getString("categoria"));
+                values.put("comprada",rs.getString("comprada"));
+                values.put("estado","C");
+                db.insert("animales_actualizados", "id",values);
+                c++;
+                prodialog.setProgress(c);
+            }
+
+            db.close();
+            rs.close();
+            conn.close();
+            mensaje_registro="PROCESO REALIZADO CON EXITO";
+        }catch(Exception e){
+            mensaje_registro=e.getMessage();
+        }}
+
+  private void registrar() {
             try {
-                String id=""; String estancia="";String cantidad="";
-                //conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
+                 //conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
                 SQLiteDatabase db=conn.getReadableDatabase();
                 ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
                 connect = conexion.Connections();
@@ -286,11 +334,10 @@ public class menu_sincro extends AppCompatActivity {
                 ResultSet rs = stmt.executeQuery(query);
 
                 while ( rs.next()){
-                    id=rs.getString("CODEST");
-                    estancia= rs.getString("ESTANCIA");
-                    ContentValues values=new ContentValues();
-                    values.put(Utilidades.CAMPO_ID_ESTANCIA,id.toString());
-                    values.put(Utilidades.CAMPO_DESC_ESTANCIA,estancia.toString());
+
+                     ContentValues values=new ContentValues();
+                    values.put(Utilidades.CAMPO_ID_ESTANCIA,rs.getString("CODEST"));
+                    values.put(Utilidades.CAMPO_DESC_ESTANCIA,rs.getString("ESTANCIA"));
                     db.insert(Utilidades.TABLA_ESTANCIA, Utilidades.CAMPO_ID_ESTANCIA,values);
                 }
                 db.close();
@@ -298,30 +345,7 @@ public class menu_sincro extends AppCompatActivity {
             }catch(Exception e){
             }}
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        private void registrar_potreros() {
-            try {
-                String id=""; String id_estancia_fk="";String descripcion="";
-              //  conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
-                SQLiteDatabase db=conn.getReadableDatabase();
-                ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-                connect = conexion.Connections();
-                String query = "select *  from  app_v_potreros";
-                Statement stmt = connect.createStatement();
-                ResultSet rs = stmt.executeQuery(query);
-                while ( rs.next()){
-                    id=rs.getString("CODPOT");
-                    id_estancia_fk= rs.getString("CODEST");
-                    descripcion= rs.getString("POTRERO");
-                    ContentValues values=new ContentValues();
-                    values.put(Utilidades.CAMPO_ID_POTRERO,id.toString());
-                    values.put(Utilidades.CAMPO_ID_ESTANCIA_FK,id_estancia_fk.toString());
-                    values.put(Utilidades.CAMPO_DESC_POTRERO,descripcion.toString());
-                    Long idResultante=db.insert(Utilidades.TABLA_POTRERO, Utilidades.CAMPO_ID_POTRERO,values);
-                }
-                db.close();
 
-            }catch(Exception e){
-            }}
         class hilo_estancia extends Thread {
             @Override
             public void run() {
@@ -351,15 +375,14 @@ public class menu_sincro extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    registrar_potreros();
+                    importar_potreros();
                     runOnUiThread(new Runnable() {
                         @Override
 
                         public void run() {
-                            Toast.makeText(menu_sincro.this, "Proceso terminado", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(menu_sincro.this, mensaje_registro, Toast.LENGTH_LONG).show();
                             progress.dismiss();
-                        /*progress = ProgressDialog.show(MainActivity.this, "SINCRONIZANDO ANIMALES",
-                                "EJECUTANDOSE...", true);*/
+
                             prodialog =  new ProgressDialog(menu_sincro.this);
                             prodialog.setMax(Integer.parseInt(contador_animales.toString().trim()));
                             LayerDrawable progressBarDrawable = new LayerDrawable(
@@ -391,7 +414,7 @@ public class menu_sincro extends AppCompatActivity {
                         }
                     });
                 } catch ( Exception e) {
-                    e.printStackTrace();
+                    Toast.makeText(menu_sincro.this, mensaje_registro, Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -406,7 +429,7 @@ public class menu_sincro extends AppCompatActivity {
                         @Override
 
                         public void run() {
-                            Toast.makeText(menu_sincro.this, "Proceso terminado", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(menu_sincro.this, mensaje_registro, Toast.LENGTH_SHORT).show();
                             // progress.dismiss();
                             prodialog.dismiss();
                        /* progress = ProgressDialog.show(MainActivity.this, "SINCRONIZANDO COLORES",
@@ -418,7 +441,7 @@ public class menu_sincro extends AppCompatActivity {
                         }
                     });
                 } catch ( Exception e) {
-                    e.printStackTrace();
+                    Toast.makeText(menu_sincro.this, mensaje_registro, Toast.LENGTH_SHORT).show();
                 }
             }
         }
@@ -434,7 +457,7 @@ public class menu_sincro extends AppCompatActivity {
                         @Override
 
                         public void run() {
-                            Toast.makeText(menu_sincro.this, "Proceso terminado", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(menu_sincro.this, mensaje_registro, Toast.LENGTH_LONG).show();
                             progress.dismiss();
                             progress = ProgressDialog.show(menu_sincro.this, "SINCRONIZANDO RAZAS",
                                     "EJECUTANDOSE...", true);
@@ -443,7 +466,9 @@ public class menu_sincro extends AppCompatActivity {
                         }
                     });
                 } catch ( Exception e) {
-                    e.printStackTrace();
+                    Toast.makeText(menu_sincro.this, mensaje_registro, Toast.LENGTH_LONG).show();
+                    progress.dismiss();
+
                 }
             }
         }
@@ -458,7 +483,7 @@ public class menu_sincro extends AppCompatActivity {
                         @Override
 
                         public void run() {
-                            Toast.makeText(menu_sincro.this, "Proceso terminado", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(menu_sincro.this, mensaje_registro, Toast.LENGTH_LONG).show();
                             progress.dismiss();
                             progress = ProgressDialog.show(menu_sincro.this, "SINCRONIZANDO CATEGORIAS",
                                     "EJECUTANDOSE...", true);
@@ -466,7 +491,7 @@ public class menu_sincro extends AppCompatActivity {
                         }
                     });
                 } catch ( Exception e) {
-                    e.printStackTrace();
+                    Toast.makeText(menu_sincro.this, mensaje_registro, Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -480,7 +505,7 @@ public class menu_sincro extends AppCompatActivity {
                         @Override
 
                         public void run() {
-                            //Toast.makeText(menu_sincro.this, "Proceso terminado", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(menu_sincro.this, mensaje_registro, Toast.LENGTH_LONG).show();
                             progress.dismiss();
                             new AlertDialog.Builder(menu_sincro.this)
                                     .setTitle("REGISTROS SINCRONIZADOS")
@@ -489,53 +514,14 @@ public class menu_sincro extends AppCompatActivity {
                         }
                     });
                 } catch ( Exception e) {
-                    e.printStackTrace();
+                    Toast.makeText(menu_sincro.this, mensaje_registro, Toast.LENGTH_LONG).show();
+                    progress.dismiss();
+
                 }
             }
         }
 
 
-        private void importar_animales_upd() {
-            try {
-                SQLiteDatabase db_estado=conn.getReadableDatabase();
-                String strSQL_estado = "DELETE FROM animales_actualizados  WHERE   estado = 'C'";
-                db_estado.execSQL(strSQL_estado);
-                db_estado.close();
-
-               // conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
-                SQLiteDatabase db=conn.getReadableDatabase();
-                ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-                connect = conexion.Connections();
-                Statement stmt = connect.createStatement();
-                ResultSet rs = stmt.executeQuery("select *  from  animales_upd");
-
-                int c=0;
-
-                while (rs.next())
-                {
-                    ContentValues values=new ContentValues();
-                    values.put("id",rs.getString("ide"));
-                    values.put("id_sincro",rs.getString("codinterno"));
-                    values.put("nrocaravana",rs.getString("nrocaravana"));
-                    values.put("sexo",rs.getString("sexo"));
-                    values.put("color",rs.getString("color"));
-                    values.put("raza",rs.getString("raza"));
-                    values.put("carimbo",rs.getString("carimbo"));
-                    values.put("id_categoria",rs.getString("categoria"));
-                    values.put("comprada",rs.getString("comprada"));
-                    values.put("estado","C");
-                    db.insert("animales_actualizados", "id",values);
-                    c++;
-                    prodialog.setProgress(c);
-                }
-
-                db.close();
-                rs.close();
-                conn.close();
-/*
-               */
-            }catch(Exception e){
-            }}
 
 
 
@@ -550,7 +536,7 @@ public class menu_sincro extends AppCompatActivity {
 
                         public void run() {
 
-                           // Toast.makeText(menu_sincro.this, "Proceso terminado", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(menu_sincro.this, mensaje_registro, Toast.LENGTH_LONG).show();
                             prodialog.dismiss();
                             new AlertDialog.Builder(menu_sincro.this)
                                     .setTitle("ANIMALES ACTUALIZADOS")
@@ -559,7 +545,9 @@ public class menu_sincro extends AppCompatActivity {
                         }
                     });
                 } catch ( Exception e) {
-                    e.printStackTrace();
+                    Toast.makeText(menu_sincro.this, mensaje_registro, Toast.LENGTH_LONG).show();
+                    prodialog.dismiss();
+
                 }
             }
         }

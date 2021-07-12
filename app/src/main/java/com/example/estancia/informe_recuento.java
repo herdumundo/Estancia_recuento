@@ -213,7 +213,7 @@ public class informe_recuento extends AppCompatActivity {
 
         for (int i=0; i<listadetallerecuento.size();i++){
             listaInformacion_detalle_recuento.add(
-                    listadetallerecuento.get(i).getDesc_animal()+" - "+ listadetallerecuento.get(i).getCaravana()
+            listadetallerecuento.get(i).getDesc_animal()+" - "+ listadetallerecuento.get(i).getCaravana()
             );
         }
 
@@ -250,11 +250,7 @@ public class informe_recuento extends AppCompatActivity {
 
             listadetallerecuento.add(Detalle_animales_recuento);
         }
-
-
-
         obtenerDetalle_recuento();
-
     }
 
 
@@ -262,10 +258,7 @@ public class informe_recuento extends AppCompatActivity {
 
         final android.support.v7.app.AlertDialog.Builder mBuilder = new android.support.v7.app.AlertDialog.Builder(informe_recuento.this);
         final View mView = getLayoutInflater().inflate(R.layout.activity_cuadro_informe_recuento, null);
-
         final ListView listView_detalle = (ListView) mView.findViewById(R.id.list_detalle);
-
-
 
         consultar_detalle(id_registro);
         ArrayAdapter adaptador_detalle = new ArrayAdapter(getApplicationContext(), R.layout.simple_list_item_3, R.id.text1, listaInformacion_detalle_recuento) {

@@ -43,9 +43,9 @@ public class color_lista extends BaseAdapter{
         }
 
         if (position % 2 == 0) {
-            view.setBackgroundResource(R.drawable.artists_list_backgroundcolor);
+            view.setBackgroundResource(R.color.azul);
         } else {
-            view.setBackgroundResource(R.drawable.artists_list_background_alternate);
+            view.setBackgroundResource(R.color.black);
         }
 
 
