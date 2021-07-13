@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import Utilidades.controles;
 import entidades.Animales;
 import entidades.Usuario;
 
@@ -33,12 +34,12 @@ public class lista_animales_actualizados extends AppCompatActivity {
 TextView txt_contenedor;
     Button btn_buscar;
 
-    ConexionSQLiteHelper conn;
+   // ConexionSQLiteHelper conn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lista_animales_actualizados);
-        conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
+        controles.conexion_sqlite(this);
         listViewAnimales= (ListView) findViewById(R.id.listViewAnimales);
         txt_contenedor=(TextView)findViewById(R.id.txt_contenido);
         btn_buscar=(Button)findViewById(R.id.btn_buscar);
@@ -99,7 +100,7 @@ TextView txt_contenedor;
 
 
     private void consultarListaregistro() {
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
 
         Animales Animales=null;
         listaAnimales=new ArrayList<Animales>();

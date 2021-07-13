@@ -8,46 +8,35 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
+import Utilidades.controles;
 import Utilidades.Utilidades;
 
 public class registrar_estancia extends AppCompatActivity {
     EditText campoId,campoNombre;
-    ConexionSQLiteHelper conn;
+   // ConexionSQLiteHelper conn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrar_estancia);
         campoNombre= (EditText) findViewById(R.id.campoEstancia);
         campoId= (EditText) findViewById(R.id.campoId);
+        controles.conexion_sqlite(this);
+
     }
 
     public void onClick(View view) {
         registrarEstancia();
-        //registrarUsuariosSql();
     }
-
-
 
     private void registrarEstancia() {
 
-
-
-
-        ConexionSQLiteHelper conn=new ConexionSQLiteHelper(this,"bd_usuarios",null,1);
-
-        SQLiteDatabase db=conn.getWritableDatabase();
-
-
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         ContentValues values=new ContentValues();
-
         values.put(Utilidades.CAMPO_DESC_ESTANCIA,campoNombre.getText().toString());
         values.put(Utilidades.CAMPO_ID_ESTANCIA,campoId.getText().toString());
+        db.insert(Utilidades.TABLA_ESTANCIA,Utilidades.CAMPO_ID_ESTANCIA,values);
 
-        //values.put(ConexionSQLiteHelper.Utilidades.CAMPO_ID,usuario.getId().toString());
-        Long idResultante=db.insert(Utilidades.TABLA_ESTANCIA,Utilidades.CAMPO_ID_ESTANCIA,values);
-
-        Toast.makeText(getApplicationContext(),"Id Registro: "+idResultante,Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(),"REGISTRADO CON EXITO.",Toast.LENGTH_LONG).show();
 
         db.close();
     }

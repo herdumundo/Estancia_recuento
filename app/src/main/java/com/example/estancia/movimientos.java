@@ -1,20 +1,28 @@
 package com.example.estancia;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.ContentValues;
 import android.content.Context;
+import Utilidades.controles;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import  Utilidades.ArrayListContenedor;
@@ -24,6 +32,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -59,7 +68,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     String variable_comprada="";
     Spinner Combo_estancia,Combo_potrero;
     TextView txt_cod_animal,txt_cantidad,txt_fecha;
-    ConexionSQLiteHelper conn;
+   // ConexionSQLiteHelper conn;
     ArrayList<String> lista_estancia;
     ArrayList<Usuario> EstanciaList;
     ArrayList<Categoria> CategoriaList;
@@ -86,6 +95,13 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     String codigo_text="";//String para almacenar el codigo que recupera del lector
     TextView txt_compra_si,txt_compra_no;
     @Override
+    public void onBackPressed()
+    {
+        controles.volver_atras(this,this, MainActivity.class,"¿Desea volver al menù principal? ",1);
+
+    }
+    @SuppressLint("NewApi")
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//Bloquea el giro de pantalla
         super.onCreate(savedInstanceState);
@@ -111,6 +127,16 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         name = Bluetooth.getPairedDevices().get(pos).getName();
         Bluetooth.connectToDevice(Bluetooth.getPairedDevices().get(pos));
 
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //bellow setSupportActionBar(toolbar);
+        getSupportActionBar().setCustomView(R.layout.customactionbar);
+        TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
+        txtActionbar.setText("RECUENTO DE ANIMALES");
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
+        this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+        controles.conexion_sqlite(this);
         txt_fecha.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -145,11 +171,11 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         spinner_potrero.setTitle("SELECCIONAR POTRERO");
         spinner_potrero.setPositiveButton("CERRAR");
 
-    //    contar_compradas();
+
         txt_cantidad.setText(String.valueOf(ListView.getCount()));
-        conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
+       // conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
         consultarEstancias();
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         Cursor cursor1=db.rawQuery("SELECT date('now') as fecha",null);
         while (cursor1.moveToNext())
         {
@@ -269,7 +295,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                 }
                 else {
                     if(txt_cod_animal.getText().length()>=23){
-                        SQLiteDatabase db_consulta=conn.getReadableDatabase();
+                        SQLiteDatabase db_consulta=controles.conSqlite.getReadableDatabase();
                         Cursor cursor_consulta=db_consulta.rawQuery("SELECT count(*) from animales_actualizados where id='"+txt_cod_animal.getText().toString()+"' and estado in ('A','C')"   ,null);
                         while (cursor_consulta.moveToNext())
                         {
@@ -394,7 +420,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
             public void run() {
                 String contador="";
                 codigo_text=mensajeLector;
-                SQLiteDatabase db_consulta=conn.getReadableDatabase();
+                SQLiteDatabase db_consulta=controles.conSqlite.getReadableDatabase();
                 Cursor cursor_consulta=db_consulta.rawQuery("SELECT * from animales_actualizados where id='"+codigo_text+"' and estado in ('A','C')"   ,null);
 
                 if(cursor_consulta.moveToNext()){
@@ -444,7 +470,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         });
     }
     private void consultarEstancias() {
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         Usuario Estancia=null;
         EstanciaList =new ArrayList<Usuario>();
         Cursor cursor=db.rawQuery("SELECT * FROM "+ Utilidades.TABLA_ESTANCIA,null);
@@ -472,7 +498,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         String itemText = (String) Combo_estancia.getSelectedItem();
         String array []= itemText.split("-");
         posicion=array[0];
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         Usuario Potrero=null;
         PotreroList =new ArrayList<Usuario>();
         Cursor cursor=db.rawQuery("SELECT * FROM potrero  where id_estancia = '"+posicion.trim()+"'",null);
@@ -625,8 +651,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         idPotrero=arrayPotrero[0];
         String arrayEstancia []= Combo_estancia.getSelectedItem().toString().split("-");
         idEstancia=arrayEstancia[0];
-        ConexionSQLiteHelper conn=new ConexionSQLiteHelper(this,"bd_usuarios",null,1);
-        SQLiteDatabase db1=conn.getReadableDatabase();
+        SQLiteDatabase db1=controles.conSqlite.getReadableDatabase();
         ContentValues valor_cab=new ContentValues();
         Cursor cursor1=db1.rawQuery("SELECT  case  when count(*) = 0 then 1 else max(cod_interno) +1  end as d FROM   "+ Utilidades.TABLA_CABECERA_AP ,null);
         String idCabecera= "";
@@ -654,7 +679,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                 identificadorAnimal = listInsertAnimal.get(i).getCaravana();
             }
 
-            SQLiteDatabase db=conn.getWritableDatabase();
+            SQLiteDatabase db=controles.conSqlite.getWritableDatabase();
             ContentValues values=new ContentValues();
             values.put(Utilidades.CAMPO_ID_CABECERA,idCabecera);
             values.put(Utilidades.CAMPO_DESC_ANIMAL,identificadorAnimal);
@@ -665,14 +690,14 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
             if(listInsertAnimal.get(i).getId().length()<1)
             {
-                SQLiteDatabase db2=conn.getReadableDatabase();
+                SQLiteDatabase db2=controles.conSqlite.getReadableDatabase();
                 String strSQL = "UPDATE animales_actualizados SET  estado='A', registro="+idCabecera.trim()+"" +
                         " WHERE nrocaravana='"+listInsertAnimal.get(i).getCaravana().trim()+"' and estado='O'";
                 db2.execSQL(strSQL);
             }
             else
             {
-                SQLiteDatabase db2=conn.getReadableDatabase();
+                SQLiteDatabase db2=controles.conSqlite.getReadableDatabase();
                 String strSQL = "UPDATE animales_actualizados SET  estado='A' , registro="+idCabecera.toString().trim()+"" +
                         " WHERE id='"+listInsertAnimal.get(i).getId().trim()+"' and estado='O'";
                 db2.execSQL(strSQL);
@@ -682,40 +707,20 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("VOLVER ATRAS.")
-                .setMessage("SE PERDERAN TODOS LOS DATOS.")
-                .setPositiveButton("SI", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Bluetooth.removeCommunicationCallback();
-                        Bluetooth.disconnect();
-                        finish();
-                        Intent List = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(List);
-                    }
-                })
-                .setNegativeButton("NO", null)
-                .show();
-    }
+
 
     private void eliminar_fila(int pos)
     {
         if(listInsertAnimal.get(pos).getId().length()<1)
         {
-            SQLiteDatabase db1=conn.getReadableDatabase();
+            SQLiteDatabase db1=controles.conSqlite.getReadableDatabase();
             db1.execSQL("UPDATE animales_actualizados SET  estado='P'" +
            " WHERE nrocaravana='"+listInsertAnimal.get(pos).getCaravana().trim()+"'");
         }
 
         else
         {
-            SQLiteDatabase db1=conn.getReadableDatabase();
+            SQLiteDatabase db1=controles.conSqlite.getReadableDatabase();
              db1.execSQL("UPDATE animales_actualizados SET  estado='P'" +
                      " WHERE id='"+listInsertAnimal.get(pos).getId().trim()+"'");
         }
@@ -818,9 +823,9 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         combo_raza.setEnabled(true);
         String codinterno="";  String nrocaravana=""; String sexo=""; String color=""; String raza=""; String carimbo="";  String id_bolo="";
         String id_categoria="";String comprada="";
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         String contenido_lv="";
-        SQLiteDatabase db_consulta_lv=conn.getReadableDatabase();
+        SQLiteDatabase db_consulta_lv=controles.conSqlite.getReadableDatabase();
         final Cursor cursor_consulta=db_consulta_lv.rawQuery("SELECT count(*) from animales_actualizados  where id='" + cod_animal + "' and id not in ('') or UPPER(nrocaravana)=UPPER('" + cod_animal + "') and nrocaravana not in ('') and estado not in ('A','C') "    ,null);
         while (cursor_consulta.moveToNext()){
             contenido_lv=cursor_consulta.getString(0);
@@ -1057,7 +1062,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                     else {
                         posicion_raza=posicion_raza.toString();
                     }
-                    SQLiteDatabase db_consulta=conn.getReadableDatabase();
+                    SQLiteDatabase db_consulta=controles.conSqlite.getReadableDatabase();
                     Cursor cursor_consulta_contar=db_consulta.rawQuery(
                             "SELECT * " +
                                     "from animales_actualizados  " +
@@ -1075,7 +1080,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                             // Toast.makeText(movimientos.this,"caravana igual",Toast.LENGTH_LONG).show();
                         }
                         else {
-                            SQLiteDatabase db_estado=conn.getReadableDatabase();
+                            SQLiteDatabase db_estado=controles.conSqlite.getReadableDatabase();
                             String strSQL_estado = "UPDATE animales_actualizados SET  estado='P' WHERE " +
                                     " nrocaravana='"+cont_text_nrocaravana.toString().trim()+"' and estado = 'O'";
                             db_estado.execSQL(strSQL_estado);
@@ -1092,7 +1097,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                     {
                         if(id_animal.getText().toString().trim().length()>1)
                         {
-                            SQLiteDatabase db_UPDATE=conn.getReadableDatabase();
+                            SQLiteDatabase db_UPDATE=controles.conSqlite.getReadableDatabase();
                             db_UPDATE.execSQL(" UPDATE " +
                                     "               animales_actualizados " +
                                     "           SET  " +
@@ -1110,7 +1115,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                         }
                         else
                         {
-                            SQLiteDatabase db_UPDATE=conn.getReadableDatabase();
+                            SQLiteDatabase db_UPDATE=controles.conSqlite.getReadableDatabase();
                             db_UPDATE.execSQL(" UPDATE " +
                                     "               animales_actualizados " +
                                     "           SET  " +
@@ -1127,7 +1132,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                             db_UPDATE.close();
                         }
 
-                        SQLiteDatabase db_UPDATE=conn.getReadableDatabase();
+                        SQLiteDatabase db_UPDATE=controles.conSqlite.getReadableDatabase();
                         String strSQL = "   UPDATE " +
                                 "               animales_actualizados " +
                                 "           SET  " +
@@ -1163,7 +1168,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                     {
 
 
-                        SQLiteDatabase db_INSERT=conn.getReadableDatabase();
+                        SQLiteDatabase db_INSERT=controles.conSqlite.getReadableDatabase();
                         ContentValues valores_ani_actual=new ContentValues();
                         valores_ani_actual.put("id",id_animal.getText().toString());
                         valores_ani_actual.put("nrocaravana",txt_caravana.getText().toString());
@@ -1230,7 +1235,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     }
 
     public void consultarCategorias(String codigo) {
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         Categoria Categoria=null;
         CategoriaList =new ArrayList<Categoria>();
         Cursor cursor=db.rawQuery("SELECT * FROM categorias where id_categoria not in ('9')",null);
@@ -1250,7 +1255,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     {
         String codigo_cate="";
         String descripcion_categoria="";
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
 
         Cursor cursor=db.rawQuery("SELECT * FROM categorias where id_categoria='"+codigo_categoria+"'",null);
         while (cursor.moveToNext()){
@@ -1282,7 +1287,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void consultarColor(String codigo)
     {
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         Colores Color=null;
         ColorList =new ArrayList<Colores>();
         Cursor cursor=db.rawQuery("SELECT * FROM color where id_color not in ('"+codigo+"','NULL') ",null);
@@ -1301,7 +1306,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     {
         String cod_color="";
         String descripcion_color="";
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         Cursor cursor=db.rawQuery("SELECT * FROM color where id_color='"+codigo_color+"'",null);
         while (cursor.moveToNext()){
             cod_color=(cursor.getString(0));
@@ -1334,7 +1339,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void consultarRaza(String codigo)
     {
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         Raza Raza=null;
         RazaList =new ArrayList<Raza>();
         Cursor cursor=db.rawQuery("SELECT * FROM razas where id_raza not in ('"+codigo.trim()+"','4')",null);
@@ -1353,7 +1358,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     {
         String cod_raza = "";
         String descripcion_raza = "";
-        SQLiteDatabase db = conn.getReadableDatabase();
+        SQLiteDatabase db = controles.conSqlite.getReadableDatabase();
 
         Cursor cursor = db.rawQuery("SELECT * FROM razas where id_raza='" + codigo_raza + "' ", null);
 
@@ -1433,8 +1438,8 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         try {
 
 
-        ConexionSQLiteHelper conn=new ConexionSQLiteHelper(this,"bd_usuarios",null,1);
-        SQLiteDatabase db1=conn.getReadableDatabase();
+       // ConexionSQLiteHelper conn=new ConexionSQLiteHelper(this,"bd_usuarios",null,1);
+        SQLiteDatabase db1=controles.conSqlite.getReadableDatabase();
         Cursor cursor_grilla=db1.rawQuery("SELECT id,nrocaravana,comprada from animales_actualizados where estado='O'" ,null);
 
         listInsertAnimal.clear(); //CADA VEZ QUE SELECCIONAMOS SUB-GRUPO, DEBE LIMPIAR EL ARRAY DE LOS ARTICULOS SELECCIONADOS EN EL SPINNER ARTICULOS.
@@ -1535,5 +1540,17 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
            ListView.setAdapter(adapter);
         // notifyDataSetChanged();
 
+    }
+
+   @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                controles.volver_atras(this,this, MainActivity.class,"¿Desea volver al menù principal? ",1);
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

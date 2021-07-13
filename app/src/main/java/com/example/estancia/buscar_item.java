@@ -19,11 +19,5 @@ public class buscar_item extends AppCompatActivity {
          //txt_codigo.setEnabled(false);
 
     }
-
-
-
-
-
-
-
+ 
 }

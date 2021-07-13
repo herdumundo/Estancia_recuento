@@ -9,21 +9,21 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import java.util.ArrayList;
+
+import Utilidades.controles;
 import entidades.Usuario;
 
 public class envios_pendientes extends AppCompatActivity {
-    ListView listViewPendientes;
-    ArrayList<String> listaInformacion;
+    ListView            listViewPendientes;
+    ArrayList<String>   listaInformacion;
+    ArrayList<Usuario>  listaUsuarios;
 
-
-    ArrayList<Usuario> listaUsuarios;
-
-       ConexionSQLiteHelper conn;
-     @Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.envios_pendientes);
-        conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
+         controles.conexion_sqlite(this);
+
          listViewPendientes= (ListView) findViewById(R.id.listPendientes);
 
          consultarListaregistro();
@@ -32,15 +32,10 @@ public class envios_pendientes extends AppCompatActivity {
 
 
  }
-
-
     private void consultarListaregistro() {
-        SQLiteDatabase db=conn.getReadableDatabase();
-
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         Usuario usuario=null;
         listaUsuarios=new ArrayList<Usuario>();
-
-
         Cursor cursor=db.rawQuery("select " +
                 "a.cod_interno, b.desc_estancia, " +
                 "c.desc_potrero,a.fecha, " +
@@ -49,22 +44,17 @@ public class envios_pendientes extends AppCompatActivity {
                 "inner join estancia b on a.cab_id_estancia = b.id_estancia " +
                 "inner join potrero c on a.cab_id_potrero = c.id_potrero where a.estado='A' "   ,null);
 
-
         while (cursor.moveToNext()){
             usuario=new Usuario();
             usuario.setNombre(cursor.getString(0));
             usuario.setPotrero(cursor.getString(1));
             usuario.setEstancia(cursor.getString(2));
             usuario.setCantidad_animales(cursor.getString(4));
-            // usuario.setFecha(cursor.getString(4));
-
-
             listaUsuarios.add(usuario);
         }
         obtenerLista();
     }
-
-   private void obtenerLista() {
+    private void obtenerLista() {
         listaInformacion=new ArrayList<String>();
 
         for (int i=0; i<listaUsuarios.size();i++){

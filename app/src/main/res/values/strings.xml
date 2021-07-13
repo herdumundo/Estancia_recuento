@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Estancia</string>
+    <string name="app_name">Recuento Ganadero</string>
     <string name="title_activity_sincro_estancia">sincro_estancia</string>
     <string name="title_activity_movimientos">movimientos</string>
     <string name="animales">ANIMALES CANTIDAD:</string>

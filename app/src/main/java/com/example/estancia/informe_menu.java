@@ -1,23 +1,33 @@
 package com.example.estancia;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import Utilidades.controles;
 import entidades.Usuario;
 
 public class informe_menu extends AppCompatActivity {
-    ConexionSQLiteHelper conn;
+ //   ConexionSQLiteHelper conn;
     Button btn_cant_animales,btn_detalle_registro,btn_pendientes,btn_animales;
     TextView txt_cant_animales,txt_cant_animales2;
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,9 +36,21 @@ public class informe_menu extends AppCompatActivity {
         btn_detalle_registro= (Button)findViewById(R.id.btn_detalle_registro);
         btn_pendientes= (Button)findViewById(R.id.btn_pendientes);
         btn_animales= (Button)findViewById(R.id.btn_animales);
-        conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
+        controles.conexion_sqlite(this);
         txt_cant_animales=(TextView)findViewById(R.id.txt_cant_animales);
         txt_cant_animales2=(TextView)findViewById(R.id.txt_cant_animales2);
+
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //bellow setSupportActionBar(toolbar);
+        getSupportActionBar().setCustomView(R.layout.customactionbar);
+        TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
+        txtActionbar.setText("MENU DE INFORMES");
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
+        this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
+
 
         btn_cant_animales.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,9 +86,12 @@ public class informe_menu extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
-        Intent List = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(List);
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        startActivity(intent);
+         finish();
 
     }
     private void ir_informe_conteo (){
@@ -94,7 +119,7 @@ public class informe_menu extends AppCompatActivity {
 
     private  void consulta_animales(){
          //Toast.makeText(this, posicion, Toast.LENGTH_SHORT).show();
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
          String contador="";
         Cursor cursor=db.rawQuery("SELECT count(*) FROM animales ",null);
         while (cursor.moveToNext()){
@@ -109,7 +134,7 @@ public class informe_menu extends AppCompatActivity {
 
     private  void consulta_animales_upd(){
         //Toast.makeText(this, posicion, Toast.LENGTH_SHORT).show();
-        SQLiteDatabase db2=conn.getReadableDatabase();
+        SQLiteDatabase db2=controles.conSqlite.getReadableDatabase();
         String contador="";
         Cursor cursor2=db2.rawQuery("SELECT count(*) FROM animales_actualizados where estado IN ('C','N') ",null);
         while (cursor2.moveToNext()){
@@ -120,5 +145,16 @@ public class informe_menu extends AppCompatActivity {
         txt_cant_animales2.setText(contador);
     }
 
+  @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
 
+            case android.R.id.home:
+                Utilidades.controles.volver_atras(this,this, MainActivity.class,"",4);
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+
+}
 }

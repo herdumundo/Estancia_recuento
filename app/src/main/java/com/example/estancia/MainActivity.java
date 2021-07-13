@@ -1,5 +1,7 @@
 package com.example.estancia;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -7,13 +9,20 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
-
+import Utilidades.controles;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -21,24 +30,57 @@ import java.sql.Statement;
 import Utilidades.Utilidades;
 
 public class MainActivity extends AppCompatActivity {
-    private ProgressDialog prodialog,progress;
-    Connection connect;
-    ConexionSQLiteHelper conn;
-Button btn_movimiento,btn_sincro,btn_potrero;
+    public static ProgressDialog prodialog,progress,ProDialogExport,ProDialogSincro;
 
-String contador_animales="";
+    Connection connect;
+    //ConexionSQLiteHelper conn;
+    Button btn_movimiento,btn_sincro,btn_potrero;
+    String contador_animales="";
     String contador_animales_upd="";
 
+    @SuppressLint("NewApi")
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("ATENCION!!!.")
+                .setMessage("DESEA CERRAR SESION.")
+                .setPositiveButton("SI", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Intent intent = new Intent(getApplicationContext(), login2.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+
+                    }
+
+                })
+                .setNegativeButton("NO", null)
+                .show();
+    }
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        // ConexionSQLiteHelper conn=new ConexionSQLiteHelper(this,"bd_usuarios",null,1);
         btn_movimiento= (Button)findViewById(R.id.idmovimiento) ;
-        btn_sincro= (Button)findViewById(R.id.btnSincro) ;
-        btn_potrero= (Button)findViewById(R.id.bnt_potrero);
+         btn_potrero= (Button)findViewById(R.id.bnt_potrero);
+        controles.getMacAddr();
+        controles.context_menuPrincipal=this;
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //bellow setSupportActionBar(toolbar);
+        getSupportActionBar().setCustomView(R.layout.customactionbar);
+        TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
+        txtActionbar.setText("MENU DE PRINCIPAL");
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
+        this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+        controles.conexion_sqlite(this);
 
         btn_movimiento.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,11 +91,6 @@ String contador_animales="";
             }
         });
 
-
-
-
-
-
         btn_potrero.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,25 +98,15 @@ String contador_animales="";
             }
         });
 
-
-        btn_sincro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-
-                ir_sincro();
-             }
-        });
     }
 
 
 
-    private void importar_colores() {
+    private void importar_colores   ()  {
         try {
-            String id="";
-            String color="";
-            conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
-            SQLiteDatabase db=conn.getReadableDatabase();
+
+
+            SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
             ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
             connect = conexion.Connections();
             Statement stmt = connect.createStatement();
@@ -98,13 +125,11 @@ String contador_animales="";
                     .setNegativeButton("CERRAR", null).show();
         }catch(Exception e){
         }}
-//////////////////////////////////////////////////////////////////////////////////////////////////
-private void importar_raza() {
+    private void importar_raza      ()  {
     try {
-        String id="";
-        String color="";
-        conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
-        SQLiteDatabase db=conn.getReadableDatabase();
+
+
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
         connect = conexion.Connections();
         Statement stmt = connect.createStatement();
@@ -123,16 +148,11 @@ private void importar_raza() {
                 .setNegativeButton("CERRAR", null).show();
     }catch(Exception e){
     }}
-  ///////////////////////////////////////////////////////////////////////////////////////////
-
-
-    private void importar_categoria()
-    {
+    private void importar_categoria ()  {
         try {
-            String id="";
-            String color="";
-            conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
-            SQLiteDatabase db=conn.getReadableDatabase();
+
+
+            SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
             ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
             connect = conexion.Connections();
             Statement stmt = connect.createStatement();
@@ -151,47 +171,16 @@ private void importar_raza() {
                     .setNegativeButton("CERRAR", null).show();
         }catch(Exception e){
         }}
-
-
-
-
-
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-    private void importar_animales() {
+    private void importar_animales  ()  {
         try {
-            String id="";
-            String cod_interno="";
-            String nro_caravana="";
-            String sexo="";
-            String color="";
-            String raza="";
-            String carimbo="";
-            String ncmadre="";
-            String ncpadre="";
-            conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
-            SQLiteDatabase db=conn.getReadableDatabase();
+
+
+            SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
             ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
             connect = conexion.Connections();
-String contador_animales="";
-
-            //String query = "select *  from  animales  where  sexo='m' and ide not in('')";
-
             Statement stmt = connect.createStatement();
             ResultSet rs = stmt.executeQuery("select *  from  animales");
-
-
-   // prodialog.setMax(Integer.parseInt(contador_animales.trim()));
-
-          int c=0;
-           // for (int i = 0; i < 1000000; i++)
-           // {
-               // c++;
-               // prodialog.setProgress(c);
-                // Toast.makeText(MainActivity.this, String.valueOf(c), Toast.LENGTH_SHORT).show();
-           // }
+            int c=0;
             while (rs.next()) {
 
                 ContentValues values=new ContentValues();
@@ -219,16 +208,11 @@ String contador_animales="";
                     .setNegativeButton("CERRAR", null).show();
         }catch(Exception e){
         }}
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void registrar() {
+    private void importar_estancias ()  {
         try {
             String id=""; String estancia="";String cantidad="";
-            conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
-            SQLiteDatabase db=conn.getReadableDatabase();
+
+            SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
             ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
             connect = conexion.Connections();
             String query = "select *  from  app_v_estancias";
@@ -250,12 +234,11 @@ String contador_animales="";
                     .setNegativeButton("CERRAR", null).show();
         }catch(Exception e){
         }}
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private void registrar_potreros() {
+    private void registrar_potreros ()  {
         try {
             String id=""; String id_estancia_fk="";String descripcion="";
-            conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
-            SQLiteDatabase db=conn.getReadableDatabase();
+
+            SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
             ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
             connect = conexion.Connections();
             String query = "select *  from  app_v_potreros";
@@ -278,14 +261,15 @@ String contador_animales="";
                     .setNegativeButton("CERRAR", null).show();
         }catch(Exception e){
         }}
-    class hilo_estancia extends Thread {
+
+    class hilo_estancia     extends Thread {
         @Override
         public void run() {
 
             try {
 
 
-               registrar();
+                importar_estancias();
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -303,7 +287,7 @@ String contador_animales="";
             }
         }
     }
-    class hilo_potrero extends Thread {
+    class hilo_potrero      extends Thread {
         @Override
         public void run() {
             try {
@@ -333,8 +317,7 @@ String contador_animales="";
             }
         }
     }
-
-     class hilo_animales extends Thread {
+    class hilo_animales     extends Thread {
         @Override
         public void run() {
             try {
@@ -359,10 +342,7 @@ String contador_animales="";
             }
         }
     }
-
-
-
-    class hilo_colores extends Thread {
+    class hilo_colores      extends Thread {
         @Override
         public void run() {
             try {
@@ -383,9 +363,7 @@ String contador_animales="";
             }
         }
     }
-
-
-    class hilo_raza extends Thread {
+    class hilo_raza         extends Thread {
         @Override
         public void run() {
             try {
@@ -406,8 +384,7 @@ String contador_animales="";
             }
         }
     }
-
-    class hilo_categoria extends Thread {
+    class hilo_categoria    extends Thread {
         @Override
         public void run() {
             try {
@@ -439,108 +416,23 @@ String contador_animales="";
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void onClick(View view) {
-        ir_registro_estancia();
-
-    }
-    public void onClick_potrero(View view) {
-        ir_registro_potrero();
-    }
-    private void ir_registro_estancia(){
-        Intent i=new Intent(this,registrar_estancia.class);
-        startActivity(i);
-    }
-
-    public void click_visor(View view) {
-        Intent i=new Intent(this,informe_menu.class);
-        startActivity(i);
-    }
-
-
-    private void ir_registro_potrero(){
-        Intent i=new Intent(this,potrero.class);
-        startActivity(i);
-    }
-
-    public void onClick_movimiento(View view) {
-        prodialog = ProgressDialog.show(MainActivity.this, "",
-                "CARGANDO...", true);
-        new MainActivity.Hilo1().start();
-    }
-
-
-    private void ir_movimiento(){
-
-        Intent i=new Intent(this,Select_blu.class);
-        startActivity(i);
-
-    }
-
-    private void ir_lista_animales_actualizados(){
-
-        Intent i=new Intent(this,lista_animales_actualizados.class);
-        startActivity(i);
-
-    }
-
-    private void ir_potrero(){
-
-        Intent i=new Intent(this,potrero.class);
-        startActivity(i);
-
-    }
-    private void ir_sincro(){
-
-        Intent i=new Intent(this,menu_sincro.class);
-        startActivity(i);
-
-    }
-
-    private void ir_exportar(){
-        Intent i=new Intent(this,exportar.class);
-        startActivity(i);
-    }
-
-    public void onClick_export(View view) {
-        prodialog = ProgressDialog.show(MainActivity.this, "EXPORTAR",
-                "CARGANDO...", true);
-        new MainActivity.Hilo2().start();
-    }
-
-
-    class Hilo1 extends Thread {
+    class hilo_animales_upd extends Thread {
         @Override
         public void run() {
 
             try {
-                ir_movimiento();
-                 runOnUiThread(new Runnable() {
+
+
+
+                importar_animales_upd();
+                runOnUiThread(new Runnable() {
                     @Override
 
                     public void run() {
-
+                        Toast.makeText(MainActivity.this, "Proceso terminado", Toast.LENGTH_SHORT).show();
                         prodialog.dismiss();
+
+
                     }
                 });
             } catch ( Exception e) {
@@ -548,12 +440,12 @@ String contador_animales="";
             }
         }
     }
-    class Hilo2 extends Thread {
+    class Hilo1             extends Thread {
         @Override
         public void run() {
 
             try {
-                ir_exportar();
+                ir_movimiento();
                 runOnUiThread(new Runnable() {
                     @Override
 
@@ -569,62 +461,60 @@ String contador_animales="";
     }
 
 
-    @Override
-    public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("ATENCION!!!.")
-                .setMessage("DESEA CERRAR SESION.")
-                .setPositiveButton("SI", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+    public void     onClick(View view) {
+        ir_registro_estancia();
 
-
-
-                        Intent intent = new Intent(getApplicationContext(), login2.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    }
-
-                })
-                .setNegativeButton("NO", null)
-                .show();
     }
+    public void     onClick_potrero(View view) {
+        ir_registro_potrero();
+    }
+    public void     onClick_movimiento(View view) {
+        prodialog = ProgressDialog.show(MainActivity.this, "",
+                "CARGANDO...", true);
+        new MainActivity.Hilo1().start();
+    }
+    public void     click_visor(View view) {
+        Intent i=new Intent(this,informe_menu.class);
+        startActivity(i);
+    }
+    public void     onClick_export(View view) {
+        controles.ConfirmarExport();
+    }
+    public  void sincronizarEstancia(View view){
+        controles.ConfirmarSincro();
+    }
+    private void    ir_registro_estancia(){
+        Intent i=new Intent(this,registrar_estancia.class);
+        startActivity(i);
+    }
+    private void    ir_registro_potrero(){
+        Intent i=new Intent(this,potrero.class);
+        startActivity(i);
+    }
+    private void    ir_movimiento(){
 
+        Intent i=new Intent(this,Select_blu.class);
+        startActivity(i);
 
+    }
+    private void    ir_potrero(){
 
+        Intent i=new Intent(this,potrero.class);
+        startActivity(i);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    }
 
 
 
     private void importar_animales_upd() {
         try {
-            SQLiteDatabase db_estado=conn.getReadableDatabase();
+            SQLiteDatabase db_estado=controles.conSqlite.getReadableDatabase();
             String strSQL_estado = "DELETE FROM animales_actualizados  WHERE   estado = 'C'";
             db_estado.execSQL(strSQL_estado);
 
 
-            conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
-            SQLiteDatabase db=conn.getReadableDatabase();
+
+            SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
             ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
             connect = conexion.Connections();
             String contador_animales="";
@@ -673,34 +563,17 @@ String contador_animales="";
         }catch(Exception e){
         }}
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
 
+            case android.R.id.home:
+               controles.volver_atras(this,this, login2.class,"¿Desea cerrar sesiòn?",1);
 
-    class hilo_animales_upd extends Thread {
-        @Override
-        public void run() {
-
-            try {
-
-
-
-                importar_animales_upd();
-                runOnUiThread(new Runnable() {
-                    @Override
-
-                    public void run() {
-                        Toast.makeText(MainActivity.this, "Proceso terminado", Toast.LENGTH_SHORT).show();
-                        prodialog.dismiss();
-
-
-                    }
-                });
-            } catch ( Exception e) {
-                e.printStackTrace();
-            }
+                return true;
         }
+        return super.onOptionsItemSelected(item);
     }
-
-
 
 
 

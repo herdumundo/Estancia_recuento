@@ -22,11 +22,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import Utilidades.Utilidades;
+import Utilidades.controles;
 import entidades.Usuario;
 
 public class login2 extends AppCompatActivity {
     Connection connect;
-    ConexionSQLiteHelper conn;
+   // ConexionSQLiteHelper conn;
     Button btn_sincro,btn_login;
     TextView txt_usuario,txt_pass;
 
@@ -40,8 +41,8 @@ public class login2 extends AppCompatActivity {
         btn_login=(Button)findViewById(R.id.btn_login);
         txt_usuario=(TextView)findViewById(R.id.txt_usuario);
         txt_pass=(TextView)findViewById(R.id.password);
-        
-        conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
+
+        controles.conexion_sqlite(this);
 
         btn_sincro.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,8 +128,7 @@ public class login2 extends AppCompatActivity {
     private void sincronizar_usuarios() {
                   try {
             String nombre=""; String usuario="";String pass="";
-            conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
-            SQLiteDatabase db=conn.getReadableDatabase();
+            SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
             ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
             connect = conexion.Connections();
             String query = "select *  from  usuarios";
@@ -153,7 +153,7 @@ public class login2 extends AppCompatActivity {
 
         private void login (){
 
-            SQLiteDatabase db=conn.getReadableDatabase();
+            SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
             String respuesta="0";
 
              Cursor cursor=db.rawQuery("SELECT * FROM  usuario where user_name='"+txt_usuario.getText().toString().trim()+"' and pass='"+txt_pass.getText()+"'" ,null);

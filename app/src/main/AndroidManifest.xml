@@ -19,7 +19,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".menu_sincro" android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".envios_pendientes" />
         <activity android:name=".informe_recuento" />
         <activity android:name=".informe_menu" />
@@ -27,14 +26,11 @@
         <activity android:name=".Select_blu" />
         <activity android:name=".MainActivity" />
         <activity android:name=".ListviewActivity" />
-        <activity android:name=".exportar" />
         <activity
-            android:name=".movimientos"
-            android:label="@string/title_activity_movimientos"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".movimientos" />
         <activity android:name=".potrero" />
         <activity android:name=".registrar_estancia" />
-        <activity android:name=".login2">
+        <activity android:name=".login2"  android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action
                     android:name="android.intent.action.MAIN"

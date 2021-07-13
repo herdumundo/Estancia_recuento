@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TwoLineListItem;
@@ -25,7 +26,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-
+ import Utilidades.controles;
 import entidades.Detalle_registro;
 import entidades.Detalle_animales_recuento;
 
@@ -34,38 +35,32 @@ import entidades.Usuario;
 public class informe_recuento extends AppCompatActivity {
     ListView listViewDetalle;
     ArrayList<String> listaInformacion;
-    ArrayList<String> listaInformacion_detalle;
     ArrayList<String> listaInformacion_detalle_recuento;
-
-
     ArrayList<Usuario> listaUsuarios;
     ArrayList<Detalle_registro> listadetalle;
     ArrayList<Detalle_animales_recuento> listadetallerecuento;
     DatePickerDialog picker;
     TextView txt_fecha,txt_total;
     Button btn_buscar;
-    ConexionSQLiteHelper conn;
-    String estancia_list="";
-    String destallerecuento_list="";
-    String potrero="";
-    String total="";
-    String registro="";
-    DateFormat dateFormatter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.informe_recuento);
-        conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
+
         listViewDetalle= (ListView) findViewById(R.id.listViewDet);
         txt_fecha=(TextView)findViewById(R.id.txt_fecha);
         btn_buscar=(Button)findViewById(R.id.btn_buscar);
+        controles.conexion_sqlite(this);
         btn_buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 txt_total=(TextView)findViewById(R.id.txt_total);
+
+
                 consultarListaregistro();
 
-                ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), R.layout.simple_list_item_3, R.id.text1, listaInformacion) {
+                ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), R.layout.simple_list_item_3_registro, R.id.text1, listaInformacion) {
                     @Override
                     public View getView(int position, View convertView, ViewGroup parent) {
                         View view = super.getView(position, convertView, parent);
@@ -73,19 +68,18 @@ public class informe_recuento extends AppCompatActivity {
                         TextView text2 = (TextView) view.findViewById(R.id.text2);
                         TextView text3 = (TextView) view.findViewById(R.id.text3);
                         TextView text4 = (TextView) view.findViewById(R.id.text4);
-                        text4.setText("REGISTRO NRO.:"+listaUsuarios.get(position).getNombre());
-                        text1.setText("ESTANCIA:"+listaUsuarios.get(position).getPotrero());
-                        text2.setText("POTRERO:"+listaUsuarios.get(position).getEstancia());
-                        text3.setText("CANTIDAD TOTAL"+listaUsuarios.get(position).getCantidad_animales());
+                        ImageView txtimagen =   view.findViewById(R.id.txtimagen);
+
+                        text1.setText("REGISTRO NRO.:"+listaUsuarios.get(position).getNombre());
+                        text2.setText("ESTANCIA:"+listaUsuarios.get(position).getPotrero());
+                        text3.setText("POTRERO:"+listaUsuarios.get(position).getEstancia());
+                        text4.setText("CANTIDAD TOTAL"+listaUsuarios.get(position).getCantidad_animales());
+                        txtimagen.setImageResource(R.drawable.ic_action_lista);
+
                         return view;
                     }
                 };
                 listViewDetalle.setAdapter(adapter);
-                //  listViewPersonas.setAdapter(adaptador);
-
-                /*consultarListaregistro();
-                ArrayAdapter adaptador=new ArrayAdapter(informe_recuento.this,android.R.layout.simple_list_item_2,listaInformacion);
-                listViewPersonas.setAdapter(adaptador);*/
 
                 listViewDetalle.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -105,10 +99,10 @@ public class informe_recuento extends AppCompatActivity {
                         consultar_detalle(posicion_id);
 
 
-                        text1.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.colorBlack));
-                        text2.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.colorBlack));
-                        text3.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.colorBlack));
-                        text4.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.colorBlack));
+                        text1.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.colorRed));
+                        text2.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.colorRed));
+                        text3.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.colorRed));
+                        text4.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.colorRed));
 
                         ir_cuadro(text4.getText().toString());
                     }
@@ -153,20 +147,12 @@ public class informe_recuento extends AppCompatActivity {
 
 
     private void consultarListaregistro() {
-        SQLiteDatabase db=conn.getReadableDatabase();
-        SQLiteDatabase db2=conn.getReadableDatabase();
-
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         String total_txt="";
-
         Cursor cursor2=db.rawQuery("select count(*) from registro_cabecera a inner join animal_potrero b on a.cod_interno=b.cod_cabecera " +
                 "where a.fecha='"+txt_fecha.getText().toString().trim()+"' "   ,null);
-
-
         while (cursor2.moveToNext()){
-
             total_txt=(cursor2.getString(0));
-
-
         }
         txt_total.setText(total_txt);
         Usuario usuario=null;
@@ -228,7 +214,7 @@ public class informe_recuento extends AppCompatActivity {
 
     private  void consultar_detalle(String id_registro){
 
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         Detalle_animales_recuento Detalle_animales_recuento=null;
 
         listadetallerecuento=new ArrayList<Detalle_animales_recuento>();
@@ -261,7 +247,7 @@ public class informe_recuento extends AppCompatActivity {
         final ListView listView_detalle = (ListView) mView.findViewById(R.id.list_detalle);
 
         consultar_detalle(id_registro);
-        ArrayAdapter adaptador_detalle = new ArrayAdapter(getApplicationContext(), R.layout.simple_list_item_3, R.id.text1, listaInformacion_detalle_recuento) {
+        ArrayAdapter adaptador_detalle = new ArrayAdapter(getApplicationContext(), R.layout.simple_list_item_3_registro, R.id.text1, listaInformacion_detalle_recuento) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
@@ -273,7 +259,6 @@ public class informe_recuento extends AppCompatActivity {
                 text1.setText("IDE:"+listadetallerecuento.get(position).getDesc_animal());
                 text2.setText("NRO CARAVANA:"+listadetallerecuento.get(position).getCaravana());
                 text3.setText("CATEGORIA:"+listadetallerecuento.get(position).getCategoria());
-
                 return view;
             }
         };

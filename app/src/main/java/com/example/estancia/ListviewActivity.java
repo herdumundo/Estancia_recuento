@@ -35,11 +35,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-
-import Utilidades.Utilidades;
-
-import Utilidades.Utilidades;
+import Utilidades.controles;
 import entidades.Detalle_registro;
 import entidades.Usuario;
 
@@ -49,11 +45,9 @@ public class ListviewActivity extends AppCompatActivity {
     ArrayList<String> listaInformacion_detalle;
     ArrayList<Usuario> listaUsuarios;
     ArrayList<Detalle_registro> listadetalle;
-
     DatePickerDialog picker;
     TextView txt_fecha;
     Button btn_buscar;
-    ConexionSQLiteHelper conn;
     String estancia_list="";
     String potrero="";
     String total="";
@@ -66,7 +60,7 @@ public class ListviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listview);
-        conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
+        controles.conexion_sqlite(this);
         listViewPersonas= (ListView) findViewById(R.id.listViewPersonas);
         txt_fecha=(TextView)findViewById(R.id.txt_fecha);
         btn_buscar=(Button)findViewById(R.id.btn_buscar);
@@ -179,7 +173,7 @@ public class ListviewActivity extends AppCompatActivity {
     }
 
     private void consultarListaregistro() {
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
 
         Usuario usuario=null;
         listaUsuarios=new ArrayList<Usuario>();
@@ -259,7 +253,7 @@ public class ListviewActivity extends AppCompatActivity {
 
     private  void consultar_detalle(String id_registro){
 
-        SQLiteDatabase db=conn.getReadableDatabase();
+        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         Detalle_registro Detalle_registro=null;
 
         listadetalle=new ArrayList<Detalle_registro>();
