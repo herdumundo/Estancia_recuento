@@ -105,7 +105,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//Bloquea el giro de pantalla
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.movimientos);
+        setContentView(R.layout.scrollmovimiento);
         txt_fecha=(TextView) findViewById(R.id.txt_fecha);
        // txt_fecha.setInputType(InputType.TYPE_NULL);
         txt_cod_animal=(TextView) findViewById(R.id.txt_cod_animal);
@@ -653,12 +653,24 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         idEstancia=arrayEstancia[0];
         SQLiteDatabase db1=controles.conSqlite.getReadableDatabase();
         ContentValues valor_cab=new ContentValues();
-        Cursor cursor1=db1.rawQuery("SELECT  case  when count(*) = 0 then 1 else max(cod_interno) +1  end as d FROM   "+ Utilidades.TABLA_CABECERA_AP ,null);
+        Cursor cursor1=db1.rawQuery("SELECT  case  when count(*) = 0 then 1 else max(cod_interno) +1  end as d FROM  registro_cabecera " ,null);
+        Cursor cabceraBoleano=db1.rawQuery("SELECT  * FROM  registro_cabecera WHERE estado='A' " ,null);
+        Cursor cabInforme=db1.rawQuery("SELECT  case  when count(*) = 0 then 1 else max(codinterno) +1  end as d FROM  informe_cabecera" ,null);
         String idCabecera= "";
-        while (cursor1.moveToNext())
-        {
-            idCabecera=cursor1.getString(0);
+        if(cabceraBoleano.moveToNext()){
+            while (cursor1.moveToNext())
+            {
+                idCabecera=cursor1.getString(0);
+            }
         }
+        else {
+            while (cabInforme.moveToNext())
+            {
+                idCabecera=cabInforme.getString(0);
+            }
+        }
+
+
         valor_cab.put(Utilidades.CAMPO_CABECERA_ID,idCabecera);
         valor_cab.put(Utilidades.CAMPO_FECHA,txt_fecha.getText().toString());
         valor_cab.put(Utilidades.CAMPO_CABECERA_CANTIDAD,txt_cantidad.getText().toString());

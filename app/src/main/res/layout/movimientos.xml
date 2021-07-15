@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:minHeight="250dp">
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"></ScrollView>
     <LinearLayout
         android:id="@+id/relative"
         android:layout_width="match_parent"
@@ -90,26 +92,26 @@
 
     </LinearLayout>
 
+
     <TextView
         android:id="@+id/txt_fecha"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_height="52dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="INGRESAR FECHA"
         android:textAlignment="center"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
         tools:ignore="MissingConstraints" />
 
-
     <Button
         android:id="@+id/btn_cargar"
-        android:layout_width="164dp"
-        android:layout_height="46dp"
+        android:layout_width="145dp"
+        android:layout_height="43dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="384dp"
         android:drawableLeft="@drawable/ic_action_agregar"
@@ -150,8 +152,8 @@
 
     <Button
         android:id="@+id/btn_registrar"
-        android:layout_width="166dp"
-        android:layout_height="48dp"
+        android:layout_width="142dp"
+        android:layout_height="45dp"
         android:layout_marginTop="384dp"
         android:drawableLeft="@drawable/ic_action_registrar"
         android:text="@string/registrar"
@@ -163,8 +165,8 @@
     <com.toptoche.searchablespinnerlibrary.SearchableSpinner
 
         android:id="@+id/spinner_estancia"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_width="313dp"
+        android:layout_height="47dp"
 
         android:layout_marginEnd="8dp"
         android:accessibilityHeading="true"
@@ -180,8 +182,8 @@
 
     <com.toptoche.searchablespinnerlibrary.SearchableSpinner
         android:id="@+id/spinner_potrero"
-        android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_width="310dp"
+        android:layout_height="47dp"
 
         android:layout_marginEnd="8dp"
         android:backgroundTint="@android:color/background_dark"
@@ -194,8 +196,9 @@
 
     <EditText
         android:id="@+id/txt_cod_animal"
-        android:layout_width="408dp"
+        android:layout_width="match_parent"
         android:layout_height="51dp"
+        android:layout_marginTop="12dp"
         android:cursorVisible="true"
         android:ems="10"
         android:focusable="true"
@@ -252,7 +255,7 @@
 
     <TextView
         android:id="@+id/textView6"
-        android:layout_width="397dp"
+        android:layout_width="match_parent"
         android:layout_height="28dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
@@ -282,7 +285,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="312dp"
-        android:layout_marginEnd="68dp"
+        android:layout_marginEnd="48dp"
         android:text="CRIOLLAS"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp"
@@ -295,7 +298,7 @@
         android:id="@+id/txt_compra_si"
         android:layout_width="55dp"
         android:layout_height="25dp"
-        android:layout_marginStart="132dp"
+        android:layout_marginStart="120dp"
         android:layout_marginTop="312dp"
         android:text="0"
         android:textAlignment="center"

@@ -42,7 +42,13 @@ public class informe_recuento extends AppCompatActivity {
     DatePickerDialog picker;
     TextView txt_fecha,txt_total;
     Button btn_buscar;
+    @Override
+    public void onBackPressed() {
+        finish();
+        Intent List = new Intent(getApplicationContext(), informe_menu.class);
+        startActivity(List);
 
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +68,8 @@ public class informe_recuento extends AppCompatActivity {
 
                 ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), R.layout.simple_list_item_3_registro, R.id.text1, listaInformacion) {
                     @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
+                    public View getView(int position, View convertView, ViewGroup parent)
+                    {
                         View view = super.getView(position, convertView, parent);
                         TextView text1 = (TextView) view.findViewById(R.id.text1);
                         TextView text2 = (TextView) view.findViewById(R.id.text2);
@@ -75,7 +82,6 @@ public class informe_recuento extends AppCompatActivity {
                         text3.setText("POTRERO:"+listaUsuarios.get(position).getEstancia());
                         text4.setText("CANTIDAD TOTAL"+listaUsuarios.get(position).getCantidad_animales());
                         txtimagen.setImageResource(R.drawable.ic_action_lista);
-
                         return view;
                     }
                 };
@@ -90,7 +96,7 @@ public class informe_recuento extends AppCompatActivity {
                         TextView text2 = (TextView) view.findViewById(R.id.text2);
                         TextView text3 = (TextView) view.findViewById(R.id.text3);
 
-                        text4.setText(listaUsuarios.get(pos).getNombre());
+                       // text4.setText(listaUsuarios.get(pos).getNombre());
                         String posicion_id="";
                         String id_registro=(String) adapterView.getItemAtPosition(pos);
 
@@ -98,13 +104,12 @@ public class informe_recuento extends AppCompatActivity {
                         posicion_id =array_id[0];
                         consultar_detalle(posicion_id);
 
+                        text1.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.black));
+                        text2.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.black));
+                        text3.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.black));
+                        text4.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.black));
 
-                        text1.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.colorRed));
-                        text2.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.colorRed));
-                        text3.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.colorRed));
-                        text4.setTextColor(ContextCompat.getColor(informe_recuento.this, R.color.colorRed));
-
-                        ir_cuadro(text4.getText().toString());
+                        ir_cuadro(listaUsuarios.get(pos).getNombre());
                     }
                 });
             }
@@ -158,25 +163,21 @@ public class informe_recuento extends AppCompatActivity {
         Usuario usuario=null;
         listaUsuarios=new ArrayList<Usuario>();
 
-
-        Cursor cursor=db.rawQuery("select " +
-                "a.cod_interno, b.desc_estancia, " +
-                "c.desc_potrero,a.fecha, " +
-                "a.cantidad " +
-                "from registro_cabecera a " +
-                "inner join estancia b on a.cab_id_estancia = b.id_estancia " +
-                "inner join potrero c on a.cab_id_potrero = c.id_potrero " +
-                "and a.fecha='"+txt_fecha.getText().toString().trim()+"' "   ,null);
-
-
+        Cursor cursor=db.rawQuery("SELECT * FROM (select  codinterno,potrero,estancia,cantidad from informe_cabecera where fecha='"+txt_fecha.getText().toString().trim()+"' "+
+                " union all select " +
+                        "a.cod_interno,  " +
+                        "c.desc_potrero,b.desc_estancia,  " +
+                        "a.cantidad " +
+                        "from registro_cabecera a " +
+                        "inner join estancia b on a.cab_id_estancia = b.id_estancia " +
+                        "inner join potrero c on a.cab_id_potrero = c.id_potrero " +
+                        "and a.fecha='"+txt_fecha.getText().toString().trim()+"' and a.estado='A' ) T ORDER BY 1 ASC" ,null);
         while (cursor.moveToNext()){
             usuario=new Usuario();
             usuario.setNombre(cursor.getString(0));
             usuario.setPotrero(cursor.getString(1));
             usuario.setEstancia(cursor.getString(2));
-            usuario.setCantidad_animales(cursor.getString(4));
-
-
+            usuario.setCantidad_animales(cursor.getString(3));
             listaUsuarios.add(usuario);
         }
         obtenerLista();
@@ -192,8 +193,6 @@ public class informe_recuento extends AppCompatActivity {
 
     }
 
-
-
     private void obtenerDetalle_recuento() {
         listaInformacion_detalle_recuento=new ArrayList<String>();
 
@@ -204,13 +203,7 @@ public class informe_recuento extends AppCompatActivity {
         }
 
     }
-    @Override
-    public void onBackPressed() {
-        finish();
-        Intent List = new Intent(getApplicationContext(), informe_menu.class);
-        startActivity(List);
 
-    }
 
     private  void consultar_detalle(String id_registro){
 
@@ -218,12 +211,16 @@ public class informe_recuento extends AppCompatActivity {
         Detalle_animales_recuento Detalle_animales_recuento=null;
 
         listadetallerecuento=new ArrayList<Detalle_animales_recuento>();
-        Cursor cursor_detalle=db.rawQuery("select a.cod_cabecera, b.id,b.nrocaravana,c.categoria   " +
-                "from animal_potrero a " +
-                "inner join animales_actualizados b on " +
-                "(a.desc_animal=b.id or a.desc_animal=b.nrocaravana) inner join categorias c on b.id_categoria=c.id_categoria" +
-                " where cod_cabecera='"+id_registro+"' and a.cod_cabecera=b.registro"    ,null);
 
+
+        Cursor cursor_detalle=db.rawQuery("" +
+                "select codinterno,ide,nrocaravana,categoria from informe_detalle where id_cabecera='"+id_registro+"' " +
+                " union all " +
+                "select a.cod_cabecera, b.id,b.nrocaravana,c.categoria  " +
+                "   from animal_potrero a " +
+                "      inner join animales_actualizados b on  " +
+                "       (a.desc_animal=b.id or a.desc_animal=b.nrocaravana) inner join categorias c on b.id_categoria=c.id_categoria " +
+                "       where cod_cabecera='"+id_registro+"' and a.cod_cabecera=b.registro  and b.estado='A'"    ,null);
 
 
         while (cursor_detalle.moveToNext()){

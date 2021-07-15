@@ -177,33 +177,22 @@ public class ListviewActivity extends AppCompatActivity {
 
         Usuario usuario=null;
         listaUsuarios=new ArrayList<Usuario>();
-        //select * from usuarios
-        //Cursor cursor=db.rawQuery("SELECT a.cod_interno,b.desc_potrero FROM registro_cabecera a,potrero b where a.cab_id_potrero=b.id_potrero"  ,null);
-      //  Cursor cursor=db.rawQuery("SELECT a.cod_interno,b.desc_potrero,c.desc_estancia,a.cantidad,a.fecha FROM registro_cabecera a,potrero b,estancia c " +
-        //        "where rtrim(a.cab_id_potrero)=rtrim(b.id_potrero) and rtrim(a.cab_id_estancia)=rtrim(c.id_estancia) and a.estado='A' and a.fecha='"+txt_fecha.getText().toString().trim()+"'"   ,null);
-       /* Cursor cursor_detalle=db.rawQuery("select a.cod_interno, e.desc_estancia, f.desc_potrero,a.fecha, a.cantidad,d.categoria , count(*) as CantCat, c.comprada from registro_cabecera a " +
-                "inner join animal_potrero b on a.cod_interno = b.cod_cabecera " +
-                "inner join animales_actualizados c on b.desc_animal = c.id or b.desc_animal = c.nrocaravana " +
-                "inner join categorias d on c.id_categoria = d.id_categoria " +
-                "inner join estancia e on a.cab_id_estancia = e.id_estancia inner join potrero f on a.cab_id_potrero = f.id_potrero " +
-                "group by a.cod_interno,e.desc_estancia, f.desc_potrero, a.fecha, a.cantidad, d.categoria, c.comprada"   ,null);
-*/
-
-        Cursor cursor=db.rawQuery("select " +
-                "a.cod_interno, b.desc_estancia, " +
-                "c.desc_potrero,a.fecha, " +
+        Cursor cursor=db.rawQuery("SELECT * FROM (select  codinterno,potrero,estancia,cantidad from informe_cabecera where fecha='"+txt_fecha.getText().toString().trim()+"' "+
+                " union all select " +
+                "a.cod_interno,  " +
+                "c.desc_potrero,b.desc_estancia,  " +
                 "a.cantidad " +
                 "from registro_cabecera a " +
-                 "inner join estancia b on a.cab_id_estancia = b.id_estancia " +
-                "inner join potrero c on a.cab_id_potrero = c.id_potrero and a.fecha='"+txt_fecha.getText().toString().trim()+"' "   ,null);
-
+                "inner join estancia b on a.cab_id_estancia = b.id_estancia " +
+                "inner join potrero c on a.cab_id_potrero = c.id_potrero " +
+                "and a.fecha='"+txt_fecha.getText().toString().trim()+"' and a.estado='A' ) T ORDER BY 1 ASC" ,null);
 
         while (cursor.moveToNext()){
             usuario=new Usuario();
             usuario.setNombre(cursor.getString(0));
             usuario.setPotrero(cursor.getString(1));
             usuario.setEstancia(cursor.getString(2));
-            usuario.setCantidad_animales(cursor.getString(4));
+            usuario.setCantidad_animales(cursor.getString(3));
            // usuario.setFecha(cursor.getString(4));
 
 

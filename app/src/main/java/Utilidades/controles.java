@@ -274,6 +274,7 @@ public class controles {
 
                 }
                 db3.execSQL(strSQL); }
+
         }catch(Exception e){
             mensaje_registro=e.getMessage();
             // Toast.makeText( this,e.toString(),Toast.LENGTH_LONG).show();
@@ -404,6 +405,8 @@ public class controles {
         @Override
         protected Void doInBackground(Void... params) {
             exportarAnimalesUpd();
+            importar_informeCabecera();
+            importar_informeDetalle();
             return null;
         }
         @Override
@@ -587,11 +590,13 @@ public class controles {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            MainActivity.prodialog = ProgressDialog.show(context_menuPrincipal, "SINCRONIZANDO ESTANCIAS", "ESPERE...", true);
+            MainActivity.prodialog = ProgressDialog.show(context_menuPrincipal, "SINCRONIZANDO ESTANCIAS E INFORMES", "ESPERE...", true);
         }
         @Override
         protected Void doInBackground(Void... params) {
             importar_estancias();
+            importar_informeCabecera();
+            importar_informeDetalle();
             return null;
         }
         @Override
@@ -621,6 +626,9 @@ public class controles {
     private static void importar_animales()
     {
         try {
+            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
+            db_estado.execSQL("DELETE FROM animales  ");
+            db_estado.close();
 
             SQLiteDatabase db=conSqlite.getReadableDatabase();
             ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
@@ -632,7 +640,12 @@ public class controles {
 
             while (rs.next()) {
 
-                ContentValues values=new ContentValues();
+            /*   db.execSQL("insert into animales (id ,codinterno ,nrocaravana , sexo ,color , raza , carimbo,ncmadre,ncpadre,id_categoria) " +
+                        " values ('"+rs.getString("ide")+"','"+rs.getString("codinterno")+"','"+rs.getString("nrocaravana")+"'," +
+                        "'"+rs.getString("sexo")+"','"+rs.getString("color")+"','"+rs.getString("raza")+
+                        "','"+rs.getString("carimbo")+"','"+rs.getString("ncmadre")+"','"+rs.getString("ncpadre")+"','"+rs.getString("categoria")+"')");
+*/
+               ContentValues values=new ContentValues();
                 values.put("id",rs.getString("ide"));
                 values.put("codinterno",rs.getString("codinterno"));
                 values.put("nrocaravana",rs.getString("nrocaravana"));
@@ -699,11 +712,8 @@ public class controles {
     private static void importar_animales_upd()
     {
         try {
-
-
             SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
-            String strSQL_estado = "DELETE FROM animales_actualizados  WHERE   estado = 'C'";
-            db_estado.execSQL(strSQL_estado);
+            db_estado.execSQL("DELETE FROM animales_actualizados  WHERE   estado = 'C'");
             db_estado.close();
 
             SQLiteDatabase db=conSqlite.getReadableDatabase();
@@ -728,8 +738,14 @@ public class controles {
                 values.put("comprada",rs.getString("comprada"));
                 values.put("estado","C");
                 db.insert("animales_actualizados", "id",values);
+
+                /*db.execSQL("insert into animales_actualizados (id ,id_sincro ,nrocaravana , sexo ,color , raza , carimbo,id_categoria,comprada,estado) " +
+                        " values ('"+rs.getString("ide")+"','"+rs.getString("codinterno")+"','"+rs.getString("nrocaravana")+"'," +
+                        "'"+rs.getString("sexo")+"','"+rs.getString("color")+"','"+rs.getString("raza")+
+                        "','"+rs.getString("carimbo")+"','"+rs.getString("categoria")+"','"+rs.getString("comprada")+"','C')");
+*/
                 c++;
-                MainActivity.prodialog.setProgress(c);
+                MainActivity.ProDialogSincro.setProgress(c);
             }
 
             db.close();
@@ -858,4 +874,73 @@ public class controles {
         }}
 
 
+    private static void importar_informeCabecera()
+    {
+        try {
+            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
+            String strSQL_estado = "DELETE FROM informe_cabecera      ";
+            db_estado.execSQL(strSQL_estado);
+            db_estado.close();
+
+            SQLiteDatabase db=conSqlite.getReadableDatabase();
+            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
+            connect = conexion.Connections();
+            Statement stmt = connect.createStatement();
+            ResultSet rs = stmt.executeQuery("select *  from  app_v_cabecera_recuento where mac='"+macAddress+"'");
+            int c=0;
+            while (rs.next()) {
+                db.execSQL("insert into informe_cabecera (id ,codinterno ,fecha , estancia ,potrero , cantidad , mac ) " +
+                " values ('"+rs.getString("id")+"','"+rs.getString("cod_interno")+"','"+rs.getString("fecha")+"'," +
+                "'"+rs.getString("descEstancia")+"','"+rs.getString("nombrePotrero")+"','"+rs.getString("cantidad")+"','"+rs.getString("mac")+"')");
+             }
+            mensaje_registro="INFORMES SINCRONIZADOS.";
+            db.close();
+            rs.close();
+
+
+        }catch(Exception e){
+            mensaje_registro=e.getMessage();
+        }}
+
+    private static void importar_informeDetalle()
+    {
+        try {
+            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
+            String strSQL_estado = "DELETE FROM informe_detalle      ";
+            db_estado.execSQL(strSQL_estado);
+            db_estado.close();
+
+            SQLiteDatabase db=conSqlite.getReadableDatabase();
+            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
+            connect = conexion.Connections();
+            Statement stmt = connect.createStatement();
+            ResultSet rs = stmt.executeQuery("select *  from  app_v_detalle_recuento where mac='"+macAddress+"'");
+
+            int c=0;
+
+            while (rs.next()) {
+
+                ContentValues values=new ContentValues();
+                values.put("codInterno",rs.getString("codInterno"));
+                values.put("id_cabecera",rs.getString("id_cabecera"));
+                values.put("nrocaravana",rs.getString("nrocaravana"));
+                values.put("ide",rs.getString("ide"));
+                values.put("color",rs.getString("color"));
+                values.put("raza",rs.getString("raza"));
+                values.put("carimbo",rs.getString("carimbo"));
+                values.put("categoria",rs.getString("categoria"));
+                values.put("comprada",rs.getString("comprada"));
+
+                db.insert("informe_detalle", null,values);
+              /*  c++;
+                MainActivity.ProDialogSincro.setProgress(c);*/
+            }
+            mensaje_registro="ANIMALES SINCRONIZADOS.";
+            db.close();
+            rs.close();
+
+
+        }catch(Exception e){
+            mensaje_registro=e.getMessage();
+        }}
 }

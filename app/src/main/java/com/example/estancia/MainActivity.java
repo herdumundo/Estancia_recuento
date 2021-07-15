@@ -31,9 +31,7 @@ import Utilidades.Utilidades;
 
 public class MainActivity extends AppCompatActivity {
     public static ProgressDialog prodialog,progress,ProDialogExport,ProDialogSincro;
-
     Connection connect;
-    //ConexionSQLiteHelper conn;
     Button btn_movimiento,btn_sincro,btn_potrero;
     String contador_animales="";
     String contador_animales_upd="";
@@ -104,8 +102,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void importar_colores   ()  {
         try {
-
-
             SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
             ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
             connect = conexion.Connections();
@@ -127,8 +123,6 @@ public class MainActivity extends AppCompatActivity {
         }}
     private void importar_raza      ()  {
     try {
-
-
         SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
         connect = conexion.Connections();

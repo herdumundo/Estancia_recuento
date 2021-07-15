@@ -45,26 +45,28 @@
                 <TextView
                     android:id="@+id/text2"
                     android:layout_width="match_parent"
-                    app:autoSizeMaxTextSize="15sp"
-                    app:autoSizeMinTextSize="5sp"
-                    app:autoSizeStepGranularity="2sp"
-                    app:autoSizeTextType="uniform"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tvName"
                     android:layout_marginTop="10dp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:autoSizeMaxTextSize="15sp"
+                    app:autoSizeMinTextSize="5sp"
+                    app:autoSizeStepGranularity="2sp"
+                    app:autoSizeTextType="uniform" />
 
                 <TextView
                     android:id="@+id/text3"
                     android:layout_width="match_parent"
-                    app:autoSizeMaxTextSize="15sp"
-                    app:autoSizeMinTextSize="5sp"
-                    app:autoSizeStepGranularity="2sp"
-                    app:autoSizeTextType="uniform"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/tvName"
                     android:layout_marginTop="10dp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:autoSizeMaxTextSize="15sp"
+                    app:autoSizeMinTextSize="5sp"
+                    app:autoSizeStepGranularity="2sp"
+                    app:autoSizeTextType="uniform" />
 
                 <TextView
                     android:id="@+id/text4"
@@ -73,6 +75,7 @@
                     android:layout_below="@+id/tvName"
                     android:layout_marginTop="10dp"
                     android:textColor="@color/white"
+                    android:textStyle="bold"
                     app:autoSizeMaxTextSize="15sp"
                     app:autoSizeMinTextSize="5sp"
                     app:autoSizeStepGranularity="2sp"

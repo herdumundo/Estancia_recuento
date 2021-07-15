@@ -35,7 +35,7 @@ public class login2 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login2);
+        setContentView(R.layout.scrollogin);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         btn_sincro=(Button)findViewById(R.id.btn_sincronizar);
         btn_login=(Button)findViewById(R.id.btn_login);
@@ -143,9 +143,9 @@ public class login2 extends AppCompatActivity {
                 values.put(Utilidades.CAMPO_NOMBRE,nombre.toString());
                 values.put(Utilidades.CAMPO_USER,usuario.toString());
                 values.put(Utilidades.CAMPO_PASS,pass.toString().trim());
-                Long idResultante=db.insert(Utilidades.TABLA_USUARIO, Utilidades.CAMPO_ID_USUARIO,values);
+               db.insert(Utilidades.TABLA_USUARIO, Utilidades.CAMPO_ID_USUARIO,values);
             }
-            db.close();
+         //   db.close();
         }catch(Exception e){
         }}
 
