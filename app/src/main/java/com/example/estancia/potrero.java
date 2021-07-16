@@ -2,7 +2,10 @@ package com.example.estancia;
 
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PorterDuff;
@@ -25,13 +28,15 @@ import java.util.ArrayList;
 import Utilidades.controles;
 import Utilidades.Utilidades;
 import entidades.Usuario;
+import maes.tech.intentanim.CustomIntent;
 
 public class potrero extends AppCompatActivity {
     EditText id_estancia,desc_potrero;
     Spinner Combo_estancia;
     ArrayList<String> lista_estancia;
     ArrayList<Usuario> EstanciaList;
-
+    public static   AlertDialog.Builder builder;
+    public static   AlertDialog ad;
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +62,21 @@ public class potrero extends AppCompatActivity {
     }
 
     public void onClick(View view) {
-        registrarPotrero();
+
+        if(desc_potrero.getText().length()==0){
+            builder = new android.app.AlertDialog.Builder(potrero.this);
+            builder.setIcon(potrero.this.getResources().getDrawable(R.drawable.ic_warning));
+            builder.setTitle("¡Atención!");
+            builder.setMessage("Campo potrero no debe quedar vacìo.");
+
+            builder.setNegativeButton("Cerrar",null);
+            ad = builder.show();
+             ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(potrero.this.getResources().getColor(R.color.colorPrimaryDark));
+             ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+        }
+        else {
+            registrarPotrero();
+        }
     }
 
     private void registrarPotrero() {
@@ -68,20 +87,23 @@ public class potrero extends AppCompatActivity {
 
         SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         ContentValues values=new ContentValues();
-        //values.put(Utilidades.CAMPO_ID_ESTANCIA_FK,id_estancia.getText().toString());
-       /* values.put(Utilidades.CAMPO_ID_ESTANCIA_FK,posicion_estancia.toString());
-        values.put(Utilidades.CAMPO_ID_POTRERO,"529");
-        values.put(Utilidades.CAMPO_DESC_POTRERO,"");*/
-        values.put(Utilidades.CAMPO_ID_ESTANCIA_FK,posicion_estancia.toString().trim());
-        //values.put(Utilidades.CAMPO_ID_POTRERO,"529");
-        values.put(Utilidades.CAMPO_DESC_POTRERO,desc_potrero.getText().toString());
-
-        //values.put(ConexionSQLiteHelper.Utilidades.CAMPO_ID,usuario.getId().toString());
-        Long idResultante=db.insert(Utilidades.TABLA_POTRERO,Utilidades.CAMPO_ID_POTRERO,values);
-
-        Toast.makeText(getApplicationContext(),"Id Registro: "+idResultante,Toast.LENGTH_LONG).show();
-
+        values.put("id_estancia",posicion_estancia.toString().trim());
+        values.put("desc_potrero",desc_potrero.getText().toString());
+        db.insert("potrero","id_potrero",values);
         db.close();
+
+        builder = new android.app.AlertDialog.Builder(potrero.this);
+        builder.setIcon(potrero.this.getResources().getDrawable(R.drawable.ic_warning));
+        builder.setTitle("¡Atención!");
+        builder.setMessage("Registrado con èxito.");
+
+        builder.setNegativeButton("Cerrar",null);
+        ad = builder.show();
+        ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(potrero.this.getResources().getColor(R.color.colorPrimaryDark));
+        ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+
+        desc_potrero.setText("");
+        desc_potrero.requestFocus();
     }
 
     private void consultarestancia() {

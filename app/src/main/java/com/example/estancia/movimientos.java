@@ -7,7 +7,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.ContentValues;
-import android.content.Context;
+import Utilidades.OnSpinerItemClick;
 import Utilidades.controles;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -64,11 +64,18 @@ import entidades.Raza;
 import me.aflak.bluetooth.Bluetooth;
 
 public class movimientos extends AppCompatActivity implements Bluetooth.CommunicationCallback {
+    public static   ArrayList<String> arrIdEstancia         =   new ArrayList<>();
+    public static   ArrayList<String> arrDescEstancia =   new ArrayList<>();
+    public static   ArrayList<String> arrIdPotrero         =   new ArrayList<>();
+    public static   ArrayList<String> arrDescPotrero =   new ArrayList<>();
+
+
+
     String variable_sexo="";
     String variable_comprada="";
-    Spinner Combo_estancia,Combo_potrero;
-    TextView txt_cod_animal,txt_cantidad,txt_fecha;
-   // ConexionSQLiteHelper conn;
+    Spinner Combo_potrero;
+    TextView txt_cod_animal,txt_cantidad,txt_fecha,txtCodPotrero,txtDescPotrero,txtDescEstancia,txtCodEstancia;
+    public static   SpinnerDialog  SpEstancia,SpPotrero;
     ArrayList<String> lista_estancia;
     ArrayList<Usuario> EstanciaList;
     ArrayList<Categoria> CategoriaList;
@@ -86,12 +93,9 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     private ListView ListView;
     Button cargar,registrar;
     DatePickerDialog picker;
-    SearchableSpinner spinner_estancia,spinner_potrero;
     private String name;
     private Bluetooth Bluetooth;
-    String variable_estancia="0";
-    String variable_potrero="0";
-    String posicion_fila_lv2="";
+      String posicion_fila_lv2="";
     String codigo_text="";//String para almacenar el codigo que recupera del lector
     TextView txt_compra_si,txt_compra_no;
     @Override
@@ -111,13 +115,18 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         txt_cod_animal=(TextView) findViewById(R.id.txt_cod_animal);
         txt_compra_si=(TextView) findViewById(R.id.txt_compra_si);
         txt_compra_no=(TextView) findViewById(R.id.txt_compra_no);
-        Combo_estancia= (Spinner) findViewById(R.id.spinner_estancia);
+      //  Combo_estancia= (Spinner) findViewById(R.id.spinner_estancia);
         txt_cantidad=(TextView)findViewById(R.id.txt_cantidad);
-        Combo_potrero=(Spinner)findViewById(R.id.spinner_potrero);
+        txtDescEstancia=(TextView)findViewById(R.id.TxtDescEstancia);
+        txtCodEstancia=(TextView)findViewById(R.id.TxtCodEstancia);
+        txtCodPotrero=(TextView)findViewById(R.id.TxtCodPotrero);
+        txtDescPotrero=(TextView)findViewById(R.id.TxtDescPotrero);
+
+      //  Combo_potrero=(Spinner)findViewById(R.id.spinner_potrero);
         cargar=(Button)findViewById(R.id.btn_cargar);
         registrar=(Button)findViewById(R.id.btn_registrar);
-        spinner_potrero=(SearchableSpinner)findViewById(R.id.spinner_potrero);
-        spinner_estancia=(SearchableSpinner)findViewById(R.id.spinner_estancia);
+     //   spinner_potrero=(SearchableSpinner)findViewById(R.id.spinner_potrero);
+       // spinner_estancia=(SearchableSpinner)findViewById(R.id.spinner_estancia);
 
         ListView = (ListView) findViewById(R.id.listView);
         Bluetooth = new Bluetooth(this);
@@ -166,11 +175,6 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
         consulta_carga_animales_upd();
 
-        spinner_estancia.setTitle("SELECCIONAR ESTANCIA");
-        spinner_estancia.setPositiveButton("CERRAR");
-        spinner_potrero.setTitle("SELECCIONAR POTRERO");
-        spinner_potrero.setPositiveButton("CERRAR");
-
 
         txt_cantidad.setText(String.valueOf(ListView.getCount()));
        // conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
@@ -183,33 +187,9 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         }
 
 
-        ArrayAdapter<CharSequence> adaptador=new ArrayAdapter (this,R.layout.spinner_item,lista_estancia);
-        Combo_estancia.setAdapter(adaptador);
-        Combo_estancia.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
-        {
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
-                variable_estancia="1";//SI LA VARIABLE ES IGUAL A 1 ENTONCES SIGNIFICA QUE SE SELECCIONO ESTANCIA, SI LA VARIABLE
-                //ES CERO SIGNIFICA QUE NO SE SELECCIONO ESTANCIA
-                consultarpotrero();
-            }
-            public void onNothingSelected(AdapterView<?> parent)
-            {
 
-            }
-        });
-        Combo_potrero.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {
-                variable_potrero="1";//SI LA VARIABLE ES IGUAL A 1 ENTONCES SIGNIFICA QUE SE SELECCIONO POTRERO, SI LA VARIABLE
-                //ES CERO SIGNIFICA QUE NO SE SELECCIONO POTRERO
-            }
-            public void onNothingSelected(AdapterView<?> parent)
-            {
 
-            }
-        });
-  /*    txt_cod_animal.setOnKeyListener(new View.OnKeyListener()
+      txt_cod_animal.setOnKeyListener(new View.OnKeyListener()
         {
             public boolean onKey(View v, int keyCode, KeyEvent event)
             {
@@ -232,14 +212,12 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                                 myCustomToast.setGravity(Gravity.CENTER, 0, 0);
                                 myCustomToast.show();
                             }
-                            else
-                            {
+                            else {
                                 if(txt_cod_animal.getText().length()>=23){
-
-                                    SQLiteDatabase db_consulta=conn.getReadableDatabase();
+                                    SQLiteDatabase db_consulta=controles.conSqlite.getReadableDatabase();
                                     Cursor cursor_consulta=db_consulta.rawQuery("SELECT count(*) from animales_actualizados where id='"+txt_cod_animal.getText().toString()+"' and estado in ('A','C')"   ,null);
-
-                                    while (cursor_consulta.moveToNext()){
+                                    while (cursor_consulta.moveToNext())
+                                    {
                                         contador=cursor_consulta.getString(0);
                                     }
                                     if (contador.equals("0"))
@@ -254,28 +232,24 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                                         myCustomToast.setCustomMessageTextColor(Color.BLACK);
                                         myCustomToast.setCustomMessageIcon(R.drawable.ic_warning, MyCustomToast.POSITION_LEFT);
                                         myCustomToast.setCustomMessageBackgroundDrawable(R.drawable.error_message_background);
-
                                         myCustomToast.setCustomMessageIconColor(Color.BLACK);
                                         myCustomToast.show();
-                                         txt_cod_animal.setText("");
+                                        txt_cod_animal.setText("");
                                     }
 
                                 }
-
                                 else
                                 {
                                     posicion_fila_lv2= String.valueOf(ListView.getCount());
                                     cargar_grilla_boton();
-
                                     txt_cod_animal.setText("");
-
                                 }
                             }
                     }
                 }
                 return false;
             }
-        });*/
+        });
 
         cargar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -350,7 +324,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
                 }
 
-                else if (variable_estancia.equals("0")){
+                else if (txtCodEstancia.getText().toString().length()==0){
                     new AlertDialog.Builder(movimientos.this)
                             .setTitle("ATENCION!!!")
                             .setMessage("ERROR, DEBE SELECCIONAR ESTANCIA")
@@ -358,7 +332,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
                 }
 
-                else if (variable_potrero.equals("0")){
+                else if (txtCodPotrero.getText().toString().length()==0){
                     new AlertDialog.Builder(movimientos.this)
                             .setTitle("ATENCION!!!")
                             .setMessage("ERROR, DEBE SELECCIONAR POTRERO")
@@ -469,59 +443,67 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
             }
         });
     }
-    private void consultarEstancias() {
+    private void consultarEstancias()
+    {
         SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
-        Usuario Estancia=null;
-        EstanciaList =new ArrayList<Usuario>();
+        arrDescEstancia.clear();
+        arrIdEstancia.clear();
         Cursor cursor=db.rawQuery("SELECT * FROM "+ Utilidades.TABLA_ESTANCIA,null);
-        while (cursor.moveToNext()){
-            Estancia=new Usuario();
-            Estancia.setId(cursor.getString(0));
-            Estancia.setNombre(cursor.getString(1));
-            Log.i("id",Estancia.getId().toString());
-            Log.i("Nombre",Estancia.getNombre());
-            EstanciaList.add(Estancia);
-        }
-        obtenerLista();
-    }
-    private void obtenerLista()
-    {
-        lista_estancia=new ArrayList<String>();
-        for(int i=0;i<EstanciaList.size();i++)
+        while (cursor.moveToNext())
         {
-            lista_estancia.add(EstanciaList.get(i).getId()+" - "+EstanciaList.get(i).getNombre());
+            arrIdEstancia.add(cursor.getString(0));
+            arrDescEstancia.add(cursor.getString(1));
         }
+        SpEstancia = new SpinnerDialog(this,arrDescEstancia,"Listado de estancias");
+        txtDescEstancia.setOnClickListener(new View.OnClickListener() {  @Override
+        public void onClick(View v)
+        {
+            SpEstancia.showSpinerDialog();
+        } } );
+        SpEstancia.bindOnSpinerListener(new  OnSpinerItemClick() {
+            @Override
+            public void onClick(String s, int i)
+            {
+                txtCodEstancia.setText(arrIdEstancia.get(i));
+                txtDescEstancia.setText(arrDescEstancia.get(i));
+                txtCodPotrero.setText("");
+                txtDescPotrero.setText("");
+                arrDescPotrero.clear();
+                arrIdPotrero.clear();
+                consultarpotrero(arrIdEstancia.get(i));
+            }
+        });
     }
-    private void consultarpotrero()
+
+    private void consultarpotrero(String idEstancia)
     {
-        String posicion;
-        String itemText = (String) Combo_estancia.getSelectedItem();
-        String array []= itemText.split("-");
-        posicion=array[0];
+
         SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
-        Usuario Potrero=null;
-        PotreroList =new ArrayList<Usuario>();
-        Cursor cursor=db.rawQuery("SELECT * FROM potrero  where id_estancia = '"+posicion.trim()+"'",null);
-        while (cursor.moveToNext()){
-            Potrero=new Usuario();
-            Potrero.setId(cursor.getString(0));
-            Potrero.setNombre(cursor.getString(2));
-            Log.i("id",Potrero.getId().toString());
-            Log.i("Nombre",Potrero.getNombre());
-            PotreroList.add(Potrero);
+        Cursor cursor=db.rawQuery("SELECT * FROM potrero  where id_estancia = '"+idEstancia.trim()+"'",null);
+        while (cursor.moveToNext())
+        {
+            arrIdPotrero.add(cursor.getString(0));
+            arrDescPotrero.add(cursor.getString(2));
         }
-        obtenerListaPotrero();
+        SpPotrero = new SpinnerDialog(this,arrDescPotrero,"Listado de potreros");
+
+        txtDescPotrero.setOnClickListener(new View.OnClickListener() {  @Override
+        public void onClick(View v) {
+            SpPotrero.showSpinerDialog();
+        } } );
+        SpPotrero.bindOnSpinerListener(new  OnSpinerItemClick() {
+            @Override
+            public void onClick(String s, int i)
+            {
+                txtCodPotrero.setText(arrIdPotrero.get(i));
+                txtDescPotrero.setText(arrDescPotrero.get(i));
+                      }
+        });
+
+
+
     }
-    private void obtenerListaPotrero()
-    {
-        lista_potrero=new ArrayList<String>();
-        for(int i=0;i<PotreroList.size();i++)   {
-            lista_potrero.add(PotreroList.get(i).getId()+" - "+PotreroList.get(i).getNombre());
-        }
-        ArrayAdapter<CharSequence> adaptador2=new ArrayAdapter (this,R.layout.spinner_item,lista_potrero);
-        Combo_potrero.setAdapter(adaptador2);
-    }
-    ////////////////////////////////////////////////////////
+
     private void cargar_grilla_lector(){
         String trigger="1";
         String par="";
@@ -645,12 +627,8 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         txt_cod_animal.requestFocus();
     }
     private void registrar (){
-        String idPotrero;
-        String idEstancia;
-        String arrayPotrero []= Combo_potrero.getSelectedItem().toString().split("-");
-        idPotrero=arrayPotrero[0];
-        String arrayEstancia []= Combo_estancia.getSelectedItem().toString().split("-");
-        idEstancia=arrayEstancia[0];
+
+
         SQLiteDatabase db1=controles.conSqlite.getReadableDatabase();
         ContentValues valor_cab=new ContentValues();
         Cursor cursor1=db1.rawQuery("SELECT  case  when count(*) = 0 then 1 else max(cod_interno) +1  end as d FROM  registro_cabecera " ,null);
@@ -674,8 +652,8 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         valor_cab.put(Utilidades.CAMPO_CABECERA_ID,idCabecera);
         valor_cab.put(Utilidades.CAMPO_FECHA,txt_fecha.getText().toString());
         valor_cab.put(Utilidades.CAMPO_CABECERA_CANTIDAD,txt_cantidad.getText().toString());
-        valor_cab.put(Utilidades.CAMPO_CABECERA_ID_POTRERO,idPotrero);
-        valor_cab.put(Utilidades.CAMPO_CABECERA_ID_ESTANCIA,idEstancia);
+        valor_cab.put(Utilidades.CAMPO_CABECERA_ID_POTRERO,txtCodPotrero.getText().toString());
+        valor_cab.put(Utilidades.CAMPO_CABECERA_ID_ESTANCIA,txtCodEstancia.getText().toString());
         valor_cab.put(Utilidades.CAMPO_CABECERA_ESTADO,"A");
         db1.insert(Utilidades.TABLA_CABECERA_AP,Utilidades.CAMPO_CABECERA_ID,valor_cab);
         db1.close();
@@ -693,11 +671,11 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
             SQLiteDatabase db=controles.conSqlite.getWritableDatabase();
             ContentValues values=new ContentValues();
-            values.put(Utilidades.CAMPO_ID_CABECERA,idCabecera);
-            values.put(Utilidades.CAMPO_DESC_ANIMAL,identificadorAnimal);
-            values.put(Utilidades.CAMPO_ID_POTRERO_ANIMAL,idPotrero);
-            values.put(Utilidades.CAMPO_DETALLE_ESTADO,"A");
-            db.insert(Utilidades.TABLA_ANIMAL_POTRERO,Utilidades.CAMPO_ID_POTRERO_ANIMAL,values);
+            values.put("cod_cabecera",idCabecera);
+            values.put("desc_animal",identificadorAnimal);
+            values.put("id_potrero",txtCodPotrero.getText().toString());
+            values.put("estado","A");
+            db.insert("animal_potrero",null,values);
             db.close();
 
             if(listInsertAnimal.get(i).getId().length()<1)
@@ -741,59 +719,10 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         contar_compradas();
     }
 
- /*   private class MyListAdaper extends ArrayAdapter<String> {
-        private int layout;
-        private List<String> mObjects;
-        private MyListAdaper(Context context, int resource, List<String> objects) {
-            super(context, resource, objects);
-            mObjects = objects;
-            layout = resource;
-        }
 
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            movimientos.ViewHolder mainViewholder = null;
-            if(convertView == null)
-            {
-                LayoutInflater inflater = LayoutInflater.from(getContext());
-                convertView = inflater.inflate(layout, parent, false);
-                movimientos.ViewHolder viewHolder = new movimientos.ViewHolder();
-                viewHolder.title = (TextView) convertView.findViewById(R.id.list_item_text);
-                viewHolder.button = (Button) convertView.findViewById(R.id.list_item_btn);
-                convertView.setTag(viewHolder);
-            }
-            mainViewholder = (movimientos.ViewHolder) convertView.getTag();
-            mainViewholder.button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new AlertDialog.Builder(movimientos.this)
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setTitle("ELIMINAR.")
-                            .setMessage("DESEA QUITAR DE LA FILA?." )
-                            .setPositiveButton("SI", new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    eliminar_fila(position);
-                                    txt_cantidad.setText(String.valueOf(ListView.getCount()));
-                                }
-                            })
-                            .setNegativeButton("NO", null)
-                            .show();
-                }
-            });
-            mainViewholder.title.setText(getItem(position));
-            return convertView;
-        }
-    }
-*/
-    public class ViewHolder
-    {
-        TextView title;
-        Button button;
-    }
 
-    private void ir_cuadro(String cod_animal,String pos,final int indicadorModificarInsertar){ // SI EL INDICADOR =0(EN UN INSERT DE REGISTRO, =1 (ES UNA MODIFICACION DE LA GRILLA.))
+    private void ir_cuadro(String cod_animal,String pos,final int indicadorModificarInsertar)
+    { // SI EL INDICADOR =0(EN UN INSERT DE REGISTRO, =1 (ES UNA MODIFICACION DE LA GRILLA.))
         final android.support.v7.app.AlertDialog.Builder mBuilder = new android.support.v7.app.AlertDialog.Builder(movimientos.this);
         final View mView = getLayoutInflater().inflate(R.layout.buscar_item, null);
         final SearchableSpinner spinner_categoria=(SearchableSpinner)mView.findViewById(R.id.spinner_categoria);

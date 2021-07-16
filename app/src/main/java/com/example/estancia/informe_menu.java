@@ -22,9 +22,9 @@ import java.util.ArrayList;
 
 import Utilidades.controles;
 import entidades.Usuario;
+import maes.tech.intentanim.CustomIntent;
 
 public class informe_menu extends AppCompatActivity {
- //   ConexionSQLiteHelper conn;
     Button btn_cant_animales,btn_detalle_registro,btn_pendientes,btn_animales;
     TextView txt_cant_animales,txt_cant_animales2;
     @SuppressLint("NewApi")
@@ -82,42 +82,39 @@ public class informe_menu extends AppCompatActivity {
         consulta_animales();
     }
 
-
-
     @Override
     public void onBackPressed() {
+        Utilidades.controles.volver_atras(this,this, MainActivity.class,"",4);
 
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        startActivity(intent);
-         finish();
 
     }
+
     private void ir_informe_conteo (){
         Intent i=new Intent(this,ListviewActivity.class);
         startActivity(i);
+        CustomIntent.customType(this,"left-to-right");
     }
 
     private void ir_informe_recuento (){
         Intent i=new Intent(this,informe_recuento.class);
         startActivity(i);
+        CustomIntent.customType(this,"left-to-right");
     }
-
 
     private void ir_pendientes (){
         Intent i=new Intent(this,envios_pendientes.class);
         startActivity(i);
+        CustomIntent.customType(this,"left-to-right");
     }
 
     private void ir_lista_animales_actualizados(){
 
         Intent i=new Intent(this,lista_animales_actualizados.class);
         startActivity(i);
-
+        CustomIntent.customType(this,"left-to-right");
     }
 
-    private  void consulta_animales(){
+    private void consulta_animales(){
          //Toast.makeText(this, posicion, Toast.LENGTH_SHORT).show();
         SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
          String contador="";
@@ -130,9 +127,7 @@ public class informe_menu extends AppCompatActivity {
         txt_cant_animales.setText(contador);
                                         }
 
-
-
-    private  void consulta_animales_upd(){
+    private void consulta_animales_upd(){
         //Toast.makeText(this, posicion, Toast.LENGTH_SHORT).show();
         SQLiteDatabase db2=controles.conSqlite.getReadableDatabase();
         String contador="";

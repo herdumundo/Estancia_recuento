@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".informe_recuento">
+    >
 
     <ListView
         android:id="@+id/listPendientes"
@@ -15,7 +15,7 @@
         android:layout_marginTop="54dp" />
 
     <TextView
-        android:id="@+id/textView23"
+        android:id="@+id/txtInforme"
         android:layout_width="298dp"
         android:layout_height="31dp"
         android:layout_alignParentStart="true"

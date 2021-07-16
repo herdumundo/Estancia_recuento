@@ -1,15 +1,22 @@
 package com.example.estancia;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -44,11 +51,9 @@ public class informe_recuento extends AppCompatActivity {
     Button btn_buscar;
     @Override
     public void onBackPressed() {
-        finish();
-        Intent List = new Intent(getApplicationContext(), informe_menu.class);
-        startActivity(List);
-
+         Utilidades.controles.volver_atras(this,this, informe_menu.class,"",4);
     }
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,6 +150,16 @@ public class informe_recuento extends AppCompatActivity {
 
             }
         });
+
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //bellow setSupportActionBar(toolbar);
+        getSupportActionBar().setCustomView(R.layout.customactionbar);
+        TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
+        txtActionbar.setText("ANIMALES INVENTARIADOS.");
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
+        this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
 
 
@@ -267,4 +282,15 @@ public class informe_recuento extends AppCompatActivity {
 
     }
 
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Utilidades.controles.volver_atras(this,this, informe_menu.class,"",4);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+
+    }
 }

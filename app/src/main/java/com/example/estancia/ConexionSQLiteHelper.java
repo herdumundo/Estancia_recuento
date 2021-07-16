@@ -10,7 +10,7 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
     public ConexionSQLiteHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
     public static final String DATABASE_NAME = "GANBONE.db";
 
     public ConexionSQLiteHelper(Context context) {
@@ -22,8 +22,8 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
     {
         db.execSQL(Utilidades.CREAR_TABLA_USUARIO);
         db.execSQL(Utilidades.CREAR_TABLA_ESTANCIA);
-        db.execSQL(Utilidades.CREAR_TABLA_POTRERO);
-        db.execSQL(Utilidades.CREAR_TABLA_ANIMAL_POTRERO);
+        db.execSQL("CREATE TABLE potrero (id_potrero  INTEGER PRIMARY KEY AUTOINCREMENT, id_estancia TEXT,desc_potrero TEXT )");
+        db.execSQL("CREATE TABLE animal_potrero (id_potrero  TEXT, desc_animal TEXT , cod_cabecera TEXT , estado TEXT )");
         db.execSQL(Utilidades.CREAR_TABLA_CABECERA);
         db.execSQL(Utilidades.CREAR_TABLA_ANIMALES);
         db.execSQL(Utilidades.CREAR_TABLA_COLOR);
@@ -40,8 +40,8 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int versionAntigua, int versionNueva) {
         db.execSQL("DROP TABLE IF EXISTS "+Utilidades.TABLA_USUARIO);
         db.execSQL("DROP TABLE IF EXISTS "+ Utilidades.TABLA_ESTANCIA);
-        db.execSQL("DROP TABLE IF EXISTS "+Utilidades.TABLA_POTRERO);
-        db.execSQL("DROP TABLE IF EXISTS "+Utilidades.TABLA_ANIMAL_POTRERO);
+        db.execSQL("DROP TABLE IF EXISTS potrero");
+        db.execSQL("DROP TABLE IF EXISTS animal_potrero");
         db.execSQL("DROP TABLE IF EXISTS "+Utilidades.TABLA_CABECERA_AP);
         db.execSQL("DROP TABLE IF EXISTS animales");
         db.execSQL("DROP TABLE IF EXISTS color");

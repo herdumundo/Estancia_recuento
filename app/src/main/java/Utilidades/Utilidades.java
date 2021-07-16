@@ -8,16 +8,10 @@ public class Utilidades {
     public static final String CAMPO_DESC_ESTANCIA="desc_estancia";
 
     //////////////////////////////////////////////////////
-    public static final String TABLA_POTRERO="potrero";
-    public static final String CAMPO_ID_POTRERO="id_potrero";
-    public static final String CAMPO_ID_ESTANCIA_FK="id_estancia";
-    public static final String CAMPO_DESC_POTRERO="desc_potrero";
-    /////////////////////////////////////////////////////////////////////////////
-    public static final String TABLA_ANIMAL_POTRERO="animal_potrero";
-    public static final String CAMPO_ID_POTRERO_ANIMAL="id_potrero";
-    public static final String CAMPO_DESC_ANIMAL="desc_animal";
-    public static final String CAMPO_ID_CABECERA="cod_cabecera";
-    public static final String CAMPO_DETALLE_ESTADO="estado";
+
+     /////////////////////////////////////////////////////////////////////////////
+
+
     ///////////////////////////////////////////////////////////////////////////////
     public static final String TABLA_CABECERA_AP="registro_cabecera";
     public static final String CAMPO_CABECERA_ID="cod_interno";
@@ -37,12 +31,8 @@ public class Utilidades {
             ""+TABLA_ESTANCIA+" ("+CAMPO_ID_ESTANCIA+"  INTEGER PRIMARY KEY, "+CAMPO_DESC_ESTANCIA+" TEXT)";
 
 
-    public static final String CREAR_TABLA_POTRERO="CREATE TABLE " + TABLA_POTRERO+" ("+CAMPO_ID_POTRERO+" " +
-            "INTEGER PRIMARY KEY AUTOINCREMENT, "+CAMPO_ID_ESTANCIA_FK+" TEXT,"+CAMPO_DESC_POTRERO+" TEXT )";
 
 
-    public static final String CREAR_TABLA_ANIMAL_POTRERO="CREATE TABLE " + TABLA_ANIMAL_POTRERO+" ("+CAMPO_ID_POTRERO_ANIMAL+" " +
-            "TEXT, "+CAMPO_DESC_ANIMAL+" TEXT , "+CAMPO_ID_CABECERA+" TEXT , "+CAMPO_DETALLE_ESTADO+" TEXT  )";
 
 
     public static final String CREAR_TABLA_CABECERA="CREATE TABLE " + TABLA_CABECERA_AP+" ("+CAMPO_CABECERA_ID+" " +

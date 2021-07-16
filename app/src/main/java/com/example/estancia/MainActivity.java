@@ -28,6 +28,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import Utilidades.Utilidades;
+import maes.tech.intentanim.CustomIntent;
 
 public class MainActivity extends AppCompatActivity {
     public static ProgressDialog prodialog,progress,ProDialogExport,ProDialogSincro;
@@ -39,25 +40,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("NewApi")
     @Override
     public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("ATENCION!!!.")
-                .setMessage("DESEA CERRAR SESION.")
-                .setPositiveButton("SI", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        Intent intent = new Intent(getApplicationContext(), login2.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-
-                    }
-
-                })
-                .setNegativeButton("NO", null)
-                .show();
+        controles.volver_atras(this,this, login2.class,"¿Desea cerrar sesiòn?",1);
     }
     @SuppressLint("NewApi")
     @Override
@@ -243,10 +226,10 @@ public class MainActivity extends AppCompatActivity {
                 id_estancia_fk= rs.getString("CODEST");
                 descripcion= rs.getString("POTRERO");
                 ContentValues values=new ContentValues();
-                values.put(Utilidades.CAMPO_ID_POTRERO,id.toString());
-                values.put(Utilidades.CAMPO_ID_ESTANCIA_FK,id_estancia_fk.toString());
-                values.put(Utilidades.CAMPO_DESC_POTRERO,descripcion.toString());
-                Long idResultante=db.insert(Utilidades.TABLA_POTRERO, Utilidades.CAMPO_ID_POTRERO,values);
+                values.put("id_potrero",id.toString());
+                values.put("id_estancia",id_estancia_fk.toString());
+                values.put("desc_potrero",descripcion.toString());
+                db.insert("potrero",null,values);
             }
             db.close();
             new AlertDialog.Builder(MainActivity.this)
@@ -470,31 +453,41 @@ public class MainActivity extends AppCompatActivity {
     public void     click_visor(View view) {
         Intent i=new Intent(this,informe_menu.class);
         startActivity(i);
+        CustomIntent.customType(this,"left-to-right");
+
     }
     public void     onClick_export(View view) {
         controles.ConfirmarExport();
     }
-    public  void sincronizarEstancia(View view){
+    public  void    sincronizarEstancia(View view){
         controles.ConfirmarSincro();
     }
     private void    ir_registro_estancia(){
         Intent i=new Intent(this,registrar_estancia.class);
         startActivity(i);
+        CustomIntent.customType(this,"left-to-right");
+
     }
     private void    ir_registro_potrero(){
         Intent i=new Intent(this,potrero.class);
         startActivity(i);
+        CustomIntent.customType(this,"left-to-right");
+
     }
     private void    ir_movimiento(){
 
         Intent i=new Intent(this,Select_blu.class);
         startActivity(i);
+        CustomIntent.customType(this,"left-to-right");
+
 
     }
     private void    ir_potrero(){
 
         Intent i=new Intent(this,potrero.class);
         startActivity(i);
+        CustomIntent.customType(this,"left-to-right");
+
 
     }
 

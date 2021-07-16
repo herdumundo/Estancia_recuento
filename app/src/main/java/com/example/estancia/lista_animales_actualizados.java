@@ -1,12 +1,20 @@
 package com.example.estancia;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -28,13 +36,19 @@ import entidades.Usuario;
 
 public class lista_animales_actualizados extends AppCompatActivity {
 
-    ListView listViewAnimales;
-    ArrayList<String> listaInformacion;
+    ListView            listViewAnimales;
+    ArrayList<String>   listaInformacion;
     ArrayList<Animales> listaAnimales;
-TextView txt_contenedor;
-    Button btn_buscar;
+    TextView            txt_contenedor;
+    Button              btn_buscar;
 
-   // ConexionSQLiteHelper conn;
+    @SuppressLint("NewApi")
+
+    @Override
+    public void onBackPressed() {
+        Utilidades.controles.volver_atras(this,this, informe_menu.class,"",4);
+    }
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,12 +57,22 @@ TextView txt_contenedor;
         listViewAnimales= (ListView) findViewById(R.id.listViewAnimales);
         txt_contenedor=(TextView)findViewById(R.id.txt_contenido);
         btn_buscar=(Button)findViewById(R.id.btn_buscar);
+
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //bellow setSupportActionBar(toolbar);
+        getSupportActionBar().setCustomView(R.layout.customactionbar);
+        TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
+        txtActionbar.setText("LISTADO ANIMALES ACTUALIZADOS");
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
+        this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
         btn_buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
         consultarListaregistro();
-
 
         ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), R.layout.simple_list_item_3, R.id.text1, listaInformacion) {
             @Override
@@ -69,11 +93,6 @@ TextView txt_contenedor;
 
             }
         });
-
-
-      /*  ArrayAdapter adaptador=new ArrayAdapter(lista_animales_actualizados.this,android.R.layout.simple_list_item_1,listaInformacion);
-        listViewAnimales.setAdapter(adaptador);*/
-
 
         listViewAnimales.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -97,7 +116,6 @@ TextView txt_contenedor;
         });
 
     }
-
 
     private void consultarListaregistro() {
         SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
@@ -125,22 +143,10 @@ TextView txt_contenedor;
             Animales.setEstado(cursor.getString(9));
             Animales.setRegistro(cursor.getString(10));
             Animales.setIdSincro(cursor.getString(11));
-
-
-
-
             listaAnimales.add(Animales);
         }
         obtenerLista();
     }
-
-
-
-
-
-
-
-
 
     private void obtenerLista() {
         listaInformacion=new ArrayList<String>();
@@ -153,11 +159,14 @@ TextView txt_contenedor;
     }
 
     @Override
-    public void onBackPressed() {
-        finish();
-        Intent List = new Intent(getApplicationContext(), informe_menu.class);
-        startActivity(List);
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
 
+            case android.R.id.home:
+                Utilidades.controles.volver_atras(this,this, informe_menu.class,"",4);
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
-
 }

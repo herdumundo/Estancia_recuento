@@ -16,12 +16,10 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.view.Gravity;
-
 import com.example.estancia.ConexionSQLiteHelper;
 import com.example.estancia.ConnectionHelperGanBOne;
 import com.example.estancia.MainActivity;
 import com.example.estancia.R;
-
 import java.net.NetworkInterface;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -29,6 +27,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Collections;
 import java.util.List;
+
+import maes.tech.intentanim.CustomIntent;
 
 public class controles {
     public static   AlertDialog.Builder builder;
@@ -38,14 +38,15 @@ public class controles {
     public static   String mensaje_registro="";
     public static   Connection connect;
     public static   Context context_menuPrincipal;
-    public static int contadorProgress=0;
+    public static   int contadorProgress=0;
+
     public static void conexion_sqlite(Context context) {
         conSqlite=      new ConexionSQLiteHelper(context,"GANBONE",null,ConexionSQLiteHelper.DATABASE_VERSION);
     }
+
     public static void volver_atras(final Context context, final Activity activity, final Class clase_destino, String texto, int tipo)  {
-        if(tipo==1){
-
-
+        if(tipo==1)
+        {
             builder = new android.app.AlertDialog.Builder(context);
             builder.setIcon(context.getResources().getDrawable(R.drawable.ic_warning));
             builder.setTitle("¡Atención!");
@@ -57,9 +58,10 @@ public class controles {
 
                     Intent intent = new Intent(context, clase_destino);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
                     context.startActivity(intent);
                     activity.finish();
+                    CustomIntent.customType(context,"right-to-left");
+
                 }
             });
             builder.setNegativeButton("No",null);
@@ -87,6 +89,7 @@ public class controles {
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     context.startActivity(intent);
                     activity.finish();
+                    CustomIntent.customType(context,"right-to-left");
                 }
             });
             builder.setNegativeButton("No",null);
@@ -103,9 +106,9 @@ public class controles {
         else {
             Intent intent = new Intent(context, clase_destino);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
             context.startActivity(intent);
             activity.finish();
+            CustomIntent.customType(context,"right-to-left");
         }
     }
 
@@ -838,10 +841,10 @@ public class controles {
             ResultSet rs = stmt.executeQuery(query);
             while ( rs.next()){
                 ContentValues values=new ContentValues();
-                values.put(Utilidades.CAMPO_ID_POTRERO,rs.getString("CODPOT"));
-                values.put(Utilidades.CAMPO_ID_ESTANCIA_FK,rs.getString("CODEST"));
-                values.put(Utilidades.CAMPO_DESC_POTRERO,rs.getString("POTRERO"));
-                db.insert(Utilidades.TABLA_POTRERO, Utilidades.CAMPO_ID_POTRERO,values);
+                values.put("id_potrero",rs.getString("CODPOT"));
+                values.put("id_estancia",rs.getString("CODEST"));
+                values.put("desc_potrero",rs.getString("POTRERO"));
+                db.insert("potrero", "id_potrero",values);
             }
             db.close();
             mensaje_registro="POTREROS SINCRONIZADOS.";

@@ -1,5 +1,7 @@
 package com.example.estancia;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
@@ -8,11 +10,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -53,9 +60,14 @@ public class ListviewActivity extends AppCompatActivity {
     String total="";
     String registro="";
     String val="";
-    private ProgressDialog prodialog,progress;
+    private ProgressDialog prodialog;
 
-    DateFormat dateFormatter;
+    @SuppressLint("NewApi")
+    @Override
+    public void onBackPressed() {
+        Utilidades.controles.volver_atras(this,this, informe_menu.class,"",4);
+    }
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,10 +76,22 @@ public class ListviewActivity extends AppCompatActivity {
         listViewPersonas= (ListView) findViewById(R.id.listViewPersonas);
         txt_fecha=(TextView)findViewById(R.id.txt_fecha);
         btn_buscar=(Button)findViewById(R.id.btn_buscar);
-        btn_buscar.setOnClickListener(new View.OnClickListener() {
+
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //bellow setSupportActionBar(toolbar);
+        getSupportActionBar().setCustomView(R.layout.customactionbar);
+        TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
+        txtActionbar.setText("INFORME ANIMALES DETALLE");
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
+        upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
+        this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
+
+        btn_buscar.setOnClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(View v) {
-
                 consultarListaregistro();
                 ArrayAdapter adapter = new ArrayAdapter(getApplicationContext(), R.layout.simple_list_item_3, R.id.text1, listaInformacion) {
                     @Override
@@ -90,8 +114,6 @@ public class ListviewActivity extends AppCompatActivity {
                 listViewPersonas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                      //  consultar_detalle("10");
-                      //  ir_cuadro("10");
                        String posicion_id="";
                         String id_registro=(String) adapterView.getItemAtPosition(pos);
 
@@ -149,7 +171,8 @@ public class ListviewActivity extends AppCompatActivity {
 
 
     }
-    class hilo_consulta extends Thread {
+
+    class hilo_consulta extends Thread      {
         @Override
         public void run() {
 
@@ -172,7 +195,7 @@ public class ListviewActivity extends AppCompatActivity {
         }
     }
 
-    private void consultarListaregistro() {
+    private void consultarListaregistro()   {
         SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
 
         Usuario usuario=null;
@@ -201,15 +224,7 @@ public class ListviewActivity extends AppCompatActivity {
         obtenerLista();
     }
 
-
-
-
-
-
-
-
-
-    private void obtenerLista() {
+    private void obtenerLista()             {
         listaInformacion=new ArrayList<String>();
 
         for (int i=0; i<listaUsuarios.size();i++){
@@ -219,7 +234,7 @@ public class ListviewActivity extends AppCompatActivity {
 
     }
 
-    private void obtenerDetalle() {
+    private void obtenerDetalle()           {
         listaInformacion_detalle=new ArrayList<String>();
 
         for (int i=0; i<listadetalle.size();i++){
@@ -231,16 +246,7 @@ public class ListviewActivity extends AppCompatActivity {
 
     }
 
-
-    @Override
-    public void onBackPressed() {
-        finish();
-                         Intent List = new Intent(getApplicationContext(), informe_menu.class);
-                        startActivity(List);
-
-    }
-
-    private  void consultar_detalle(String id_registro){
+    private void consultar_detalle(String id_registro)  {
 
         SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         Detalle_registro Detalle_registro=null;
@@ -288,23 +294,7 @@ public class ListviewActivity extends AppCompatActivity {
 
      }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    private void ir_cuadro(String id_registro){
+    private void ir_cuadro(String id_registro)          {
 
         final android.support.v7.app.AlertDialog.Builder mBuilder = new android.support.v7.app.AlertDialog.Builder(ListviewActivity.this);
         final View mView = getLayoutInflater().inflate(R.layout.lista_detalle_registro, null);
@@ -362,6 +352,18 @@ public class ListviewActivity extends AppCompatActivity {
 
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+
+            case android.R.id.home:
+                Utilidades.controles.volver_atras(this,this, informe_menu.class,"",4);
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
