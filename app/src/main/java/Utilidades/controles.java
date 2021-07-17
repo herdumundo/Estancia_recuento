@@ -283,7 +283,7 @@ public class controles {
             // Toast.makeText( this,e.toString(),Toast.LENGTH_LONG).show();
         }}
     public static void ConfirmarExport()           {
-
+        MainActivity.id_exportar.setEnabled(false);
         SQLiteDatabase db_contador= conSqlite.getReadableDatabase();
         ConnectionHelperGanBOne conexion_contador = new ConnectionHelperGanBOne();
         connect = conexion_contador.Connections();
@@ -326,9 +326,19 @@ public class controles {
                 MainActivity.ProDialogExport.setCancelable(false);
                 final AsyncInsertAnimales task = new AsyncInsertAnimales();
                 task.execute();
+                MainActivity.id_exportar.setEnabled(true);
+
             }
         });
-        builder.setNegativeButton("No",null);
+        builder.setNegativeButton("No",new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                MainActivity.id_exportar.setEnabled(true);
+
+            }  });
+        builder.setCancelable(false);
+
         ad = builder.show();
         ad.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.azul_claro));
         ad.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.azul_claro));
@@ -630,8 +640,15 @@ public class controles {
     {
         try {
             SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
-            db_estado.execSQL("DELETE FROM animales  ");
+            db_estado.execSQL("DELETE FROM animales     ");
             db_estado.close();
+            SQLiteDatabase db_cabecera=conSqlite.getReadableDatabase();
+            db_cabecera.execSQL("DELETE FROM registro_cabecera   where estado='C'  ");
+            db_cabecera.close();
+            SQLiteDatabase db_detalle=conSqlite.getReadableDatabase();
+            db_detalle.execSQL("DELETE FROM animal_potrero  where estado='C' ");
+            db_detalle.close();
+
 
             SQLiteDatabase db=conSqlite.getReadableDatabase();
             ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();

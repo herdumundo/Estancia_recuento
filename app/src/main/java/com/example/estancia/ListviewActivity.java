@@ -200,7 +200,8 @@ public class ListviewActivity extends AppCompatActivity {
 
         Usuario usuario=null;
         listaUsuarios=new ArrayList<Usuario>();
-        Cursor cursor=db.rawQuery("SELECT * FROM (select  codinterno,potrero,estancia,cantidad from informe_cabecera where fecha='"+txt_fecha.getText().toString().trim()+"' "+
+        Cursor cursor=db.rawQuery("SELECT * FROM (" +
+                "select  codinterno,potrero,estancia,cantidad from informe_cabecera where fecha='"+txt_fecha.getText().toString().trim()+"' "+
                 " union all select " +
                 "a.cod_interno,  " +
                 "c.desc_potrero,b.desc_estancia,  " +
@@ -257,7 +258,7 @@ public class ListviewActivity extends AppCompatActivity {
                 "e.desc_estancia, " +
                 "f.desc_potrero," +
                 "a.fecha, " +
-                "a.cantidad," +
+              //  "a.cantidad," +
                 "d.categoria , " +
                 "count(*) as CantCat, " +
                 "c.comprada " +
@@ -266,20 +267,26 @@ public class ListviewActivity extends AppCompatActivity {
                 "inner join animales_actualizados c on b.desc_animal = c.id or b.desc_animal = c.nrocaravana " +
                 "inner join categorias d on c.id_categoria = d.id_categoria " +
                 "inner join estancia e on a.cab_id_estancia = e.id_estancia inner join potrero f on a.cab_id_potrero = f.id_potrero " +
-                " where a.cod_interno='"+id_registro+"' and b.cod_cabecera=c.registro " +
-                " group by a.cod_interno,e.desc_estancia, f.desc_potrero, a.fecha, a.cantidad, d.categoria, c.comprada"    ,null);
+                " where a.cod_interno='"+id_registro+"' and b.cod_cabecera=c.registro and a.estado not in ('C') " +
+                " group by a.cod_interno,e.desc_estancia, f.desc_potrero, a.fecha,  d.categoria, c.comprada" +
+                " UNION ALL" +
+                "  select  id_cabecera as cod_interno, estancia as desc_estancia ,potrero as desc_potrero,  fecha, categoria,count(*)as CantCat,comprada " +
+                "     from informe_detalle inner join informe_cabecera  on  " +
+                "   informe_detalle.id_cabecera=informe_cabecera.codinterno " +
+                "   where id_cabecera="+id_registro+"  group by    cod_interno, desc_estancia,desc_potrero,fecha,categoria,  comprada "    ,null);
 
 
 
-        while (cursor_detalle.moveToNext()){
+        while (cursor_detalle.moveToNext())
+        {
             Detalle_registro=new Detalle_registro();
             Detalle_registro.setIdregistro(cursor_detalle.getString(0));
-            Detalle_registro.setCantidad_animal(cursor_detalle.getString(6));
-            Detalle_registro.setCategoria(cursor_detalle.getString(5));
-            Detalle_registro.setComprada(cursor_detalle.getString(7));
+            Detalle_registro.setCantidad_animal(cursor_detalle.getString(5));
+            Detalle_registro.setCategoria(cursor_detalle.getString(4));
+            Detalle_registro.setComprada(cursor_detalle.getString(6));
             Detalle_registro.setEstancia(cursor_detalle.getString(1));
             Detalle_registro.setPotrero(cursor_detalle.getString(2));
-            Detalle_registro.setCantidad_total(cursor_detalle.getString(4));
+            Detalle_registro.setCantidad_total(cursor_detalle.getString(3));
             estancia_list=Detalle_registro.getEstancia().toString();
             potrero=Detalle_registro.getPotrero().toString();
             total=Detalle_registro.getCantidad_total().toString();

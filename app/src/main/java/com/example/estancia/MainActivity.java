@@ -33,7 +33,7 @@ import maes.tech.intentanim.CustomIntent;
 public class MainActivity extends AppCompatActivity {
     public static ProgressDialog prodialog,progress,ProDialogExport,ProDialogSincro;
     Connection connect;
-    Button btn_movimiento,btn_sincro,btn_potrero;
+    public static Button btn_movimiento,btn_sincro,btn_potrero,id_exportar;
     String contador_animales="";
     String contador_animales_upd="";
 
@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         btn_movimiento= (Button)findViewById(R.id.idmovimiento) ;
+        id_exportar=findViewById(R.id.id_exportar) ;
+
+
          btn_potrero= (Button)findViewById(R.id.bnt_potrero);
         controles.getMacAddr();
         controles.context_menuPrincipal=this;
@@ -475,21 +478,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
     private void    ir_movimiento(){
-
         Intent i=new Intent(this,Select_blu.class);
         startActivity(i);
         CustomIntent.customType(this,"left-to-right");
-
-
     }
     private void    ir_potrero(){
-
         Intent i=new Intent(this,potrero.class);
         startActivity(i);
         CustomIntent.customType(this,"left-to-right");
-
-
-    }
+   }
 
 
 

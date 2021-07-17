@@ -722,7 +722,10 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
 
     private void ir_cuadro(String cod_animal,String pos,final int indicadorModificarInsertar)
-    { // SI EL INDICADOR =0(EN UN INSERT DE REGISTRO, =1 (ES UNA MODIFICACION DE LA GRILLA.))
+    {
+        try {
+            // SI EL INDICADOR =0(EN UN INSERT DE REGISTRO, =1 (ES UNA MODIFICACION DE LA GRILLA.))
+
         final android.support.v7.app.AlertDialog.Builder mBuilder = new android.support.v7.app.AlertDialog.Builder(movimientos.this);
         final View mView = getLayoutInflater().inflate(R.layout.buscar_item, null);
         final SearchableSpinner spinner_categoria=(SearchableSpinner)mView.findViewById(R.id.spinner_categoria);
@@ -1153,6 +1156,10 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                 }
             }
         });
+        }catch (Exception e){
+            Toast.makeText(movimientos.this,e.getMessage(),Toast.LENGTH_LONG).show();
+            System.out.println(e.getMessage());
+        }
     }
 
     public void obtenerLista_Carimbo(String carimbo)
@@ -1335,43 +1342,33 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     }
     private void contar_compradas()
     {
-
-        int compradas=0;
-        int criollas=0;
-        txt_compra_si.setText("0");
-        txt_compra_no.setText("0");
-        for (int i = 0; i < listInsertAnimal.size(); )
-        {
-            if(listInsertAnimal.get(i).getComprada().equals("SI"))
+        try {
+            int compradas=0;
+            int criollas=0;
+            txt_compra_si.setText("0");
+            txt_compra_no.setText("0");
+            for (int i = 0; i < listInsertAnimal.size(); )
             {
-                compradas++;
+                if(listInsertAnimal.get(i).getComprada().equals("SI"))
+                {
+                    compradas++;
+                }
+                else if (listInsertAnimal.get(i).getComprada().equals("NO"))
+                {
+                    criollas++;
+                }
+                i++;
             }
-            else if (listInsertAnimal.get(i).getComprada().equals("NO"))
-            {
-                criollas++;
-            }
-            i++;
+            txt_compra_si.setText(String.valueOf(compradas));
+            txt_compra_no.setText(String.valueOf(criollas));
+            txt_cantidad.setText(String.valueOf(compradas+criollas));
         }
-        txt_compra_si.setText(String.valueOf(compradas));
-        txt_compra_no.setText(String.valueOf(criollas));
+        catch (Exception e){
+            Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show();
+        }
 
-    /*    for (int i = 0; i < ListView.getCount(); i++)
-        {
-            contenido_grilla = (String) ListView.getItemAtPosition(i);
-            String[] array_grilla = contenido_grilla.split("-");
-            parte_compra=array_grilla[2].trim();
 
-            if (parte_compra.equals("SI"))
-            {
-                c++;
-                txt_compra_si.setText(String.valueOf(c));
-            }
-            if (parte_compra.equals("NO"))
-            {
-                n++;
-                txt_compra_no.setText(String.valueOf(n));
-            }
-        }*/
+
     }
 
     private void consulta_carga_animales_upd()
