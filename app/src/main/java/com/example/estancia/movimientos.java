@@ -94,14 +94,14 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     Button cargar,registrar;
     DatePickerDialog picker;
     private String name;
-    private Bluetooth Bluetooth;
+     public static  Bluetooth Bluetooth;
       String posicion_fila_lv2="";
     String codigo_text="";//String para almacenar el codigo que recupera del lector
     TextView txt_compra_si,txt_compra_no;
     @Override
     public void onBackPressed()
     {
-        controles.volver_atras(this,this, MainActivity.class,"¿Desea volver al menù principal? ",1);
+        controles.volver_atras(this,this, MainActivity.class,"¿Desea volver al menù principal? ",6);
 
     }
     @SuppressLint("NewApi")
@@ -111,22 +111,17 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scrollmovimiento);
         txt_fecha=(TextView) findViewById(R.id.txt_fecha);
-       // txt_fecha.setInputType(InputType.TYPE_NULL);
         txt_cod_animal=(TextView) findViewById(R.id.txt_cod_animal);
         txt_compra_si=(TextView) findViewById(R.id.txt_compra_si);
         txt_compra_no=(TextView) findViewById(R.id.txt_compra_no);
-      //  Combo_estancia= (Spinner) findViewById(R.id.spinner_estancia);
         txt_cantidad=(TextView)findViewById(R.id.txt_cantidad);
         txtDescEstancia=(TextView)findViewById(R.id.TxtDescEstancia);
         txtCodEstancia=(TextView)findViewById(R.id.TxtCodEstancia);
         txtCodPotrero=(TextView)findViewById(R.id.TxtCodPotrero);
         txtDescPotrero=(TextView)findViewById(R.id.TxtDescPotrero);
 
-      //  Combo_potrero=(Spinner)findViewById(R.id.spinner_potrero);
         cargar=(Button)findViewById(R.id.btn_cargar);
         registrar=(Button)findViewById(R.id.btn_registrar);
-     //   spinner_potrero=(SearchableSpinner)findViewById(R.id.spinner_potrero);
-       // spinner_estancia=(SearchableSpinner)findViewById(R.id.spinner_estancia);
 
         ListView = (ListView) findViewById(R.id.listView);
         Bluetooth = new Bluetooth(this);
@@ -140,7 +135,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         getSupportActionBar().setCustomView(R.layout.customactionbar);
         TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
         txtActionbar.setText("RECUENTO DE ANIMALES");
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
+     //   getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
@@ -185,9 +180,6 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         {
             txt_fecha.setText(cursor1.getString(0));
         }
-
-
-
 
       txt_cod_animal.setOnKeyListener(new View.OnKeyListener()
         {
@@ -482,7 +474,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         Cursor cursor=db.rawQuery("SELECT * FROM potrero  where id_estancia = '"+idEstancia.trim()+"'",null);
         while (cursor.moveToNext())
         {
-            arrIdPotrero.add(cursor.getString(0));
+            arrIdPotrero.add(cursor.getString(4)); //EN VEZ DE CONSULTAR CAMPO ID_POTRERO, SE CAMBIA A ID_POTREROSQLITE.
             arrDescPotrero.add(cursor.getString(2));
         }
         SpPotrero = new SpinnerDialog(this,arrDescPotrero,"Listado de potreros");
@@ -560,9 +552,6 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
             }
         }
      }
-
-
-
 
     private void cargar_grilla_boton()
     {
@@ -649,13 +638,13 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         }
 
 
-        valor_cab.put(Utilidades.CAMPO_CABECERA_ID,idCabecera);
-        valor_cab.put(Utilidades.CAMPO_FECHA,txt_fecha.getText().toString());
-        valor_cab.put(Utilidades.CAMPO_CABECERA_CANTIDAD,txt_cantidad.getText().toString());
-        valor_cab.put(Utilidades.CAMPO_CABECERA_ID_POTRERO,txtCodPotrero.getText().toString());
-        valor_cab.put(Utilidades.CAMPO_CABECERA_ID_ESTANCIA,txtCodEstancia.getText().toString());
-        valor_cab.put(Utilidades.CAMPO_CABECERA_ESTADO,"A");
-        db1.insert(Utilidades.TABLA_CABECERA_AP,Utilidades.CAMPO_CABECERA_ID,valor_cab);
+        valor_cab.put("cod_interno",idCabecera);
+        valor_cab.put("fecha",txt_fecha.getText().toString());
+        valor_cab.put("cantidad",txt_cantidad.getText().toString());
+        valor_cab.put("cab_id_potrero",txtCodPotrero.getText().toString());
+        valor_cab.put("cab_id_estancia",txtCodEstancia.getText().toString());
+        valor_cab.put("estado","A");
+        db1.insert("registro_cabecera","cod_interno",valor_cab);
         db1.close();
         String identificadorAnimal="";
         for (int i = 0; i < listInsertAnimal.size();)
@@ -697,8 +686,6 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
     }
 
-
-
     private void eliminar_fila(int pos)
     {
         if(listInsertAnimal.get(pos).getId().length()<1)
@@ -719,38 +706,34 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         contar_compradas();
     }
 
-
-
     private void ir_cuadro(String cod_animal,String pos,final int indicadorModificarInsertar)
     {
         try {
             // SI EL INDICADOR =0(EN UN INSERT DE REGISTRO, =1 (ES UNA MODIFICACION DE LA GRILLA.))
 
         final android.support.v7.app.AlertDialog.Builder mBuilder = new android.support.v7.app.AlertDialog.Builder(movimientos.this);
-        final View mView = getLayoutInflater().inflate(R.layout.buscar_item, null);
-        final SearchableSpinner spinner_categoria=(SearchableSpinner)mView.findViewById(R.id.spinner_categoria);
-        final SearchableSpinner spinner_color=(SearchableSpinner)mView.findViewById(R.id.spinner_color);
-        final SearchableSpinner spinner_carimbo=(SearchableSpinner)mView.findViewById(R.id.txt_carimbo);
-        spinner_carimbo.setTitle("SELECCIONAR CARIMBO ");
-        spinner_carimbo.setBackgroundColor(0x00000000);
-        spinner_carimbo.setPositiveButton("CERRAR");
-        spinner_categoria.setTitle("SELECCIONAR CATEGORIA ");
-        spinner_categoria.setBackgroundColor(0x00000000);
-        spinner_categoria.setPositiveButton("CERRAR");
-        spinner_color.setTitle("SELECCIONAR COLOR ");
-        spinner_color.setPositiveButton("CERRAR");
+        final View mView = getLayoutInflater().inflate(R.layout.cuadro_movimiento, null);
+
         final TextView id_animal = (TextView) mView.findViewById(R.id.id_animal);
         final TextView txt_caravana = (TextView) mView.findViewById(R.id.txt_caravana);
-        final Spinner txt_carimbo = (Spinner) mView.findViewById(R.id.txt_carimbo);
+       // final Spinner txt_carimbo = (Spinner) mView.findViewById(R.id.txt_carimbo);
         final Button btn_guardar_cerrar = (Button) mView.findViewById(R.id.boton_grabar);
         final RadioGroup radioGroup= (RadioGroup)mView.findViewById(R.id.radio_grupo);
         final RadioButton radio_macho= (RadioButton)mView.findViewById(R.id.radio_macho);
         final RadioButton radio_hembra= (RadioButton)mView.findViewById(R.id.radio_hembra);
         final RadioButton radio_comprada_si= (RadioButton)mView.findViewById(R.id.radio_compra_si);
         final RadioButton radio_comprada_no= (RadioButton)mView.findViewById(R.id.radio_compra_no);
-        final Spinner combo_categoria=(Spinner)mView.findViewById(R.id.spinner_categoria);
-        final Spinner combo_color=(Spinner)mView.findViewById(R.id.spinner_color);
-        final Spinner combo_raza=(Spinner)mView.findViewById(R.id.spinner_raza);
+   //     final Spinner combo_categoria=(Spinner)mView.findViewById(R.id.spinner_categoria);
+        final TextView TxtCodColorCuadro=mView.findViewById(R.id.TxtCodColorCuadro);
+        final TextView TxtDescColorCuadro=mView.findViewById(R.id.TxtDescColorCuadro);
+            final TextView TxtCodRazaCuadro=mView.findViewById(R.id.TxtCodRazaCuadro);
+            final TextView TxtDescRazaCuadro=mView.findViewById(R.id.TxtDescRazaCuadro);
+            final TextView TxtDescCarimboCuadro=mView.findViewById(R.id.TxtDescCarimboCuadro);
+            final TextView TxtCodCategoriaCuadro=mView.findViewById(R.id.TxtCodCategoriaCuadro);
+            final TextView TxtDescCategoriaCuadro=mView.findViewById(R.id.TxtDescCategoriaCuadro);
+
+        final SpinnerDialog SpColor,SpRaza,SpCategoria,SpCarimbo;
+       // final Spinner combo_raza=(Spinner)mView.findViewById(R.id.spinner_raza);
         final TextView txt_posicion = (TextView) mView.findViewById(R.id.txt_posicion);
         final TextView txt_compra = (TextView) mView.findViewById(R.id.txt_compra);
         txt_posicion.setText(pos);
@@ -762,21 +745,33 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         radio_macho.setEnabled(true);
         radio_comprada_no.setEnabled(true);
         radio_comprada_si.setEnabled(true);
-        combo_categoria.setEnabled(true);
-        combo_color.setEnabled(true);
-        combo_raza.setEnabled(true);
+       // combo_categoria.setEnabled(true);
+        //combo_raza.setEnabled(true);
         String codinterno="";  String nrocaravana=""; String sexo=""; String color=""; String raza=""; String carimbo="";  String id_bolo="";
         String id_categoria="";String comprada="";
         SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         String contenido_lv="";
         SQLiteDatabase db_consulta_lv=controles.conSqlite.getReadableDatabase();
-        final Cursor cursor_consulta=db_consulta_lv.rawQuery("SELECT count(*) from animales_actualizados  where id='" + cod_animal + "' and id not in ('') or UPPER(nrocaravana)=UPPER('" + cod_animal + "') and nrocaravana not in ('') and estado not in ('A','C') "    ,null);
-        while (cursor_consulta.moveToNext()){
+        final Cursor cursor_consulta=db_consulta_lv.rawQuery(
+                "SELECT count(*) from animales_actualizados  where id='" + cod_animal + "' " +
+                "and id not in ('') or UPPER(nrocaravana)=UPPER('" + cod_animal + "') " +
+                        "and nrocaravana not in ('') and estado not in ('A','C') "    ,null);
+       while (cursor_consulta.moveToNext()){
             contenido_lv=cursor_consulta.getString(0);
         }
-        if (contenido_lv.equals("0"))
+              if (contenido_lv.equals("0"))
+      //  if (!cursor_consulta.moveToNext())
         {
-            Cursor cursor = db.rawQuery("SELECT distinct codinterno ,nrocaravana , sexo ,color , raza , carimbo ,id,id_categoria  from animales  where id='" + cod_animal + "' or UPPER(nrocaravana)=UPPER('" + cod_animal + "')", null);
+            Cursor cursor = db.rawQuery("SELECT distinct a.codinterno ," +
+                    "a.nrocaravana , a.sexo ,a.color , a.raza ,        " +
+                    " a.carimbo ,a.id,a.id_categoria,b.color as descColor," +
+                    "c.raza as descRaza,d.categoria as descCategoria        " +
+                    "from animales  a   " +
+                    "inner join color b on a.color=b.id_color  " +
+                    "inner join categorias d on a.id_categoria=d.id_categoria   " +
+                    "inner join razas c on a.raza=c.id_raza   " +
+                    " where id='"+cod_animal+"' or  " +
+                    " UPPER(nrocaravana)=UPPER('"+cod_animal+"')", null);
             while (cursor.moveToNext()) {
                 codinterno = (cursor.getString(0));
                 nrocaravana = (cursor.getString(1));
@@ -787,10 +782,23 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                 id_bolo=(cursor.getString(6));
                 id_categoria = (cursor.getString(7));
                 // comprada=(cursor.getString(8));
+
+                TxtCodColorCuadro.setText(color);
+                TxtDescColorCuadro.setText(cursor.getString(8));
+
+                TxtCodRazaCuadro.setText(raza);
+                TxtDescRazaCuadro.setText(cursor.getString(9));
+                TxtDescCarimboCuadro.setText(carimbo);
+                TxtCodCategoriaCuadro.setText(id_categoria);
+                TxtDescCategoriaCuadro.setText(cursor.getString(10));
+
             }
         }
         else {
-            Cursor cursor = db.rawQuery("SELECT  codinterno ,nrocaravana , sexo ,color , raza , carimbo ,id,id_categoria,comprada from animales_actualizados where id='" + cod_animal + "' or UPPER(nrocaravana)=UPPER('" + cod_animal + "')", null);
+            Cursor cursor = db.rawQuery("SELECT  a.codinterno ,a.nrocaravana , a.sexo ,a.color , a.raza , " +
+                    " a.carimbo ,a.id,a.id_categoria,a.comprada, b.color as descColor,c.raza as descRaza,d.categoria" +
+                    " from animales_actualizados a inner join color b on a.color=b.id_color  inner join categorias d on a.id_categoria=d.id_categoria" +
+                    " inner join razas c on a.raza=c.id_raza  where a.id='" + cod_animal + "' or UPPER(a.nrocaravana)=UPPER('" + cod_animal + "')", null);
             while (cursor.moveToNext()) {
                 codinterno = (cursor.getString(0));
                 nrocaravana = (cursor.getString(1));
@@ -801,6 +809,15 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                 id_categoria = (cursor.getString(7));
                 comprada=(cursor.getString(8));
                 id_bolo=(cursor.getString(6));
+
+                TxtCodColorCuadro.setText(cursor.getString(3));
+                TxtDescColorCuadro.setText(cursor.getString(9));
+
+                TxtCodRazaCuadro.setText(cursor.getString(4));
+                TxtDescRazaCuadro.setText(cursor.getString(10));
+                TxtDescCarimboCuadro.setText(carimbo);
+                TxtCodCategoriaCuadro.setText(id_categoria);
+                TxtDescCategoriaCuadro.setText(cursor.getString(11));
             }
         }
         radio_comprada_si.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -849,7 +866,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         }
         id_animal.setEnabled(false);
         txt_caravana.setEnabled(true);
-        txt_carimbo.setEnabled(true);
+       // txt_carimbo.setEnabled(true);
         if (radio_hembra.isChecked()==true) {
             variable_sexo="H";
         }
@@ -884,16 +901,162 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         consultarCategorias(id_categoria);
         consultarColor(color.trim());
         consultarRaza(raza.trim());
-        ArrayAdapter<CharSequence> adaptador_categoria=new ArrayAdapter (this,R.layout.spinner_item,lista_categoria);
-        combo_categoria.setAdapter(adaptador_categoria);
-        ArrayAdapter<CharSequence> adaptador_color=new ArrayAdapter (this,R.layout.spinner_item,lista_color);
-        combo_color.setAdapter(adaptador_color);
-        ArrayAdapter<CharSequence> adaptador_raza=new ArrayAdapter (this,R.layout.spinner_item,lista_razas);
-        combo_raza.setAdapter(adaptador_raza);
-        obtenerLista_Carimbo(cont_text_carimbo.trim().toString());
-        ArrayAdapter<CharSequence> adaptador_carimbo=new ArrayAdapter (this,R.layout.spinner_item,lista_carimbo);
-        txt_carimbo.setAdapter(adaptador_carimbo);
-        if(combo_categoria.getSelectedItem().equals("SELECCIONAR CATEGORIA"))
+
+            final ArrayList<String> arrCodColor         =   new ArrayList<>();
+            final ArrayList<String> arrDescColor =   new ArrayList<>();
+
+
+            SQLiteDatabase dbColor=controles.conSqlite.getReadableDatabase();
+            arrCodColor.clear();
+            arrDescColor.clear();
+
+            Cursor cursorColor=dbColor.rawQuery("SELECT * FROM color  ",null);
+
+            while (cursorColor.moveToNext())
+            {
+                arrCodColor.add(cursorColor.getString(0));
+                arrDescColor.add(cursorColor.getString(1));
+            }
+            SpColor = new SpinnerDialog(this,arrDescColor,"Listado de colores");
+            TxtDescColorCuadro.setOnClickListener(new View.OnClickListener() {  @Override
+            public void onClick(View v)
+            {
+                SpColor.showSpinerDialog();
+            } } );
+            SpColor.bindOnSpinerListener(new  OnSpinerItemClick() {
+                @Override
+                public void onClick(String s, int i)
+                {
+                    TxtCodColorCuadro.setText(arrCodColor.get(i));
+                    TxtDescColorCuadro.setText(arrDescColor.get(i));
+
+                }
+            });
+            final ArrayList<String> arrCodRaza         =   new ArrayList<>();
+            final ArrayList<String> arrDescRaza =   new ArrayList<>();
+            SQLiteDatabase dbRaza=controles.conSqlite.getReadableDatabase();
+            arrCodRaza.clear();
+            arrDescRaza.clear();
+
+            Cursor cursorRaza=dbRaza.rawQuery("SELECT * FROM razas   ",null);
+
+            while (cursorRaza.moveToNext())
+            {
+                arrCodRaza.add(cursorRaza.getString(0));
+                arrDescRaza.add(cursorRaza.getString(1));
+            }
+            SpRaza = new SpinnerDialog(this,arrDescRaza,"Listado de razas");
+            TxtDescRazaCuadro.setOnClickListener(new View.OnClickListener() {  @Override
+            public void onClick(View v)
+            {
+                SpRaza.showSpinerDialog();
+            } } );
+            SpRaza.bindOnSpinerListener(new  OnSpinerItemClick() {
+                @Override
+                public void onClick(String s, int i)
+                {
+                    TxtCodRazaCuadro.setText(arrCodRaza.get(i));
+                    TxtDescRazaCuadro.setText(arrDescRaza.get(i));
+
+                }
+            });
+
+            final ArrayList<String> arrCarimbo        =   new ArrayList<>();
+            for (int i=0;  i<=9;) {
+                 arrCarimbo.add(String.valueOf(i));
+                    i++;
+            }
+
+            SpCarimbo = new SpinnerDialog(this,arrCarimbo,"Listado de carimbos");
+            TxtDescCarimboCuadro.setOnClickListener(new View.OnClickListener() {  @Override
+            public void onClick(View v)
+            {
+                SpCarimbo.showSpinerDialog();
+            } } );
+            SpCarimbo.bindOnSpinerListener(new  OnSpinerItemClick() {
+                @Override
+                public void onClick(String s, int i)
+                {
+                    TxtDescCarimboCuadro.setText(arrCarimbo.get(i));
+
+                }
+            });
+
+
+
+
+            final ArrayList<String> arrCodCategoria         =   new ArrayList<>();
+            final ArrayList<String> arrDescCategoria =   new ArrayList<>();
+            SQLiteDatabase dbCategoria=controles.conSqlite.getReadableDatabase();
+            arrCodCategoria.clear();
+            arrDescCategoria.clear();
+
+            Cursor cursorCategoria=dbCategoria.rawQuery("SELECT * FROM categorias   ",null);
+
+            while (cursorCategoria.moveToNext())
+            {
+                arrCodCategoria.add(cursorCategoria.getString(0));
+                arrDescCategoria.add(cursorCategoria.getString(1));
+            }
+            SpCategoria = new SpinnerDialog(this,arrDescCategoria,"Listado de Categorias");
+            TxtDescCategoriaCuadro.setOnClickListener(new View.OnClickListener() {  @Override
+            public void onClick(View v)
+            {
+                SpCategoria.showSpinerDialog();
+            } } );
+            SpCategoria.bindOnSpinerListener(new  OnSpinerItemClick() {
+                @Override
+                public void onClick(String s, int i)
+                {
+                    TxtCodCategoriaCuadro.setText(arrCodCategoria.get(i));
+                    TxtDescCategoriaCuadro.setText(arrDescCategoria.get(i));
+
+
+                    if(TxtCodCategoriaCuadro.getText().toString().trim().equals("1")){
+
+                        radio_hembra.setChecked(true);
+                        variable_sexo="H";
+                    }
+                    else   if(TxtCodCategoriaCuadro.getText().toString().trim().equals("2")){
+
+                        radio_macho.setChecked(true);
+                        variable_sexo="M";
+                    }
+                    else   if(TxtCodCategoriaCuadro.getText().toString().trim().equals("3")){
+
+                        radio_hembra.setChecked(true);
+                        variable_sexo="H";
+                    }
+                    else   if(TxtCodCategoriaCuadro.getText().toString().trim().equals("4")){
+
+                        radio_macho.setChecked(true);
+                        variable_sexo="M";
+                    }
+                    else   if(TxtCodCategoriaCuadro.getText().toString().trim().equals("5")){
+
+                        radio_hembra.setChecked(true);
+                        variable_sexo="H";
+                    }
+                    else   if(TxtCodCategoriaCuadro.getText().toString().trim().equals("6")){
+
+                        radio_macho.setChecked(true);
+                        variable_sexo="M";
+                    }
+                    else   if(TxtCodCategoriaCuadro.getText().toString().trim().equals("7")){
+
+                        radio_macho.setChecked(true);
+                        variable_sexo="M";
+                    }
+                    else   if(TxtCodCategoriaCuadro.getText().toString().trim().equals("8")){
+
+                        radio_hembra.setChecked(true);
+                        variable_sexo="H";
+                    }
+
+                }
+            });
+
+        if(TxtCodCategoriaCuadro.getText().length()==0)
         {
 
         }
@@ -902,59 +1065,6 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
 
-        combo_categoria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
-            {  String posicion_categoria="";
-                String item_categoria = (String) combo_categoria.getSelectedItem();
-                String array_item_categoria []= item_categoria.split("-");
-                posicion_categoria =array_item_categoria[0];
-
-                if(posicion_categoria.trim().equals("1")){
-
-                    radio_hembra.setChecked(true);
-                    variable_sexo="H";
-                }
-                else   if(posicion_categoria.trim().equals("2")){
-
-                    radio_macho.setChecked(true);
-                    variable_sexo="M";
-                }
-                else   if(posicion_categoria.trim().equals("3")){
-
-                    radio_hembra.setChecked(true);
-                    variable_sexo="H";
-                }
-                else   if(posicion_categoria.trim().equals("4")){
-
-                    radio_macho.setChecked(true);
-                    variable_sexo="M";
-                }
-                else   if(posicion_categoria.trim().equals("5")){
-
-                    radio_hembra.setChecked(true);
-                    variable_sexo="H";
-                }
-                else   if(posicion_categoria.trim().equals("6")){
-
-                    radio_macho.setChecked(true);
-                    variable_sexo="M";
-                }
-                else   if(posicion_categoria.trim().equals("7")){
-
-                    radio_macho.setChecked(true);
-                    variable_sexo="M";
-                }
-                else   if(posicion_categoria.trim().equals("8")){
-
-                    radio_hembra.setChecked(true);
-                    variable_sexo="H";
-                }
-            }
-            public void onNothingSelected(AdapterView<?> parent)
-            {
-
-            }
-        });
 
         btn_guardar_cerrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -964,48 +1074,26 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
                     Toast.makeText(movimientos.this,"ERROR, CARGAR NUMERO DE CARAVANA",Toast.LENGTH_LONG).show();
                 }
+                else if(TxtCodColorCuadro.getText().length()==0){
+                    Toast.makeText(movimientos.this,"ERROR, CARGAR PELAJE",Toast.LENGTH_LONG).show();
 
+                }
+
+                else if(TxtCodRazaCuadro.getText().length()==0){
+                    Toast.makeText(movimientos.this,"ERROR, CARGAR RAZA",Toast.LENGTH_LONG).show();
+
+                }
+                else if(TxtDescCarimboCuadro.getText().length()==0){
+                    Toast.makeText(movimientos.this,"ERROR, CARGAR CARIMBO",Toast.LENGTH_LONG).show();
+
+                }
+                else if(TxtCodCategoriaCuadro.getText().length()==0){
+                    Toast.makeText(movimientos.this,"ERROR, CARGAR CATEGORIA",Toast.LENGTH_LONG).show();
+
+                }
                 else{
 
-                    String posicion_categoria="";
-                    String posicion_raza="";
-                    String posicion_color="";
-                    String contenido="";
-                    String item_categoria = (String) combo_categoria.getSelectedItem();
-                    String array_item_categoria []= item_categoria.split("-");
-                    posicion_categoria =array_item_categoria[0];
-                    String item_raza = (String) combo_raza.getSelectedItem();
-                    String array_item_raza []= item_raza.split("-");
-                    posicion_raza =array_item_raza[0];
-                    String item_color = (String) combo_color.getSelectedItem();
-                    String array_item_color []= item_color.split("-");
-                    posicion_color =array_item_color[0];
 
-
-
-
-
-                   // contar_compradas();
-                    if(posicion_categoria.equals("SELECCIONAR CATEGORIA")){
-                        posicion_categoria="9";
-                    }
-                    else
-                    {
-                        posicion_categoria=posicion_categoria.toString();
-                    }
-                    if(posicion_color.equals("SELECCIONAR COLOR")){
-                        posicion_color="8";
-                    }
-
-                    else {
-                        posicion_color=posicion_color.toString();
-                    }
-                    if(posicion_raza.equals("SELECCIONAR RAZA")){
-                        posicion_raza="4";
-                    }
-                    else {
-                        posicion_raza=posicion_raza.toString();
-                    }
                     SQLiteDatabase db_consulta=controles.conSqlite.getReadableDatabase();
                     Cursor cursor_consulta_contar=db_consulta.rawQuery(
                             "SELECT * " +
@@ -1047,10 +1135,10 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                                     "           SET  " +
                                     "               nrocaravana='"+txt_caravana.getText()+"'," +
                                     "               sexo='"+variable_sexo+"'," +
-                                    "               color='"+posicion_color+"', " +
-                                    "               raza='"+posicion_raza+"'," +
-                            "                       carimbo='"+txt_carimbo.getSelectedItem().toString()+"', " +
-                                    "               id_categoria='"+posicion_categoria+"'," +
+                                    "               color='"+TxtCodColorCuadro.getText().toString()+"', " +
+                                    "               raza='"+TxtCodRazaCuadro.getText().toString()+"'," +
+                            "                       carimbo='"+TxtDescCarimboCuadro.getText().toString()+"', " +
+                                    "               id_categoria='"+TxtCodCategoriaCuadro.getText().toString()+"'," +
                                     "               comprada='"+variable_comprada+"', " +
                                     "               estado='O'" +
                             "                   WHERE  " +
@@ -1065,10 +1153,10 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                                     "           SET  " +
                                     "               nrocaravana='"+txt_caravana.getText()+"'," +
                                     "               sexo='"+variable_sexo+"'," +
-                                    "               color='"+posicion_color+"', " +
-                                    "               raza='"+posicion_raza+"'," +
-                            "                       carimbo='"+txt_carimbo.getSelectedItem().toString()+"', " +
-                                    "               id_categoria='"+posicion_categoria+"'," +
+                                    "               color='"+TxtCodColorCuadro.getText().toString()+"', " +
+                                    "               raza='"+TxtCodRazaCuadro.getText().toString()+"'," +
+                            "                       carimbo='"+TxtDescCarimboCuadro.getText().toString()+"', " +
+                                    "               id_categoria='"+TxtCodCategoriaCuadro.getText().toString()+"'," +
                                     "               comprada='"+variable_comprada+"', " +
                                     "               estado='O'" +
                             "                   WHERE  " +
@@ -1082,10 +1170,10 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                                 "           SET  " +
                                 "               nrocaravana='"+txt_caravana.getText()+"'," +
                                 "               sexo='"+variable_sexo+"'," +
-                                "               color='"+posicion_color+"', " +
-                                "               raza='"+posicion_raza+"'," +
-                        "                       carimbo='"+txt_carimbo.getSelectedItem().toString()+"', " +
-                                "               id_categoria='"+posicion_categoria+"'," +
+                                "               color='"+TxtCodColorCuadro.getText().toString()+"', " +
+                                "               raza='"+TxtCodRazaCuadro.getText().toString()+"'," +
+                        "                       carimbo='"+TxtDescCarimboCuadro.getText().toString()+"', " +
+                                "               id_categoria='"+TxtCodCategoriaCuadro.getText().toString()+"'," +
                                 "               comprada='"+variable_comprada+"', " +
                                 "               estado='O'" +
                         "                   WHERE " +
@@ -1117,10 +1205,10 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                         valores_ani_actual.put("id",id_animal.getText().toString());
                         valores_ani_actual.put("nrocaravana",txt_caravana.getText().toString());
                         valores_ani_actual.put("sexo",variable_sexo.trim());
-                        valores_ani_actual.put("color",posicion_color.toString());
-                        valores_ani_actual.put("raza",posicion_raza.toString());
-                        valores_ani_actual.put("carimbo",txt_carimbo.getSelectedItem().toString());
-                        valores_ani_actual.put("id_categoria",posicion_categoria.toString());
+                        valores_ani_actual.put("color",TxtCodColorCuadro.getText().toString().toString());
+                        valores_ani_actual.put("raza",TxtCodRazaCuadro.getText().toString().toString());
+                        valores_ani_actual.put("carimbo",TxtDescCarimboCuadro.getText().toString());
+                        valores_ani_actual.put("id_categoria",TxtCodCategoriaCuadro.getText().toString().toString());
                         valores_ani_actual.put("comprada",variable_comprada.toString());
                         valores_ani_actual.put("estado","O");
                         db_INSERT.insert("animales_actualizados","id",valores_ani_actual);
@@ -1192,8 +1280,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
             Categoria=new Categoria();
             Categoria.setId(cursor.getString(0));
             Categoria.setCategoria(cursor.getString(1));
-            Log.i("id_categoria",Categoria.getId().toString());
-            Log.i("categoria",Categoria.getCategoria());
+
             CategoriaList.add(Categoria);
         }
         obtenerListaCategoria(codigo);
@@ -1436,7 +1523,6 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     }
 
 
-
     private void addRow (){
 
 
@@ -1485,7 +1571,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         switch (item.getItemId()) {
 
             case android.R.id.home:
-                controles.volver_atras(this,this, MainActivity.class,"¿Desea volver al menù principal? ",1);
+                controles.volver_atras(this,this, MainActivity.class,"¿Desea volver al menù principal? ",6);
 
                 return true;
         }

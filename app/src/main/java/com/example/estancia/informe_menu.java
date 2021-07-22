@@ -44,7 +44,7 @@ public class informe_menu extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.customactionbar);
         TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
         txtActionbar.setText("MENU DE INFORMES");
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
+       // getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);

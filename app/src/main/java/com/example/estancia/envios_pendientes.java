@@ -45,7 +45,7 @@ public class envios_pendientes extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.customactionbar);
         TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
         txtActionbar.setText("REGISTROS PENDIENTES A EXPORTAR");
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
+       // getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
@@ -67,7 +67,7 @@ public class envios_pendientes extends AppCompatActivity {
                 "a.cantidad " +
                 "from registro_cabecera a " +
                 "inner join estancia b on a.cab_id_estancia = b.id_estancia " +
-                "inner join potrero c on a.cab_id_potrero = c.id_potrero where a.estado='A' "   ,null);
+                "inner join potrero c on a.cab_id_potrero = c.id_potrerosqlite where a.estado='A' "   ,null);
             int c=0;
         while (cursor.moveToNext()){
             usuario=new Usuario();

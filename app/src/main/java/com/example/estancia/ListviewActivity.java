@@ -81,7 +81,7 @@ public class ListviewActivity extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.customactionbar);
         TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
         txtActionbar.setText("INFORME ANIMALES DETALLE");
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
+      //  getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
@@ -208,7 +208,7 @@ public class ListviewActivity extends AppCompatActivity {
                 "a.cantidad " +
                 "from registro_cabecera a " +
                 "inner join estancia b on a.cab_id_estancia = b.id_estancia " +
-                "inner join potrero c on a.cab_id_potrero = c.id_potrero " +
+                "inner join potrero c on a.cab_id_potrero = c.id_potrerosqlite " +
                 "and a.fecha='"+txt_fecha.getText().toString().trim()+"' and a.estado='A' ) T ORDER BY 1 ASC" ,null);
 
         while (cursor.moveToNext()){
@@ -266,7 +266,8 @@ public class ListviewActivity extends AppCompatActivity {
                 "inner join animal_potrero b on a.cod_interno = b.cod_cabecera " +
                 "inner join animales_actualizados c on b.desc_animal = c.id or b.desc_animal = c.nrocaravana " +
                 "inner join categorias d on c.id_categoria = d.id_categoria " +
-                "inner join estancia e on a.cab_id_estancia = e.id_estancia inner join potrero f on a.cab_id_potrero = f.id_potrero " +
+                "inner join estancia e on a.cab_id_estancia = e.id_estancia " +
+                "inner join potrero f on a.cab_id_potrero = f.id_potrerosqlite " +
                 " where a.cod_interno='"+id_registro+"' and b.cod_cabecera=c.registro and a.estado not in ('C') " +
                 " group by a.cod_interno,e.desc_estancia, f.desc_potrero, a.fecha,  d.categoria, c.comprada" +
                 " UNION ALL" +
@@ -293,12 +294,7 @@ public class ListviewActivity extends AppCompatActivity {
             registro=Detalle_registro.getIdregistro().toString();
             listadetalle.add(Detalle_registro);
         }
-
-
-
-        obtenerDetalle();
-
-
+       obtenerDetalle();
      }
 
     private void ir_cuadro(String id_registro)          {

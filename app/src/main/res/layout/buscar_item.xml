@@ -4,8 +4,146 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorGray">
+    android:layout_height="wrap_content"
+    android:background="#393837">
+
+
+    <TextView
+        android:id="@+id/TxtDescCarimboCuadro"
+        android:layout_width="258dp"
+        android:layout_height="45dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="30dp"
+        android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
+        android:ems="10"
+        android:hint="SELECCIONAR"
+        android:textAlignment="textStart"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textStyle="bold"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintStart_toEndOf="@+id/textView13"
+        app:layout_constraintTop_toBottomOf="@+id/TxtDescRazaCuadro"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/TxtDescColorCuadro"
+        android:layout_width="261dp"
+        android:layout_height="35dp"
+        android:layout_alignParentEnd="false"
+        android:layout_marginStart="4dp"
+        android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
+
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:hint="SELECCIONAR"
+
+        android:textAlignment="textStart"
+
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textStyle="bold"
+        app:autoSizeMaxTextSize="20sp"
+
+
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintStart_toEndOf="@+id/textView9"
+        app:layout_constraintTop_toBottomOf="@+id/txt_caravana"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/TxtDescRazaCuadro"
+        android:layout_width="272dp"
+        android:layout_height="36dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="30dp"
+
+        android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
+        android:ems="10"
+        android:hint="SELECCIONAR"
+        android:textAlignment="textStart"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textStyle="bold"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintStart_toEndOf="@+id/textView11"
+        app:layout_constraintTop_toBottomOf="@+id/TxtDescColorCuadro"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/TxtDescCategoriaCuadro"
+        android:layout_width="246dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="22dp"
+        android:ems="10"
+        android:hint="SELECCIONAR"
+        android:textAlignment="textStart"
+        android:textColor="@color/white"
+        android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
+        android:textColorHint="@color/white"
+        android:textStyle="bold"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintStart_toEndOf="@+id/textView16"
+        app:layout_constraintTop_toBottomOf="@+id/TxtDescCarimboCuadro"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/TxtCodCategoriaCuadro"
+        android:layout_width="40dp"
+        android:layout_height="38dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:hint="COD"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/textView16"
+        app:layout_constraintTop_toBottomOf="@+id/TxtDescCarimboCuadro"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/TxtCodColorCuadro"
+        android:layout_width="40dp"
+        android:layout_height="38dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:hint="COD"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/textView9"
+        app:layout_constraintTop_toBottomOf="@+id/textView7"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/TxtCodRazaCuadro"
+        android:layout_width="40dp"
+        android:layout_height="38dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:hint="COD"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/textView11"
+        app:layout_constraintTop_toBottomOf="@+id/TxtCodColorCuadro"
+        tools:ignore="MissingConstraints" />
 
 
     <TextView
@@ -14,29 +152,32 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/radio_grupo"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="16dp"
-
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="32dp"
         android:text="COMPRADA"
         android:textAllCaps="true"
-        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         android:textStyle="bold|italic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radio_grupo"
+        app:layout_constraintTop_toBottomOf="@+id/textView16"
         tools:ignore="MissingConstraints" />
 
     <EditText
         android:id="@+id/txt_caravana"
-        android:layout_width="123dp"
-        android:layout_height="53dp"
+        android:layout_width="235dp"
+        android:layout_height="40dp"
         android:layout_below="@+id/id_animal"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="24dp"
         android:layout_toEndOf="@+id/textView7"
-        android:textColor="@android:color/background_dark"
-        android:textSize="15sp"
+        android:background="@color/white"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:hint=""
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.042"
         app:layout_constraintStart_toEndOf="@+id/textView7"
         app:layout_constraintTop_toBottomOf="@+id/id_animal" />
 
@@ -58,49 +199,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:textColor="#066112"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:text="SEXO:"
         android:textAllCaps="true"
-        android:textSize="15sp"
+        android:textColor="#F1F1F1"
+        android:textSize="18sp"
         android:textStyle="bold|italic"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_categoria"
+        app:layout_constraintTop_toBottomOf="@+id/textView16"
         tools:ignore="MissingConstraints" />
+
 
     <EditText
         android:id="@+id/id_animal"
-        android:layout_width="277dp"
-        android:layout_height="36dp"
+        android:layout_width="366dp"
+        android:layout_height="40dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-
-        android:layout_toEndOf="@+id/id"
+        android:layout_marginTop="12dp"
+        android:background="@color/white"
         android:textAllCaps="true"
-        android:textColor="@android:color/background_dark"
-        android:textSize="15sp"
+        android:textColor="#000000"
+        android:textColorHint="@color/black"
+        android:textSize="18sp"
         android:textStyle="bold"
+        android:hint="IDE ELECTRONICO"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.022"
-        app:layout_constraintStart_toEndOf="@+id/id"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="3dp" />
-
-    <TextView
-        android:id="@+id/id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="IDE:"
-        android:textAllCaps="true"
-        android:textColor="#066112"
-        android:textSize="15sp"
-        android:textStyle="bold|italic"
+        app:layout_constraintHorizontal_bias="0.481"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="13dp" />
-
+        app:layout_constraintTop_toBottomOf="@+id/boton_grabar"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/textView7"
@@ -108,40 +239,29 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/id_animal"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="40dp"
-        android:textColor="#066112"
+        android:layout_marginStart="16dp"
 
-        android:text="NUMERO DE CARAVANA:"
+        android:layout_marginTop="32dp"
+        android:text="CARAVANA:"
         android:textAllCaps="true"
-        android:textSize="15sp"
+        android:textColor="#F1F1F1"
+        android:textSize="18sp"
         android:textStyle="bold|italic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/id"
+        app:layout_constraintTop_toBottomOf="@+id/id_animal"
         tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/boton_grabar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/radio_grupo_compra"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="32dp"
-        android:drawableLeft="@drawable/ic_action_guardar"
-        android:text="GUARDAR Y CERRAR"
-        app:layout_constraintTop_toBottomOf="@+id/radio_grupo_compra"
-        tools:layout_editor_absoluteX="-5dp" />
 
     <RadioGroup
         android:id="@+id/radio_grupo"
-        android:layout_width="185dp"
-
-        android:layout_height="48dp"
+        android:layout_width="252dp"
+        android:layout_height="33dp"
         android:layout_below="@+id/textView8"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
+        android:background="@color/white"
         android:orientation="horizontal"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8">
 
@@ -154,64 +274,62 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/radio_grupo"
             android:text="MACHO"
-            android:textColor="#066112"
-
-            android:textSize="15sp"
+            android:textColor="#000000"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <RadioButton
             android:id="@+id/radio_hembra"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignStart="@+id/radio_grupo"
             android:layout_alignBottom="@+id/radio_grupo"
             android:text="HEMBRA"
-            android:textColor="#066112"
+            android:textColor="#000000"
 
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
     </RadioGroup>
 
     <RadioGroup
         android:id="@+id/radio_grupo_compra"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
+        android:layout_width="248dp"
+        android:layout_height="28dp"
         android:layout_below="@+id/textView15"
 
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="28dp"
+        android:background="@color/white"
         android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView15">
+        app:layout_constraintStart_toEndOf="@+id/textView15"
+        app:layout_constraintTop_toBottomOf="@+id/textView16">
 
         <!-- In RadioGroup create the 1 Radio Button-->
         <!-- like this we will add some more Radio Button-->
 
         <RadioButton
             android:id="@+id/radio_compra_si"
-            android:layout_width="58dp"
-            android:textColor="#066112"
+            android:layout_width="95dp"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/radio_grupo"
             android:layout_marginStart="16dp"
             android:orientation="horizontal"
             android:text="SI"
-            android:textSize="15sp"
+            android:textColor="#000000"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent" />
 
         <RadioButton
             android:id="@+id/radio_compra_no"
-            android:layout_width="wrap_content"
+            android:layout_width="111dp"
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/radio_grupo"
             android:layout_alignBottom="@+id/radio_grupo"
             android:text="NO"
-            android:textColor="#066112"
+            android:textColor="#000000"
 
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
     </RadioGroup>
@@ -230,102 +348,82 @@
 
     <TextView
         android:id="@+id/textView9"
-        android:layout_width="75dp"
-        android:layout_height="26dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="78dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="16dp"
 
+        android:layout_marginTop="32dp"
         android:text="PELAJE:"
         android:textAllCaps="true"
-        android:textColor="#066112"
-        android:textSize="15sp"
+        android:textColor="#F1F1F1"
+        android:textSize="18sp"
         android:textStyle="bold|italic"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
-    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-        android:id="@+id/spinner_color"
-        android:layout_width="287dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView9"
-        app:layout_constraintTop_toBottomOf="@+id/textView7"
-        tools:ignore="MissingConstraints" />
-
     <TextView
         android:id="@+id/textView11"
-        android:layout_width="59dp"
-        android:layout_height="36dp"
-        android:layout_marginTop="36dp"
+        android:layout_width="73dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
         android:text="RAZA:"
-        android:textColor="#066112"
 
         android:textAllCaps="true"
-        android:textSize="15sp"
+        android:textColor="#F1F1F1"
+        android:textSize="18sp"
         android:textStyle="bold|italic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
-
-    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-        android:id="@+id/spinner_raza"
-        android:layout_width="299dp"
-        android:layout_height="44dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView11"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <TextView
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="34dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
         android:text="CARIMBO:"
-        android:textColor="#066112"
 
-        android:textSize="15sp"
+        android:textColor="#F1F1F1"
+        android:textSize="18sp"
         android:textStyle="bold|italic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
-
-    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-        android:id="@+id/txt_carimbo"
-        android:layout_width="287dp"
-        android:layout_height="45dp"
-        android:layout_below="@+id/spinner_raza"
-        android:layout_alignStart="@+id/textView16"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="4dp"
-        android:accessibilityHeading="true"
-
-        android:dropDownWidth="match_parent"
-        android:theme="@style/AppTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView13"
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
 
     <TextView
         android:id="@+id/textView16"
         android:layout_width="wrap_content"
         android:layout_height="37dp"
-        android:textColor="#066112"
         android:layout_marginTop="32dp"
         android:text="CATEGORIA:"
         android:textAllCaps="true"
-        android:textSize="15sp"
+        android:textColor="#F1F1F1"
+        android:textSize="18sp"
         android:textStyle="bold|italic"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+        app:layout_constraintTop_toBottomOf="@+id/textView13"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="12dp" />
 
-    <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-        android:id="@+id/spinner_categoria"
-        android:layout_width="266dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="24dp"
+    <RelativeLayout
+        android:layout_width="397dp"
+        android:layout_height="239dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintTop_toBottomOf="@+id/radio_grupo_compra"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="-1dp">
+
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/boton_grabar"
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:drawableLeft="@drawable/ic_action_guardar"
+        android:text="GUARDAR Y CERRAR"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView16"
-        app:layout_constraintTop_toBottomOf="@+id/txt_carimbo" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="4dp" />
 
 </android.support.constraint.ConstraintLayout>

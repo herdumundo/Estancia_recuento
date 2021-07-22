@@ -1,0 +1,428 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#393837"
+    android:minHeight="100dp">
+
+
+    <RelativeLayout
+
+        android:id="@+id/relativeLayout7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout8"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CARAVANA:"
+            android:textAllCaps="true"
+            android:textColor="#F1F1F1"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"
+            tools:ignore="MissingConstraints" />
+
+        <EditText
+            android:id="@+id/txt_caravana"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="52dp"
+            android:layout_toEndOf="@+id/textView7"
+            android:background="@color/white"
+            android:hint="NRO. CARAVANA"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/boton_grabar"
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:drawableLeft="@drawable/ic_action_guardar"
+        android:text="GUARDAR Y CERRAR"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <RelativeLayout
+
+        android:id="@+id/relativeLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout7"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/lblRaza"
+            android:layout_width="93dp"
+            android:layout_height="35dp"
+            android:text="RAZA:"
+            android:textColor="#F1F1F1"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/TxtDescRazaCuadro"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginStart="-3dp"
+            android:layout_toEndOf="@+id/lblRaza"
+            android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
+            android:ems="10"
+            android:hint="SELECCIONAR"
+            android:textAlignment="textStart"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textStyle="bold"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeStepGranularity="2sp"
+            tools:ignore="MissingConstraints" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+
+        android:id="@+id/relativeLayout9"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout3"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="COMPRADA"
+            android:textAlignment="textStart"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"
+            tools:ignore="MissingConstraints" />
+
+
+        <TextView
+            android:id="@+id/txt_compra"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="56dp"
+            android:layout_marginBottom="133dp"
+            android:text="TextView"
+            android:visibility="gone"
+            tools:ignore="MissingConstraints" />
+    </RelativeLayout>
+
+    <RadioGroup
+        android:id="@+id/radio_grupo_compra"
+        android:layout_width="151dp"
+        android:layout_height="35dp"
+        android:layout_alignParentEnd="true"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout9">
+
+        <!-- In RadioGroup create the 1 Radio Button-->
+        <!-- like this we will add some more Radio Button-->
+
+        <RadioButton
+            android:id="@+id/radio_compra_si"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+
+            android:orientation="horizontal"
+            android:text="SI"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <RadioButton
+            android:id="@+id/radio_compra_no"
+            android:layout_width="69dp"
+            android:layout_height="wrap_content"
+
+            android:text="NO"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </RadioGroup>
+
+    <RelativeLayout
+
+        android:id="@+id/relativeLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout6"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/lblCarimbo"
+            android:layout_width="93dp"
+            android:layout_height="35dp"
+            android:text="CARIMBO:"
+            android:textColor="#F1F1F1"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/TxtDescCarimboCuadro"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginStart="-1dp"
+            android:layout_toEndOf="@+id/lblCarimbo"
+            android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
+            android:ems="10"
+            android:hint="SELECCIONAR"
+            android:textAlignment="textStart"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textStyle="bold"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeStepGranularity="2sp"
+            tools:ignore="MissingConstraints" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout4"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/lblPelaje"
+            android:layout_width="93dp"
+            android:layout_height="35dp"
+            android:text="PELAJE:"
+            android:textColor="#F1F1F1"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/TxtDescColorCuadro"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_toEndOf="@+id/lblPelaje"
+            android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
+            android:ems="10"
+            android:hint="SELECCIONAR"
+            android:textAlignment="textStart"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textStyle="bold"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeStepGranularity="2sp"
+            tools:ignore="MissingConstraints" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+
+        android:id="@+id/relativeLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout5"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/lblCategoria"
+            android:layout_width="110dp"
+            android:layout_height="35dp"
+
+            android:text="CATEGORIA:"
+            android:textColor="#F1F1F1"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/TxtDescCategoriaCuadro"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_toEndOf="@+id/lblCategoria"
+            android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
+            android:ems="10"
+            android:hint="SELECCIONAR"
+            android:textAlignment="textStart"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textStyle="bold"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeMinTextSize="12sp"
+            app:autoSizeStepGranularity="2sp"
+            tools:ignore="MissingConstraints" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+
+        android:id="@+id/relativeLayout8"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/boton_grabar"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:id="@+id/id_animal"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="12dp"
+            android:background="@color/white"
+            android:hint="IDE ELECTRONICO"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="#000000"
+            android:textColorHint="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.481"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints" />
+
+
+    </RelativeLayout>
+
+
+    <RadioGroup
+        android:id="@+id/radio_grupo"
+        android:layout_width="252dp"
+        android:layout_height="33dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <!-- In RadioGroup create the 1 Radio Button-->
+        <!-- like this we will add some more Radio Button-->
+
+        <RadioButton
+            android:id="@+id/radio_macho"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/radio_grupo"
+            android:text="MACHO"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <RadioButton
+            android:id="@+id/radio_hembra"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignStart="@+id/radio_grupo"
+            android:layout_alignBottom="@+id/radio_grupo"
+            android:text="HEMBRA"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/TxtCodCategoriaCuadro"
+        android:layout_width="40dp"
+        android:layout_height="38dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:hint="COD"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/TxtCodColorCuadro"
+        android:layout_width="40dp"
+        android:layout_height="38dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:hint="COD"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/TxtCodRazaCuadro"
+        android:layout_width="40dp"
+        android:layout_height="38dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:ems="10"
+        android:hint="COD"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/txt_posicion"
+        android:layout_width="74dp"
+        android:layout_height="33dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="127dp"
+        android:layout_marginBottom="254dp"
+        android:text="TextView"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints" />
+</android.support.constraint.ConstraintLayout>

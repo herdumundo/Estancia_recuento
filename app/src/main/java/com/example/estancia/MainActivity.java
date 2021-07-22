@@ -55,15 +55,19 @@ public class MainActivity extends AppCompatActivity {
          btn_potrero= (Button)findViewById(R.id.bnt_potrero);
         controles.getMacAddr();
         controles.context_menuPrincipal=this;
+
+
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //bellow setSupportActionBar(toolbar);
         getSupportActionBar().setCustomView(R.layout.customactionbar);
         TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
         txtActionbar.setText("MENU DE PRINCIPAL");
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
+       // getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
         this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+
+
         controles.conexion_sqlite(this);
 
         btn_movimiento.setOnClickListener(new View.OnClickListener() {
@@ -232,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
                 values.put("id_potrero",id.toString());
                 values.put("id_estancia",id_estancia_fk.toString());
                 values.put("desc_potrero",descripcion.toString());
+                values.put("estado","C");
                 db.insert("potrero",null,values);
             }
             db.close();

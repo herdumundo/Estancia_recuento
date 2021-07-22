@@ -3,15 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minHeight="250dp">
+    android:minHeight="100dp">
 
 
     <TextView
         android:id="@+id/txt_fecha"
-        android:layout_width="386dp"
+        android:layout_width="match_parent"
         android:layout_height="42dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
+        android:textColor="@color/black"
+
         android:hint="INGRESAR FECHA"
         android:textAlignment="center"
         android:textSize="20sp"
@@ -24,56 +26,65 @@
 
     <RelativeLayout
         android:id="@+id/relativeLayout2"
-        android:layout_width="391dp"
-        android:layout_height="35dp"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
 
+        android:layout_marginTop="8dp"
         android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="1dp">
+        tools:ignore="MissingConstraints">
 
         <TextView
             android:id="@+id/textView5"
             android:layout_width="99dp"
             android:layout_height="31dp"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="0dp"
             android:fontFamily="monospace"
             android:text="POTRERO"
+            android:textColor="@color/black"
+
             android:textAlignment="viewStart"
-            android:textSize="19sp"
-            android:textStyle="bold"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="4dp"
-            tools:layout_editor_absoluteY="176dp" />
+            app:autoSizeMaxTextSize="19sp"
+            app:autoSizeMinTextSize="7sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/TxtCodPotrero"
             android:layout_width="46dp"
             android:layout_height="match_parent"
             android:layout_marginStart="-1dp"
-
             android:layout_toEndOf="@+id/textView5"
             android:ems="10"
             android:hint="COD"
             android:textAlignment="center"
-            android:textSize="15sp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="gone"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="96dp"
             tools:layout_editor_absoluteY="176dp" />
 
         <TextView
             android:id="@+id/TxtDescPotrero"
-            android:layout_width="197dp"
+            android:layout_width="288dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="0dp"
-            android:layout_marginEnd="50dp"
-            android:layout_toEndOf="@+id/TxtCodPotrero"
+            android:layout_marginEnd="6dp"
+            android:layout_toEndOf="@+id/textView5"
+            android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_24"
             android:ems="10"
+
             android:hint="SELECCIONAR POTRERO"
-            android:textAlignment="center"
-            android:textSize="15sp"
+            android:textAlignment="textStart"
+            android:textColor="@color/black"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeMinTextSize="7sp"
+            app:autoSizeStepGranularity="2sp"
+            android:textStyle="bold"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="180dp"
             tools:layout_editor_absoluteY="176dp" />
@@ -82,59 +93,66 @@
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="391dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="37dp"
 
         android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_fecha"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp">
+        tools:ignore="MissingConstraints">
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="99dp"
+            android:textColor="@color/black"
+
             android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_marginStart="0dp"
             android:fontFamily="monospace"
             android:text="ESTANCIA"
             android:textAlignment="viewStart"
-            android:textSize="19sp"
+            app:autoSizeMaxTextSize="19sp"
+            app:autoSizeMinTextSize="7sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+
             android:textStyle="bold"
-            android:typeface="normal"
-            tools:ignore="MissingConstraints"
-            tools:layout_editor_absoluteX="4dp"
-            tools:layout_editor_absoluteY="96dp" />
+            android:typeface="normal" />
 
         <TextView
             android:id="@+id/TxtCodEstancia"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_marginStart="-2dp"
-
             android:layout_toEndOf="@+id/textView4"
             android:ems="10"
-
             android:hint="COD"
+
             android:textAlignment="center"
-            android:textSize="15sp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:visibility="gone"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="122dp"
             tools:layout_editor_absoluteY="96dp" />
 
         <TextView
             android:id="@+id/TxtDescEstancia"
-            android:layout_width="196dp"
+            android:layout_width="281dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="50dp"
-            android:layout_toEndOf="@+id/TxtCodEstancia"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="7dp"
+            android:layout_toEndOf="@+id/textView4"
+            android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_24"
             android:ems="10"
             android:hint="SELECCIONAR ESTANCIA"
-            android:textAlignment="center"
-            android:textSize="15sp"
+            android:textAlignment="textStart"
+            android:textColor="@color/black"
+            app:autoSizeMaxTextSize="20sp"
+            app:autoSizeMinTextSize="7sp"
+            app:autoSizeStepGranularity="2sp"
+
+            android:textStyle="bold"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="182dp"
             tools:layout_editor_absoluteY="96dp" />
@@ -156,14 +174,10 @@
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="232dp"
+        android:layout_height="356dp"
         android:background="@color/colorPrimary"
         android:backgroundTint="@color/colorAccent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relative"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@+id/relative" />
 
     <TextView
         android:id="@+id/textView2"
@@ -172,7 +186,7 @@
         android:text="CANTIDAD DE ANIMALES"
         android:textAlignment="center"
         android:textAllCaps="false"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/black"
 
         android:textSize="14sp"
         android:textStyle="bold|italic"
@@ -196,25 +210,24 @@
         android:id="@+id/txt_cod_animal"
         android:layout_width="match_parent"
         android:layout_height="51dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:cursorVisible="true"
         android:ems="10"
         android:focusable="true"
-        android:textAlignment="center"
         android:hint="COD ANIMAL"
         android:inputType="textPersonName"
+        android:textAlignment="center"
         app:layout_constraintTop_toBottomOf="@+id/relativeLayout2"
-        tools:layout_editor_absoluteX="-2dp"
+        tools:layout_editor_absoluteX="0dp"
         tools:text=" " />
 
     <TextView
         android:id="@+id/txt_cantidad"
         android:layout_width="match_parent"
         android:layout_height="24dp"
-
+        android:textColor="@color/black"
         android:text="0"
         android:textAlignment="center"
-        android:textColor="@color/colorAccent"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -244,6 +257,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:text="COMPRADAS"
+        android:textColor="@color/black"
+
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -268,6 +283,8 @@
         android:layout_height="25dp"
         android:layout_marginStart="120dp"
         android:text="0"
+        android:textColor="@color/black"
+
         android:textAlignment="center"
         android:textSize="18sp"
         android:textStyle="bold"

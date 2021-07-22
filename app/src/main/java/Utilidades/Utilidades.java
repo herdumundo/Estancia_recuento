@@ -13,14 +13,7 @@ public class Utilidades {
 
 
     ///////////////////////////////////////////////////////////////////////////////
-    public static final String TABLA_CABECERA_AP="registro_cabecera";
-    public static final String CAMPO_CABECERA_ID="cod_interno";
-    public static final String CAMPO_FECHA="fecha";
-    public static final String CAMPO_CABECERA_CANTIDAD="cantidad";
-    public static final String CAMPO_CABECERA_ID_POTRERO="cab_id_potrero";
-    public static final String CAMPO_CABECERA_ID_ESTANCIA="cab_id_estancia";
-    public static final String CAMPO_CABECERA_ESTADO="estado";
-    ///////////////////////////////////////////////////////////////////////////////
+     ///////////////////////////////////////////////////////////////////////////////
     public static final String TABLA_USUARIO="usuario";
     public static final String CAMPO_ID_USUARIO="id";
     public static final String CAMPO_NOMBRE="nombre";
@@ -35,8 +28,6 @@ public class Utilidades {
 
 
 
-    public static final String CREAR_TABLA_CABECERA="CREATE TABLE " + TABLA_CABECERA_AP+" ("+CAMPO_CABECERA_ID+" " +
-            "INTEGER , "+CAMPO_FECHA+" TEXT , "+CAMPO_CABECERA_CANTIDAD+" TEXT , "+CAMPO_CABECERA_ID_POTRERO+" TEXT , "+CAMPO_CABECERA_ID_ESTANCIA+" TEXT , "+CAMPO_CABECERA_ESTADO+" TEXT)";
 
     public static final String CREAR_TABLA_USUARIO="CREATE TABLE " + TABLA_USUARIO+" ("+CAMPO_ID_USUARIO+" " +
             "INTEGER PRIMARY KEY AUTOINCREMENT , "+CAMPO_NOMBRE+" TEXT , "+CAMPO_USER+" TEXT , "+CAMPO_PASS+" TEXT )";

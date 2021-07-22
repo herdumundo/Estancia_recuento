@@ -155,7 +155,7 @@ public class informe_recuento extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.customactionbar);
         TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
         txtActionbar.setText("ANIMALES INVENTARIADOS.");
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
+      //  getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
@@ -178,14 +178,15 @@ public class informe_recuento extends AppCompatActivity {
         Usuario usuario=null;
         listaUsuarios=new ArrayList<Usuario>();
 
-        Cursor cursor=db.rawQuery("SELECT * FROM (select  codinterno,potrero,estancia,cantidad from informe_cabecera where fecha='"+txt_fecha.getText().toString().trim()+"' "+
+        Cursor cursor=db.rawQuery("SELECT * FROM (" +
+                "select  codinterno,potrero,estancia,cantidad from informe_cabecera where fecha='"+txt_fecha.getText().toString().trim()+"' "+
                 " union all select " +
                         "a.cod_interno,  " +
                         "c.desc_potrero,b.desc_estancia,  " +
                         "a.cantidad " +
                         "from registro_cabecera a " +
                         "inner join estancia b on a.cab_id_estancia = b.id_estancia " +
-                        "inner join potrero c on a.cab_id_potrero = c.id_potrero " +
+                        "inner join potrero c on a.cab_id_potrero = c.id_potrerosqlite " +
                         "and a.fecha='"+txt_fecha.getText().toString().trim()+"' and a.estado='A' ) T ORDER BY 1 ASC" ,null);
         while (cursor.moveToNext()){
             usuario=new Usuario();

@@ -50,7 +50,7 @@ public class potrero extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.customactionbar);
         TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
         txtActionbar.setText("REGISTRO DE POTREROS");
-        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
+       // getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
@@ -80,18 +80,27 @@ public class potrero extends AppCompatActivity {
     }
 
     private void registrarPotrero() {
+        try {
+
+
         String posicion_estancia="";
         String combo_estancia = (String) Combo_estancia.getSelectedItem();
         String array_combo_estancia []= combo_estancia.split("-");
         posicion_estancia =array_combo_estancia[0];
 
         SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
+        SQLiteDatabase dbPotrero=controles.conSqlite.getReadableDatabase();
         ContentValues values=new ContentValues();
         values.put("id_estancia",posicion_estancia.toString().trim());
         values.put("desc_potrero",desc_potrero.getText().toString());
-        db.insert("potrero","id_potrero",values);
-        db.close();
+        values.put("estado","P");
 
+        long ID= db.insert("potrero","id_potrero",values);
+
+
+        dbPotrero.execSQL("UPDATE potrero SET   id_potrerosqlite='"+ID+"' WHERE id_potrero ='"+ ID+"'");
+            db.close();
+            dbPotrero.close();
         builder = new android.app.AlertDialog.Builder(potrero.this);
         builder.setIcon(potrero.this.getResources().getDrawable(R.drawable.ic_warning));
         builder.setTitle("¡Atención!");
@@ -99,11 +108,24 @@ public class potrero extends AppCompatActivity {
 
         builder.setNegativeButton("Cerrar",null);
         ad = builder.show();
-        ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(potrero.this.getResources().getColor(R.color.colorPrimaryDark));
+       // ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(potrero.this.getResources().getColor(R.color.colorPrimaryDark));
         ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
 
         desc_potrero.setText("");
         desc_potrero.requestFocus();
+
+        }
+        catch (Exception e ){
+            builder = new android.app.AlertDialog.Builder(potrero.this);
+            builder.setIcon(potrero.this.getResources().getDrawable(R.drawable.ic_warning));
+            builder.setTitle("¡Atención!");
+            builder.setMessage(e.getMessage());
+
+            builder.setNegativeButton("Cerrar",null);
+            ad = builder.show();
+            ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(potrero.this.getResources().getColor(R.color.colorPrimaryDark));
+            ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+        }
     }
 
     private void consultarestancia() {

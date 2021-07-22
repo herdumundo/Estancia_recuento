@@ -20,10 +20,13 @@ import com.example.estancia.ConexionSQLiteHelper;
 import com.example.estancia.ConnectionHelperGanBOne;
 import com.example.estancia.MainActivity;
 import com.example.estancia.R;
+import com.example.estancia.movimientos;
+
 import java.net.NetworkInterface;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collections;
 import java.util.List;
@@ -102,6 +105,34 @@ public class controles {
         }
         else if(tipo==5){
             activity.finish();
+        }
+
+        else if(tipo==6){
+            builder = new android.app.AlertDialog.Builder(context);
+            builder.setIcon(context.getResources().getDrawable(R.drawable.ic_warning));
+            builder.setTitle("¡Atención!");
+            builder.setMessage(texto);
+            builder.setPositiveButton("Si", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    Intent intent = new Intent(context, clase_destino);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    context.startActivity(intent);
+                    activity.finish();
+                    movimientos.Bluetooth.removeCommunicationCallback();
+                    movimientos.Bluetooth.disconnect();
+                    CustomIntent.customType(context,"right-to-left");
+
+                }
+            });
+            builder.setNegativeButton("No",null);
+            ad = builder.show();
+            ad.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+            ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+            ad.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+            ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
         }
         else {
             Intent intent = new Intent(context, clase_destino);
@@ -451,6 +482,7 @@ public class controles {
         }
         @Override
         protected Void doInBackground(Void... params) {
+            exportarPotreros();
             ExportarRegistrosRecuento();
             return null;
         }
@@ -852,6 +884,10 @@ public class controles {
         try {
             SQLiteDatabase db=conSqlite.getReadableDatabase();
             ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
+            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
+            String strSQL_estado = "DELETE FROM potrero where estado='C'      ";
+            db_estado.execSQL(strSQL_estado);
+
             connect = conexion.Connections();
             String query = "select *  from  app_v_potreros";
             Statement stmt = connect.createStatement();
@@ -861,6 +897,9 @@ public class controles {
                 values.put("id_potrero",rs.getString("CODPOT"));
                 values.put("id_estancia",rs.getString("CODEST"));
                 values.put("desc_potrero",rs.getString("POTRERO"));
+                values.put("id_potrerosqlite",rs.getString("CODPOT"));
+                values.put("estado","C");
+
                 db.insert("potrero", "id_potrero",values);
             }
             db.close();
@@ -963,4 +1002,70 @@ public class controles {
         }catch(Exception e){
             mensaje_registro=e.getMessage();
         }}
+
+        private static  void exportarPotreros(){
+            SQLiteDatabase dbPotrero=conSqlite.getReadableDatabase();
+            SQLiteDatabase dbcab=conSqlite.getReadableDatabase();
+            SQLiteDatabase dbDet=conSqlite.getReadableDatabase();
+        try {
+            int verificador=0;
+
+            SQLiteDatabase db=conSqlite.getReadableDatabase();
+            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
+            connect = conexion.Connections();
+            connect.setAutoCommit(false);
+            String id=""; String idEstancia="";String descPotrero="";
+            Cursor cursor=db.rawQuery(" select * from potrero where estado='P'" ,null);
+
+            Statement stmt = connect.createStatement();
+            String idPotreroSqlServer="";
+            dbPotrero.beginTransaction();
+            dbDet.beginTransaction();
+            dbcab.beginTransaction();
+            while (cursor.moveToNext()){
+
+                ResultSet rs = stmt.executeQuery("SELECT NEXT VALUE FOR IdPotrero as idPotrero    ");
+
+                while (  rs.next()){
+                    idPotreroSqlServer=rs.getString("IdPotrero");
+                }
+
+
+                id=cursor.getString(0);
+                idEstancia=cursor.getString(1);
+                descPotrero=cursor.getString(2);
+
+
+                PreparedStatement ps = connect.prepareStatement("insert into potreros (idPotrero,nombrePotrero,codEstancia,estado) " +
+                        " values ("+idPotreroSqlServer+",'"+descPotrero+"',"+idEstancia+",'N')");
+                ps.executeUpdate();
+
+                 dbPotrero.execSQL("UPDATE potrero SET estado = 'C', id_potrerosqlite='"+idPotreroSqlServer+"' WHERE id_potrero ='"+ id+"'");
+
+                dbDet.execSQL("UPDATE animal_potrero SET  id_potrero='"+idPotreroSqlServer+"' WHERE id_potrero ='"+ id+"'");
+
+                dbcab.execSQL("UPDATE registro_cabecera SET  cab_id_potrero='"+idPotreroSqlServer+"' WHERE cab_id_potrero ='"+ id+"'");
+
+                mensaje_registro ="REGISTROS EXPORTADOS CON EXITO";
+
+                }
+            dbPotrero.setTransactionSuccessful();
+            dbPotrero.endTransaction();
+            dbDet.setTransactionSuccessful();
+            dbDet.endTransaction();
+            dbcab.setTransactionSuccessful();
+            dbcab.endTransaction();
+            connect.commit();
+        } catch (Exception e){
+            mensaje_registro=e.getMessage();
+            dbDet.endTransaction();
+            dbcab.endTransaction();
+            dbPotrero.endTransaction();
+            try {
+                connect.rollback();
+            } catch (Exception ex) {
+                mensaje_registro=ex.toString();
+            }
+        }
+        }
 }
