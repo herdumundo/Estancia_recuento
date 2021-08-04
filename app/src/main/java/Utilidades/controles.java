@@ -42,6 +42,9 @@ public class controles {
     public static   Connection connect=null;
     public static   Context context_menuPrincipal;
     public static   int contadorProgress=0;
+    public static   int tipoRegistroImportador=1;
+    public static   int tipoRegistroExportador=1;
+
 
     public static void desconectarBD(){
         try {
@@ -50,6 +53,20 @@ public class controles {
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }
+    }
+    public static void verificacionReconexion(){
+        if(connect==null){
+            ConectarBD();
+        }
+    }
+    public  static  void ConectarBD(){
+        try {
+            ConnectionHelperGanBOne   conexion = new ConnectionHelperGanBOne();
+            connect = conexion.Connections();
+        }
+        catch (Exception e){
+
         }
     }
     public static void conexion_sqlite(Context context) {
@@ -183,7 +200,869 @@ public class controles {
             //handle exception
         }
     }
-    public static void exportarAnimalesUpd()       {
+
+
+
+
+    public static void ConfirmarExport()
+    {   try {
+            controles.getMacAddr();
+            MainActivity.id_exportar.setEnabled(false);
+            SQLiteDatabase db_contador= conSqlite.getReadableDatabase();
+            tipoRegistroExportador=1;//resetea a 1
+            Cursor cursor_contador=db_contador.rawQuery("SELECT  count(*) as contador FROM det_inv_animales where     estado='A'   " ,null);
+            while (cursor_contador.moveToNext())
+            {
+                contadorProgress=cursor_contador.getInt(0) ;
+            }
+
+            builder = new AlertDialog.Builder(context_menuPrincipal);
+            builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+            builder.setTitle("Exportación de datos.");
+            builder.setMessage("¿Desea enviar los registros realizados?");
+            builder.setPositiveButton("Si", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+            MainActivity.ProDialogExport =  new ProgressDialog(context_menuPrincipal);
+            MainActivity.ProDialogExport.setMax(contadorProgress);
+            LayerDrawable progressBarDrawable = new LayerDrawable(
+            new Drawable[]{ new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+            new int[]{Color.parseColor("black"),Color.parseColor("black")}),
+            new ClipDrawable(   new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+            new int[]{Color.parseColor("red"),Color.parseColor("red")}),
+            Gravity.START,  ClipDrawable.HORIZONTAL),   new ClipDrawable(   new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+            new int[]{Color.parseColor("red"),Color.parseColor("red")}), Gravity.START,  ClipDrawable.HORIZONTAL)    });
+            progressBarDrawable.setId(0,android.R.id.background);
+            progressBarDrawable.setId(1,android.R.id.secondaryProgress);
+            progressBarDrawable.setId(2,android.R.id.progress);
+            MainActivity.ProDialogExport.setTitle("RECUENTO REGISTRADOS.");
+            MainActivity.ProDialogExport.setMessage("ENVIANDO...");
+            MainActivity.ProDialogExport.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            MainActivity.ProDialogExport.setProgressDrawable(progressBarDrawable);
+            MainActivity.ProDialogExport.show();
+            MainActivity.ProDialogExport.setCanceledOnTouchOutside(false);
+            MainActivity.ProDialogExport.setCancelable(false);
+            final AsyncExportAnimales task = new AsyncExportAnimales();
+            task.execute();
+            MainActivity.id_exportar.setEnabled(true);
+            }
+        });
+        builder.setNegativeButton("No",new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                MainActivity.id_exportar.setEnabled(true);
+
+            }  });
+        builder.setCancelable(false);
+
+        ad = builder.show();
+        ad.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.azul_claro));
+        ad.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.azul_claro));
+        ad.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+        ad.getButton(AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+
+    }catch (Exception e){
+        connect=null;
+        builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
+        builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+        builder.setTitle("¡Atención!");
+        builder.setMessage("Base de datos fuera de servicio.");
+
+        builder.setNegativeButton("Cerrar",null);
+        ad = builder.show();
+        ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.colorPrimaryDark));
+        ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+    }
+    }
+
+    public static void ConfirmarSincro()
+    {
+        try {
+            controles.getMacAddr();
+            tipoRegistroImportador=1; //RESET AL INDICADOR.
+            verificacionReconexion();
+
+            Statement stmt2 = connect.createStatement();
+            ResultSet rs2 = stmt2.executeQuery("select count(*) as contador  from  animales");
+            while (rs2.next()) {
+                contadorProgress=rs2.getInt("contador");
+
+            }
+
+            builder = new AlertDialog.Builder(context_menuPrincipal);
+            builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+            builder.setTitle("Sincronizacion de datos.");
+            builder.setMessage("¿Desea importar los datos?");
+            builder.setPositiveButton("Si", new DialogInterface.OnClickListener()
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    MainActivity.ProDialogSincro =  new ProgressDialog(context_menuPrincipal);
+                    MainActivity.ProDialogSincro.setMax(contadorProgress);
+                    LayerDrawable progressBarDrawable = new LayerDrawable(
+                            new Drawable[]{
+                                    new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                                            new int[]{Color.parseColor("black"),Color.parseColor("black")}),
+                                    new ClipDrawable(
+                                            new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                                                    new int[]{Color.parseColor("red"),Color.parseColor("red")}),
+                                            Gravity.START,  ClipDrawable.HORIZONTAL),
+                                    new ClipDrawable(   new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+                                            new int[]{Color.parseColor("red"),Color.parseColor("red")}),
+                                            Gravity.START,  ClipDrawable.HORIZONTAL)    });
+                    progressBarDrawable.setId(0,android.R.id.background);
+                    progressBarDrawable.setId(1,android.R.id.secondaryProgress);
+                    progressBarDrawable.setId(2,android.R.id.progress);
+                    MainActivity.ProDialogSincro.setTitle("SINCRONIZACION.");
+                    MainActivity.ProDialogSincro.setMessage("IMPORTANDO...");
+                    MainActivity.ProDialogSincro.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    MainActivity.ProDialogSincro.setProgressDrawable(progressBarDrawable);
+                    MainActivity.ProDialogSincro.show();
+                    MainActivity.ProDialogSincro.setCanceledOnTouchOutside(false);
+                    MainActivity.ProDialogSincro.setCancelable(false);
+                    final AsyncSincroAnimales task = new AsyncSincroAnimales();
+                    task.execute();
+                }
+            });
+            builder.setNegativeButton("No",null);
+            ad = builder.show();
+            ad.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.azul_claro));
+            ad.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.azul_claro));
+            ad.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+            ad.getButton(AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+        }catch (Exception e){
+            connect=null;
+            builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
+            builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+            builder.setTitle("¡Atención!");
+            builder.setMessage("Base de datos fuera de servicio.");
+
+            builder.setNegativeButton("Cerrar",null);
+            ad = builder.show();
+            ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.colorPrimaryDark));
+            ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+            tipoRegistroImportador=0;
+        }
+
+    }
+
+
+    public static class AsyncExportAnimalesUpd  extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            MainActivity.ProDialogExport = ProgressDialog.show(context_menuPrincipal, "EXPORTANDO ANIMALES ACTUALIZADOS.", "ESPERE...", true);
+
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            exportarAnimalesUpd();
+            importar_informeCabecera();
+            importar_informeDetalle();
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            MainActivity.ProDialogExport.dismiss();
+            if (tipoRegistroExportador==0){
+                connect=null;
+                builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
+                builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+                builder.setTitle("¡Atención!");
+                builder.setMessage("Error al exportar los registros, verifique la conexion con el servidor.er");
+
+                builder.setNegativeButton("Cerrar",null);
+                ad = builder.show();
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.colorPrimaryDark));
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+            }
+            else
+            {
+                builder = new AlertDialog.Builder(context_menuPrincipal);
+                builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+                builder.setTitle("¡Atención!");
+                builder.setMessage("Registros exportados correctamente.");
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                ad = builder.show();
+                ad.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.verde));
+                ad.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+            }
+
+
+        }
+    }
+    public static class AsyncExportAnimales     extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            exportarPotreros();
+            ExportarRegistrosRecuento();
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            MainActivity.ProDialogExport.dismiss();
+            if(tipoRegistroExportador==0){
+                connect=null;
+                builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
+                builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+                builder.setTitle("¡Atención!");
+                builder.setMessage(mensaje_registro);
+
+                builder.setNegativeButton("Cerrar",null);
+                ad = builder.show();
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.colorPrimaryDark));
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+            }
+            else{
+                final AsyncExportAnimalesUpd task = new AsyncExportAnimalesUpd();
+                task.execute();
+            }
+
+
+        }
+    }
+
+    public static class AsyncSincroAnimales     extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            importar_animales();
+
+
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            MainActivity.ProDialogSincro.dismiss();
+            if (tipoRegistroImportador==0){
+                connect=null;
+                builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
+                builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+                builder.setTitle("¡Atención!");
+                builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+
+                builder.setNegativeButton("Cerrar",null);
+                ad = builder.show();
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.colorPrimaryDark));
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+            }
+            else {
+                ProgressBarrAnimalesUPD();
+            }
+        }
+    }
+
+
+    public static class AsyncSincroAnimalesUpd     extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            importar_animales_upd();
+
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            MainActivity.ProDialogSincro.dismiss();
+
+            if (tipoRegistroImportador==0){
+                connect=null;
+                builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
+                builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+                builder.setTitle("¡Atención!");
+                builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+
+                builder.setNegativeButton("Cerrar",null);
+                ad = builder.show();
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.colorPrimaryDark));
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+            }
+            else {
+                final AsyncSincroColores task = new AsyncSincroColores();
+                task.execute();
+            }
+        }
+    }
+
+    public static class AsyncSincroColores     extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            MainActivity.prodialog = ProgressDialog.show(context_menuPrincipal, "SINCRONIZANDO COLORES", "ESPERE...", true);
+
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            importar_colores();
+
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            MainActivity.prodialog.dismiss();
+
+            if (tipoRegistroImportador==0){
+                connect=null;
+                builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
+                builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+                builder.setTitle("¡Atención!");
+                builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+
+                builder.setNegativeButton("Cerrar",null);
+                ad = builder.show();
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.colorPrimaryDark));
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+            }
+            else {
+                final AsyncSincroRazas task = new AsyncSincroRazas();
+                task.execute();
+            }
+        }
+    }
+
+    public static class AsyncSincroRazas     extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            MainActivity.prodialog = ProgressDialog.show(context_menuPrincipal, "SINCRONIZANDO RAZAS", "ESPERE...", true);
+
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            importar_raza();
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            MainActivity.prodialog.dismiss();
+
+            if (tipoRegistroImportador==0){
+                connect=null;
+                builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
+                builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+                builder.setTitle("¡Atención!");
+                builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+
+                builder.setNegativeButton("Cerrar",null);
+                ad = builder.show();
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.colorPrimaryDark));
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+            }
+            else {
+                final AsyncSincroCategorias task = new AsyncSincroCategorias();
+                task.execute();
+            }
+        }
+    }
+
+    public static class AsyncSincroCategorias    extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            MainActivity.prodialog = ProgressDialog.show(context_menuPrincipal, "SINCRONIZANDO CATEGORIAS", "ESPERE...", true);
+
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            importar_categoria();
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            MainActivity.prodialog.dismiss();
+
+            if (tipoRegistroImportador==0){
+                connect=null;
+                builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
+                builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+                builder.setTitle("¡Atención!");
+                builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+
+                builder.setNegativeButton("Cerrar",null);
+                ad = builder.show();
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.colorPrimaryDark));
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+            }
+            else {
+                final AsyncSincroPotreros task = new AsyncSincroPotreros();
+                task.execute();
+            }
+        }
+    }
+
+    public static class AsyncSincroPotreros    extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            MainActivity.prodialog = ProgressDialog.show(context_menuPrincipal, "SINCRONIZANDO POTREROS", "ESPERE...", true);
+
+
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            importar_potreros();
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            MainActivity.prodialog.dismiss();
+
+            if (tipoRegistroImportador==0){
+                connect=null;
+                builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
+                builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+                builder.setTitle("¡Atención!");
+                builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+
+                builder.setNegativeButton("Cerrar",null);
+                ad = builder.show();
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.colorPrimaryDark));
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+            }
+            else {
+                final AsyncSincroEstancias task = new AsyncSincroEstancias();
+                task.execute();
+            }
+        }
+    }
+
+    public static class AsyncSincroEstancias     extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            MainActivity.prodialog = ProgressDialog.show(context_menuPrincipal, "SINCRONIZANDO ESTANCIAS E INFORMES", "ESPERE...", true);
+        }
+        @Override
+        protected Void doInBackground(Void... params) {
+            importar_estancias();
+            importar_informeCabecera();
+            importar_informeDetalle();
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            MainActivity.prodialog.dismiss();
+            if (tipoRegistroImportador==0){
+                connect=null;
+                builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
+                builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+                builder.setTitle("¡Atención!");
+                builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+
+                builder.setNegativeButton("Cerrar",null);
+                ad = builder.show();
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.colorPrimaryDark));
+                ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+            }
+            else {
+                builder = new AlertDialog.Builder(context_menuPrincipal);
+                builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+                builder.setTitle("¡Atención!");
+                builder.setMessage("Datos sincronizados con exito.");
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                ad = builder.show();
+                ad.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.verde));
+                ad.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
+            }
+
+        }
+    }
+
+
+
+    private static void importar_animales()
+    {
+        try {
+            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
+            db_estado.execSQL("DELETE FROM animales     ");
+            db_estado.close();
+            SQLiteDatabase db_cabecera=conSqlite.getReadableDatabase();
+            db_cabecera.execSQL("DELETE FROM cab_inv_animales   where estado='C'  ");
+            db_cabecera.close();
+            SQLiteDatabase db_detalle=conSqlite.getReadableDatabase();
+            db_detalle.execSQL("DELETE FROM det_inv_animales  where estado='C' ");
+            db_detalle.close();
+
+            verificacionReconexion();
+            SQLiteDatabase db=conSqlite.getReadableDatabase();
+            verificacionReconexion();
+            Statement stmt = connect.createStatement();
+            ResultSet rs = stmt.executeQuery("select *  from  animales");
+
+            int c=0;
+
+            while (rs.next()) {
+
+           ContentValues values=new ContentValues();
+                values.put("id",rs.getString("ide"));
+                values.put("codinterno",rs.getString("codinterno"));
+                values.put("nrocaravana",rs.getString("nrocaravana"));
+                values.put("sexo",rs.getString("sexo"));
+                values.put("color",rs.getString("color"));
+                values.put("raza",rs.getString("raza"));
+                values.put("carimbo",rs.getString("carimbo"));
+                values.put("ncmadre",rs.getString("ncmadre"));
+                values.put("ncpadre",rs.getString("ncpadre"));
+                values.put("id_categoria",rs.getString("categoria"));
+                db.insert("animales", "id",values);
+                c++;
+                MainActivity.ProDialogSincro.setProgress(c);
+            }
+            mensaje_registro="ANIMALES SINCRONIZADOS.";
+            db.close();
+            rs.close();
+
+
+        }catch(Exception e){
+            tipoRegistroImportador=0;
+            mensaje_registro=e.getMessage();
+        }}
+    private static void ProgressBarrAnimalesUPD(){
+        try {
+
+
+            verificacionReconexion();
+            Statement stmt3 = connect.createStatement();
+            ResultSet rs3 = stmt3.executeQuery("select count(*) as contador  from  animales_upd");
+            while (rs3.next()) {
+                contadorProgress=rs3.getInt("contador");
+            }
+            rs3.close();
+
+
+            MainActivity.ProDialogSincro =  new ProgressDialog(context_menuPrincipal);
+            MainActivity.ProDialogSincro.setMax(contadorProgress);
+            LayerDrawable progressBarDrawable = new LayerDrawable(
+            new Drawable[]{ new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+            new int[]{Color.parseColor("black"),Color.parseColor("black")}),
+            new ClipDrawable( new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+            new int[]{Color.parseColor("yellow"),Color.parseColor("yellow")}), Gravity.START, ClipDrawable.HORIZONTAL),
+            new ClipDrawable( new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
+            new int[]{Color.parseColor("yellow"),Color.parseColor("yellow")}),
+            Gravity.START, ClipDrawable.HORIZONTAL) });
+            progressBarDrawable.setId(0,android.R.id.background);
+            progressBarDrawable.setId(1,android.R.id.secondaryProgress);
+            progressBarDrawable.setId(2,android.R.id.progress);
+            MainActivity.ProDialogSincro.setTitle("SINCRONIZANDO ANIMALES ACTUALIZADOS");
+            MainActivity.ProDialogSincro.setMessage("DESCARGANDO...");
+            MainActivity.ProDialogSincro.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            MainActivity.ProDialogSincro.setProgressDrawable(progressBarDrawable);
+            MainActivity.ProDialogSincro.show();
+            MainActivity.ProDialogSincro.setCanceledOnTouchOutside(false);
+            MainActivity.ProDialogSincro.setCancelable(false);
+            final AsyncSincroAnimalesUpd task = new AsyncSincroAnimalesUpd();
+            task.execute();
+        }catch (Exception e){
+            connect=null;
+            builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
+            builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
+            builder.setTitle("¡Atención!");
+            builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+
+            builder.setNegativeButton("Cerrar",null);
+            ad = builder.show();
+            ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.colorPrimaryDark));
+            ad.getButton(android.app.AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
+        }
+        }
+
+    private static void importar_animales_upd()
+    {
+        try {
+            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
+            db_estado.execSQL("DELETE FROM animales_actualizados  WHERE   estado = 'C'");
+            db_estado.close();
+
+            SQLiteDatabase db=conSqlite.getReadableDatabase();
+            verificacionReconexion();
+            Statement stmt = connect.createStatement();
+            ResultSet rs = stmt.executeQuery("select *  from  animales_upd");
+
+            int c=0;
+
+            while (rs.next())
+            {
+                ContentValues values=new ContentValues();
+                values.put("id",rs.getString("ide"));
+                values.put("id_sincro",rs.getString("codinterno"));
+                values.put("nrocaravana",rs.getString("nrocaravana"));
+                values.put("sexo",rs.getString("sexo"));
+                values.put("color",rs.getString("color"));
+                values.put("raza",rs.getString("raza"));
+                values.put("carimbo",rs.getString("carimbo"));
+                values.put("id_categoria",rs.getString("categoria"));
+                values.put("comprada",rs.getString("comprada"));
+                values.put("estado","C");
+                db.insert("animales_actualizados", "id",values);
+
+                /*db.execSQL("insert into animales_actualizados (id ,id_sincro ,nrocaravana , sexo ,color , raza , carimbo,id_categoria,comprada,estado) " +
+                        " values ('"+rs.getString("ide")+"','"+rs.getString("codinterno")+"','"+rs.getString("nrocaravana")+"'," +
+                        "'"+rs.getString("sexo")+"','"+rs.getString("color")+"','"+rs.getString("raza")+
+                        "','"+rs.getString("carimbo")+"','"+rs.getString("categoria")+"','"+rs.getString("comprada")+"','C')");
+*/
+                c++;
+                MainActivity.ProDialogSincro.setProgress(c);
+            }
+
+            db.close();
+            rs.close();
+            // conn.close();
+            mensaje_registro="PROCESO REALIZADO CON EXITO";
+        }catch(Exception e){
+            tipoRegistroImportador=0;
+            mensaje_registro=e.getMessage();
+        }}
+
+    private static void importar_colores()
+    {
+        try {
+            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
+            String strSQL_estado = "DELETE FROM color      ";
+            db_estado.execSQL(strSQL_estado);
+            db_estado.close();
+            verificacionReconexion();
+            SQLiteDatabase db=conSqlite.getReadableDatabase();
+
+            Statement stmt = connect.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from  color ");
+            while (rs.next()) {
+                ContentValues values=new ContentValues();
+                values.put("id_color",rs.getString("id"));
+                values.put("color",rs.getString("color"));
+                db.insert("color", "id_color",values);
+            }
+            db.close();
+            rs.close();
+
+            mensaje_registro="COLORES SINCRONIZADOS.";
+        }catch(Exception e){
+            tipoRegistroImportador=0;
+            mensaje_registro=e.getMessage();
+        }}
+    private static void importar_raza()
+    {
+        try {
+            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
+            String strSQL_estado = "DELETE FROM razas      ";
+            db_estado.execSQL(strSQL_estado);
+            db_estado.close();
+
+            SQLiteDatabase db=conSqlite.getReadableDatabase();
+            verificacionReconexion();
+            Statement stmt = connect.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from  razas ");
+            while (rs.next()) {
+                ContentValues values=new ContentValues();
+                values.put("id_raza",rs.getString("id_raza"));
+                values.put("raza",rs.getString("raza"));
+                db.insert("razas", "id_raza",values);
+            }
+
+            db.close();
+            rs.close();
+            mensaje_registro="RAZAS SINCRONIZADAS.";
+        }catch(Exception e){
+            tipoRegistroImportador=0;
+            mensaje_registro=e.getMessage();
+        }}
+    private static void importar_categoria()
+    {
+        try {
+            SQLiteDatabase db=conSqlite.getReadableDatabase();
+            verificacionReconexion();
+            Statement stmt = connect.createStatement();
+            ResultSet rs = stmt.executeQuery("select * from  categorias ");
+            while (rs.next()) {
+                ContentValues values=new ContentValues();
+                values.put("id_categoria",rs.getString("id_categoria"));
+                values.put("categoria",rs.getString("categoria"));
+                db.insert("categorias", "id_categoria",values);
+            }
+            verificacionReconexion();
+            db.close();
+            rs.close();
+            mensaje_registro="CATEGORIAS SINCRONIZADAS.";
+        }catch(Exception e){
+            tipoRegistroImportador=0;
+            mensaje_registro=e.getMessage();
+        }}
+
+    private static void importar_potreros()
+    {
+        try {
+            SQLiteDatabase db=conSqlite.getReadableDatabase();
+             SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
+            String strSQL_estado = "DELETE FROM potrero where estado='C'      ";
+            db_estado.execSQL(strSQL_estado);
+
+            verificacionReconexion();
+            String query = "select *  from  app_v_potreros";
+            Statement stmt = connect.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            while ( rs.next()){
+                ContentValues values=new ContentValues();
+                values.put("id_potrero",rs.getString("CODPOT"));
+                values.put("id_estancia",rs.getString("CODEST"));
+                values.put("desc_potrero",rs.getString("POTRERO"));
+                values.put("id_potrerosqlite",rs.getString("CODPOT"));
+                values.put("estado","C");
+
+                db.insert("potrero", "id_potrero",values);
+            }
+
+            db.close();
+            mensaje_registro="POTREROS SINCRONIZADOS.";
+        }catch(Exception e){
+            tipoRegistroImportador=0;
+            mensaje_registro=e.getMessage();
+        }}
+
+    private static void importar_estancias() {
+        try {
+            SQLiteDatabase db=conSqlite.getReadableDatabase();
+            verificacionReconexion();
+            String query = "select *  from  app_v_estancias";
+            Statement stmt = connect.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            while ( rs.next()){
+
+                ContentValues values=new ContentValues();
+                values.put("id_estancia",rs.getString("CODEST"));
+                values.put("desc_estancia",rs.getString("ESTANCIA"));
+                db.insert("estancia", null,values);
+            }
+
+            db.close();
+            mensaje_registro="ESTANCIAS SINCRONIZADAS.";
+
+        }catch(Exception e){
+            tipoRegistroImportador=0;
+            mensaje_registro=e.getMessage();
+        }}
+
+
+    private static void importar_informeCabecera()
+    {
+        try {
+            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
+            String strSQL_estado = "DELETE FROM informe_cabecera      ";
+            db_estado.execSQL(strSQL_estado);
+            db_estado.close();
+
+            SQLiteDatabase db=conSqlite.getReadableDatabase();
+            verificacionReconexion();
+            Statement stmt = connect.createStatement();
+            ResultSet rs = stmt.executeQuery("select *  from  app_v_cabecera_recuento where mac='"+macAddress+"'");
+            int c=0;
+            while (rs.next()) {
+                db.execSQL("insert into informe_cabecera (id ,codinterno ,fecha , estancia ,potrero , cantidad , mac ) " +
+                " values ('"+rs.getString("id")+"','"+rs.getString("cod_interno")+"','"+rs.getString("fecha")+"'," +
+                "'"+rs.getString("descEstancia")+"','"+rs.getString("nombrePotrero")+"','"+rs.getString("cantidad")+"','"+rs.getString("mac")+"')");
+             }
+            mensaje_registro="INFORMES SINCRONIZADOS.";
+
+            db.close();
+            rs.close();
+
+
+        }catch(Exception e){
+            tipoRegistroImportador=0;
+            tipoRegistroExportador=0;
+            mensaje_registro=e.getMessage();
+        }}
+
+    private static void importar_informeDetalle()  {
+        try {
+            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
+            String strSQL_estado = "DELETE FROM informe_detalle      ";
+            db_estado.execSQL(strSQL_estado);
+            db_estado.close();
+
+            SQLiteDatabase db=conSqlite.getReadableDatabase();
+            verificacionReconexion();
+            Statement stmt = connect.createStatement();
+            ResultSet rs = stmt.executeQuery("select *  from  app_v_detalle_recuento where mac='"+macAddress+"'");
+
+            int c=0;
+
+            while (rs.next()) {
+
+                ContentValues values=new ContentValues();
+                values.put("codInterno",rs.getString("codInterno"));
+                values.put("id_cabecera",rs.getString("id_cabecera"));
+                values.put("nrocaravana",rs.getString("nrocaravana"));
+                values.put("ide",rs.getString("ide"));
+                values.put("color",rs.getString("color"));
+                values.put("raza",rs.getString("raza"));
+                values.put("carimbo",rs.getString("carimbo"));
+                values.put("categoria",rs.getString("categoria"));
+                values.put("comprada",rs.getString("comprada"));
+
+                db.insert("informe_detalle", null,values);
+              /*  c++;
+                MainActivity.ProDialogSincro.setProgress(c);*/
+            }
+
+            mensaje_registro="ANIMALES SINCRONIZADOS.";
+            db.close();
+            rs.close();
+
+
+        }catch(Exception e){
+            tipoRegistroImportador=0;
+            tipoRegistroExportador=0;
+            mensaje_registro=e.getMessage();
+        }}
+
+
+    public static void exportarAnimalesUpd()
+    {
 
         try {
             SQLiteDatabase db=conSqlite.getReadableDatabase();
@@ -199,11 +1078,7 @@ public class controles {
             String comprada="";
             String registro="";
             Cursor cursor=db.rawQuery("SELECT id,codinterno  ,nrocaravana  , sexo  ,color  , raza  , carimbo  , id_categoria  ,comprada,registro FROM animales_actualizados where estado='A'" ,null);
-            //String select_max = "SELECT  case  when count(*) = 0 then 1 else max(codinterno)+1  end as id FROM animales_upd ";
-            // String select_max = "SELECT  max(codinterno+1) as id FROM animales_upd ";
 
-
-            //String codigo_max="";
             while (cursor.moveToNext())
 
             {
@@ -226,12 +1101,15 @@ public class controles {
                 String strSQL = "UPDATE animales_actualizados SET estado='C' WHERE codinterno='"+codinterno+"'";
                 db1.execSQL(strSQL);
             }
+           // connect.close();
             mensaje_registro="DATOS EXPORTADOS CON EXITO.";
 
         }catch(Exception e){
-            mensaje_registro=e.getMessage();
-           // Toast.makeText( context_menuPrincipal,e.toString(),Toast.LENGTH_LONG).show();
+            tipoRegistroExportador=0;
+            mensaje_registro="Error al exportar los registros, verifique la conexion con el servidor.";
+
         }  }
+
     public static void ExportarRegistrosRecuento() {
 
         try {
@@ -325,743 +1203,37 @@ public class controles {
                     }
 
                 }
-                db3.execSQL(strSQL); }
-
+                db3.execSQL(strSQL);
+            }
+            connect.close();
         }catch(Exception e){
-            mensaje_registro=e.getMessage();
+            tipoRegistroExportador=0;
+            mensaje_registro="Error al exportar los registros, verifique la conexion con el servidor.";
+
+            // mensaje_registro=e.getMessage();
             // Toast.makeText( this,e.toString(),Toast.LENGTH_LONG).show();
         }}
 
-
-
-    public static void ConfirmarExport()
-    {
-            controles.getMacAddr();
-            MainActivity.id_exportar.setEnabled(false);
-            SQLiteDatabase db_contador= conSqlite.getReadableDatabase();
-            ConnectionHelperGanBOne conexion_contador = new ConnectionHelperGanBOne();
-            connect = conexion_contador.Connections();
-
-            Cursor cursor_contador=db_contador.rawQuery("SELECT  count(*) as contador FROM det_inv_animales where     estado='A'   " ,null);
-            while (cursor_contador.moveToNext())
-            {
-                contadorProgress=cursor_contador.getInt(0) ;
-            }
-
-            builder = new AlertDialog.Builder(context_menuPrincipal);
-            builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
-            builder.setTitle("Exportación de datos.");
-            builder.setMessage("¿Desea enviar los registros realizados?");
-            builder.setPositiveButton("Si", new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-            MainActivity.ProDialogExport =  new ProgressDialog(context_menuPrincipal);
-            MainActivity.ProDialogExport.setMax(contadorProgress);
-            LayerDrawable progressBarDrawable = new LayerDrawable(
-            new Drawable[]{ new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-            new int[]{Color.parseColor("black"),Color.parseColor("black")}),
-            new ClipDrawable(   new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-            new int[]{Color.parseColor("red"),Color.parseColor("red")}),
-            Gravity.START,  ClipDrawable.HORIZONTAL),   new ClipDrawable(   new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-            new int[]{Color.parseColor("red"),Color.parseColor("red")}), Gravity.START,  ClipDrawable.HORIZONTAL)    });
-            progressBarDrawable.setId(0,android.R.id.background);
-            progressBarDrawable.setId(1,android.R.id.secondaryProgress);
-            progressBarDrawable.setId(2,android.R.id.progress);
-            MainActivity.ProDialogExport.setTitle("RECUENTO REGISTRADOS.");
-            MainActivity.ProDialogExport.setMessage("ENVIANDO...");
-            MainActivity.ProDialogExport.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            MainActivity.ProDialogExport.setProgressDrawable(progressBarDrawable);
-            MainActivity.ProDialogExport.show();
-            MainActivity.ProDialogExport.setCanceledOnTouchOutside(false);
-            MainActivity.ProDialogExport.setCancelable(false);
-            final AsyncInsertAnimales task = new AsyncInsertAnimales();
-            task.execute();
-            MainActivity.id_exportar.setEnabled(true);
-            }
-        });
-        builder.setNegativeButton("No",new DialogInterface.OnClickListener()
-        {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                MainActivity.id_exportar.setEnabled(true);
-
-            }  });
-        builder.setCancelable(false);
-
-        ad = builder.show();
-        ad.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.azul_claro));
-        ad.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.azul_claro));
-        ad.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
-        ad.getButton(AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
-
-
-    }
-
-    public static void ConfirmarSincro()
-    {
-        try {
-            controles.getMacAddr();
-            ConnectionHelperGanBOne conexion_contador = new ConnectionHelperGanBOne();
-            connect = conexion_contador.Connections();
-
-            Statement stmt2 = connect.createStatement();
-            ResultSet rs2 = stmt2.executeQuery("select count(*) as contador  from  animales");
-            while (rs2.next()) {
-                contadorProgress=rs2.getInt("contador");
-
-            }
-            connect.close();
-            connect=null;
-            builder = new AlertDialog.Builder(context_menuPrincipal);
-            builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
-            builder.setTitle("Sincronizacion de datos.");
-            builder.setMessage("¿Desea importar los datos?");
-            builder.setPositiveButton("Si", new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    MainActivity.ProDialogSincro =  new ProgressDialog(context_menuPrincipal);
-                    MainActivity.ProDialogSincro.setMax(contadorProgress);
-                    LayerDrawable progressBarDrawable = new LayerDrawable(
-                            new Drawable[]{
-                                    new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                                            new int[]{Color.parseColor("black"),Color.parseColor("black")}),
-                                    new ClipDrawable(
-                                            new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                                                    new int[]{Color.parseColor("red"),Color.parseColor("red")}),
-                                            Gravity.START,  ClipDrawable.HORIZONTAL),
-                                    new ClipDrawable(   new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                                            new int[]{Color.parseColor("red"),Color.parseColor("red")}),
-                                            Gravity.START,  ClipDrawable.HORIZONTAL)    });
-                    progressBarDrawable.setId(0,android.R.id.background);
-                    progressBarDrawable.setId(1,android.R.id.secondaryProgress);
-                    progressBarDrawable.setId(2,android.R.id.progress);
-                    MainActivity.ProDialogSincro.setTitle("SINCRONIZACION.");
-                    MainActivity.ProDialogSincro.setMessage("IMPORTANDO...");
-                    MainActivity.ProDialogSincro.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                    MainActivity.ProDialogSincro.setProgressDrawable(progressBarDrawable);
-                    MainActivity.ProDialogSincro.show();
-                    MainActivity.ProDialogSincro.setCanceledOnTouchOutside(false);
-                    MainActivity.ProDialogSincro.setCancelable(false);
-                    final AsyncSincroAnimales task = new AsyncSincroAnimales();
-                    task.execute();
-                }
-            });
-            builder.setNegativeButton("No",null);
-            ad = builder.show();
-            ad.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.azul_claro));
-            ad.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.azul_claro));
-            ad.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
-            ad.getButton(AlertDialog.BUTTON_NEGATIVE).setAllCaps(false);
-        }catch (Exception e){
-
-        }
-
-    }
-
-
-    public static class AsyncInsertAnimalesUpd  extends AsyncTask<Void, Void, Void>
-    {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            MainActivity.ProDialogExport = ProgressDialog.show(context_menuPrincipal, "EXPORTANDO ANIMALES ACTUALIZADOS.", "ESPERE...", true);
-
-        }
-        @Override
-        protected Void doInBackground(Void... params) {
-            exportarAnimalesUpd();
-            importar_informeCabecera();
-            importar_informeDetalle();
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            MainActivity.ProDialogExport.dismiss();
-            builder = new AlertDialog.Builder(context_menuPrincipal);
-            builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
-            builder.setTitle("¡Atención!");
-            builder.setMessage(mensaje_registro);
-            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            });
-            ad = builder.show();
-            ad.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.verde));
-            ad.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
-        }
-    }
-    public static class AsyncInsertAnimales     extends AsyncTask<Void, Void, Void>
-    {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
-        @Override
-        protected Void doInBackground(Void... params) {
-            exportarPotreros();
-            ExportarRegistrosRecuento();
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            MainActivity.ProDialogExport.dismiss();
-            final AsyncInsertAnimalesUpd task = new AsyncInsertAnimalesUpd();
-            task.execute();
-        }
-    }
-
-    public static class AsyncSincroAnimales     extends AsyncTask<Void, Void, Void>
-    {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
-        @Override
-        protected Void doInBackground(Void... params) {
-            importar_animales();
-
-
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            MainActivity.ProDialogSincro.dismiss();
-            ProgressBarrAnimalesUPD();
-        }
-    }
-
-
-    public static class AsyncSincroAnimalesUpd     extends AsyncTask<Void, Void, Void>
-    {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-        @Override
-        protected Void doInBackground(Void... params) {
-            importar_animales_upd();
-
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            MainActivity.ProDialogSincro.dismiss();
-            final AsyncSincroColores task = new AsyncSincroColores();
-            task.execute();
-        }
-    }
-
-    public static class AsyncSincroColores     extends AsyncTask<Void, Void, Void>
-    {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            MainActivity.prodialog = ProgressDialog.show(context_menuPrincipal, "SINCRONIZANDO COLORES", "ESPERE...", true);
-
-        }
-        @Override
-        protected Void doInBackground(Void... params) {
-            importar_colores();
-
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            MainActivity.prodialog.dismiss();
-            final AsyncSincroRazas task = new AsyncSincroRazas();
-            task.execute();
-        }
-    }
-
-    public static class AsyncSincroRazas     extends AsyncTask<Void, Void, Void>
-    {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            MainActivity.prodialog = ProgressDialog.show(context_menuPrincipal, "SINCRONIZANDO RAZAS", "ESPERE...", true);
-
-        }
-        @Override
-        protected Void doInBackground(Void... params) {
-            importar_raza();
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            MainActivity.prodialog.dismiss();
-            final AsyncSincroCategorias task = new AsyncSincroCategorias();
-            task.execute();
-        }
-    }
-
-    public static class AsyncSincroCategorias    extends AsyncTask<Void, Void, Void>
-    {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            MainActivity.prodialog = ProgressDialog.show(context_menuPrincipal, "SINCRONIZANDO CATEGORIAS", "ESPERE...", true);
-
-        }
-        @Override
-        protected Void doInBackground(Void... params) {
-            importar_categoria();
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            MainActivity.prodialog.dismiss();
-            final AsyncSincroPotreros task = new AsyncSincroPotreros();
-            task.execute();
-        }
-    }
-
-    public static class AsyncSincroPotreros    extends AsyncTask<Void, Void, Void>
-    {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            MainActivity.prodialog = ProgressDialog.show(context_menuPrincipal, "SINCRONIZANDO POTREROS", "ESPERE...", true);
-
-
-        }
-        @Override
-        protected Void doInBackground(Void... params) {
-
-            importar_potreros();
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            MainActivity.prodialog.dismiss();
-            final AsyncSincroEstancias task = new AsyncSincroEstancias();
-            task.execute();
-        }
-    }
-
-    public static class AsyncSincroEstancias     extends AsyncTask<Void, Void, Void>
-    {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            MainActivity.prodialog = ProgressDialog.show(context_menuPrincipal, "SINCRONIZANDO ESTANCIAS E INFORMES", "ESPERE...", true);
-        }
-        @Override
-        protected Void doInBackground(Void... params) {
-            importar_estancias();
-            importar_informeCabecera();
-            importar_informeDetalle();
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            MainActivity.prodialog.dismiss();
-
-            builder = new AlertDialog.Builder(context_menuPrincipal);
-            builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
-            builder.setTitle("¡Atención!");
-            builder.setMessage("Datos sincronizados con exito.");
-            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener()
-            {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                }
-            });
-            ad = builder.show();
-            ad.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(context_menuPrincipal.getResources().getColor(R.color.verde));
-            ad.getButton(AlertDialog.BUTTON_POSITIVE).setAllCaps(false);
-        }
-    }
-
-
-
-    private static void importar_animales()
-    {
-        try {
-            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
-            db_estado.execSQL("DELETE FROM animales     ");
-            db_estado.close();
-            SQLiteDatabase db_cabecera=conSqlite.getReadableDatabase();
-            db_cabecera.execSQL("DELETE FROM cab_inv_animales   where estado='C'  ");
-            db_cabecera.close();
-            SQLiteDatabase db_detalle=conSqlite.getReadableDatabase();
-            db_detalle.execSQL("DELETE FROM det_inv_animales  where estado='C' ");
-            db_detalle.close();
-
-
-            SQLiteDatabase db=conSqlite.getReadableDatabase();
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
-            Statement stmt = connect.createStatement();
-            ResultSet rs = stmt.executeQuery("select *  from  animales");
-
-            int c=0;
-
-            while (rs.next()) {
-
-            /*   db.execSQL("insert into animales (id ,codinterno ,nrocaravana , sexo ,color , raza , carimbo,ncmadre,ncpadre,id_categoria) " +
-                        " values ('"+rs.getString("ide")+"','"+rs.getString("codinterno")+"','"+rs.getString("nrocaravana")+"'," +
-                        "'"+rs.getString("sexo")+"','"+rs.getString("color")+"','"+rs.getString("raza")+
-                        "','"+rs.getString("carimbo")+"','"+rs.getString("ncmadre")+"','"+rs.getString("ncpadre")+"','"+rs.getString("categoria")+"')");
-*/
-               ContentValues values=new ContentValues();
-                values.put("id",rs.getString("ide"));
-                values.put("codinterno",rs.getString("codinterno"));
-                values.put("nrocaravana",rs.getString("nrocaravana"));
-                values.put("sexo",rs.getString("sexo"));
-                values.put("color",rs.getString("color"));
-                values.put("raza",rs.getString("raza"));
-                values.put("carimbo",rs.getString("carimbo"));
-                values.put("ncmadre",rs.getString("ncmadre"));
-                values.put("ncpadre",rs.getString("ncpadre"));
-                values.put("id_categoria",rs.getString("categoria"));
-                db.insert("animales", "id",values);
-                c++;
-                MainActivity.ProDialogSincro.setProgress(c);
-            }
-            connect.close();
-            connect=null;
-            mensaje_registro="ANIMALES SINCRONIZADOS.";
-            db.close();
-            rs.close();
-
-
-        }catch(Exception e){
-            mensaje_registro=e.getMessage();
-        }}
-    private static void ProgressBarrAnimalesUPD(){
-        try {
-
-
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
-            Statement stmt3 = connect.createStatement();
-            ResultSet rs3 = stmt3.executeQuery("select count(*) as contador  from  animales_upd");
-            while (rs3.next()) {
-                contadorProgress=rs3.getInt("contador");
-            }
-            rs3.close();
-            connect.close();
-            connect=null;
-
-            MainActivity.ProDialogSincro =  new ProgressDialog(context_menuPrincipal);
-            MainActivity.ProDialogSincro.setMax(contadorProgress);
-            LayerDrawable progressBarDrawable = new LayerDrawable(
-            new Drawable[]{ new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-            new int[]{Color.parseColor("black"),Color.parseColor("black")}),
-            new ClipDrawable( new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-            new int[]{Color.parseColor("yellow"),Color.parseColor("yellow")}), Gravity.START, ClipDrawable.HORIZONTAL),
-            new ClipDrawable( new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-            new int[]{Color.parseColor("yellow"),Color.parseColor("yellow")}),
-            Gravity.START, ClipDrawable.HORIZONTAL) });
-            progressBarDrawable.setId(0,android.R.id.background);
-            progressBarDrawable.setId(1,android.R.id.secondaryProgress);
-            progressBarDrawable.setId(2,android.R.id.progress);
-            MainActivity.ProDialogSincro.setTitle("SINCRONIZANDO ANIMALES ACTUALIZADOS");
-            MainActivity.ProDialogSincro.setMessage("DESCARGANDO...");
-            MainActivity.ProDialogSincro.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            MainActivity.ProDialogSincro.setProgressDrawable(progressBarDrawable);
-            MainActivity.ProDialogSincro.show();
-            MainActivity.ProDialogSincro.setCanceledOnTouchOutside(false);
-            MainActivity.ProDialogSincro.setCancelable(false);
-            final AsyncSincroAnimalesUpd task = new AsyncSincroAnimalesUpd();
-            task.execute();
-        }catch (Exception e){
-
-        }
-        }
-
-    private static void importar_animales_upd()
-    {
-        try {
-            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
-            db_estado.execSQL("DELETE FROM animales_actualizados  WHERE   estado = 'C'");
-            db_estado.close();
-
-            SQLiteDatabase db=conSqlite.getReadableDatabase();
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
-            Statement stmt = connect.createStatement();
-            ResultSet rs = stmt.executeQuery("select *  from  animales_upd");
-
-            int c=0;
-
-            while (rs.next())
-            {
-                ContentValues values=new ContentValues();
-                values.put("id",rs.getString("ide"));
-                values.put("id_sincro",rs.getString("codinterno"));
-                values.put("nrocaravana",rs.getString("nrocaravana"));
-                values.put("sexo",rs.getString("sexo"));
-                values.put("color",rs.getString("color"));
-                values.put("raza",rs.getString("raza"));
-                values.put("carimbo",rs.getString("carimbo"));
-                values.put("id_categoria",rs.getString("categoria"));
-                values.put("comprada",rs.getString("comprada"));
-                values.put("estado","C");
-                db.insert("animales_actualizados", "id",values);
-
-                /*db.execSQL("insert into animales_actualizados (id ,id_sincro ,nrocaravana , sexo ,color , raza , carimbo,id_categoria,comprada,estado) " +
-                        " values ('"+rs.getString("ide")+"','"+rs.getString("codinterno")+"','"+rs.getString("nrocaravana")+"'," +
-                        "'"+rs.getString("sexo")+"','"+rs.getString("color")+"','"+rs.getString("raza")+
-                        "','"+rs.getString("carimbo")+"','"+rs.getString("categoria")+"','"+rs.getString("comprada")+"','C')");
-*/
-                c++;
-                MainActivity.ProDialogSincro.setProgress(c);
-            }
-            connect.close();
-            connect=null;
-            db.close();
-            rs.close();
-            // conn.close();
-            mensaje_registro="PROCESO REALIZADO CON EXITO";
-        }catch(Exception e){
-            mensaje_registro=e.getMessage();
-        }}
-
-    private static void importar_colores()
-    {
-        try {
-            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
-            String strSQL_estado = "DELETE FROM color      ";
-            db_estado.execSQL(strSQL_estado);
-            db_estado.close();
-
-            SQLiteDatabase db=conSqlite.getReadableDatabase();
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
-            Statement stmt = connect.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from  color ");
-            while (rs.next()) {
-                ContentValues values=new ContentValues();
-                values.put("id_color",rs.getString("id"));
-                values.put("color",rs.getString("color"));
-                db.insert("color", "id_color",values);
-            }
-            db.close();
-            rs.close();
-            connect.close();
-            connect=null;
-            mensaje_registro="COLORES SINCRONIZADOS.";
-        }catch(Exception e){
-            mensaje_registro=e.getMessage();
-        }}
-    private static void importar_raza()
-    {
-        try {
-            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
-            String strSQL_estado = "DELETE FROM razas      ";
-            db_estado.execSQL(strSQL_estado);
-            db_estado.close();
-
-            SQLiteDatabase db=conSqlite.getReadableDatabase();
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
-            Statement stmt = connect.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from  razas ");
-            while (rs.next()) {
-                ContentValues values=new ContentValues();
-                values.put("id_raza",rs.getString("id_raza"));
-                values.put("raza",rs.getString("raza"));
-                db.insert("razas", "id_raza",values);
-            }
-            connect.close();
-            connect=null;
-            db.close();
-            rs.close();
-            mensaje_registro="RAZAS SINCRONIZADAS.";
-        }catch(Exception e){
-            mensaje_registro=e.getMessage();
-        }}
-    private static void importar_categoria()
-    {
-        try {
-            SQLiteDatabase db=conSqlite.getReadableDatabase();
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
-            Statement stmt = connect.createStatement();
-            ResultSet rs = stmt.executeQuery("select * from  categorias ");
-            while (rs.next()) {
-                ContentValues values=new ContentValues();
-                values.put("id_categoria",rs.getString("id_categoria"));
-                values.put("categoria",rs.getString("categoria"));
-                db.insert("categorias", "id_categoria",values);
-            }
-            connect.close();
-            connect=null;
-            db.close();
-            rs.close();
-            mensaje_registro="CATEGORIAS SINCRONIZADAS.";
-        }catch(Exception e){
-            mensaje_registro=e.getMessage();
-        }}
-
-    private static void importar_potreros()
-    {
-        try {
-            SQLiteDatabase db=conSqlite.getReadableDatabase();
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
-            String strSQL_estado = "DELETE FROM potrero where estado='C'      ";
-            db_estado.execSQL(strSQL_estado);
-
-            connect = conexion.Connections();
-            String query = "select *  from  app_v_potreros";
-            Statement stmt = connect.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-            while ( rs.next()){
-                ContentValues values=new ContentValues();
-                values.put("id_potrero",rs.getString("CODPOT"));
-                values.put("id_estancia",rs.getString("CODEST"));
-                values.put("desc_potrero",rs.getString("POTRERO"));
-                values.put("id_potrerosqlite",rs.getString("CODPOT"));
-                values.put("estado","C");
-
-                db.insert("potrero", "id_potrero",values);
-            }
-            connect.close();
-            connect=null;
-            db.close();
-            mensaje_registro="POTREROS SINCRONIZADOS.";
-        }catch(Exception e){
-            mensaje_registro=e.getMessage();
-        }}
-
-    private static void importar_estancias() {
-        try {
-            SQLiteDatabase db=conSqlite.getReadableDatabase();
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
-            String query = "select *  from  app_v_estancias";
-            Statement stmt = connect.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
-
-            while ( rs.next()){
-
-                ContentValues values=new ContentValues();
-                values.put("id_estancia",rs.getString("CODEST"));
-                values.put("desc_estancia",rs.getString("ESTANCIA"));
-                db.insert("estancia", null,values);
-            }
-            connect.close();
-            connect=null;
-            db.close();
-            mensaje_registro="ESTANCIAS SINCRONIZADAS.";
-
-        }catch(Exception e){
-            mensaje_registro=e.getMessage();
-
-        }}
-
-
-    private static void importar_informeCabecera()
-    {
-        try {
-            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
-            String strSQL_estado = "DELETE FROM informe_cabecera      ";
-            db_estado.execSQL(strSQL_estado);
-            db_estado.close();
-
-            SQLiteDatabase db=conSqlite.getReadableDatabase();
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
-            Statement stmt = connect.createStatement();
-            ResultSet rs = stmt.executeQuery("select *  from  app_v_cabecera_recuento where mac='"+macAddress+"'");
-            int c=0;
-            while (rs.next()) {
-                db.execSQL("insert into informe_cabecera (id ,codinterno ,fecha , estancia ,potrero , cantidad , mac ) " +
-                " values ('"+rs.getString("id")+"','"+rs.getString("cod_interno")+"','"+rs.getString("fecha")+"'," +
-                "'"+rs.getString("descEstancia")+"','"+rs.getString("nombrePotrero")+"','"+rs.getString("cantidad")+"','"+rs.getString("mac")+"')");
-             }
-            mensaje_registro="INFORMES SINCRONIZADOS.";
-            connect.close();
-            connect=null;
-            db.close();
-            rs.close();
-
-
-        }catch(Exception e){
-            mensaje_registro=e.getMessage();
-        }}
-
-    private static void importar_informeDetalle()  {
-        try {
-            SQLiteDatabase db_estado=conSqlite.getReadableDatabase();
-            String strSQL_estado = "DELETE FROM informe_detalle      ";
-            db_estado.execSQL(strSQL_estado);
-            db_estado.close();
-
-            SQLiteDatabase db=conSqlite.getReadableDatabase();
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
-            Statement stmt = connect.createStatement();
-            ResultSet rs = stmt.executeQuery("select *  from  app_v_detalle_recuento where mac='"+macAddress+"'");
-
-            int c=0;
-
-            while (rs.next()) {
-
-                ContentValues values=new ContentValues();
-                values.put("codInterno",rs.getString("codInterno"));
-                values.put("id_cabecera",rs.getString("id_cabecera"));
-                values.put("nrocaravana",rs.getString("nrocaravana"));
-                values.put("ide",rs.getString("ide"));
-                values.put("color",rs.getString("color"));
-                values.put("raza",rs.getString("raza"));
-                values.put("carimbo",rs.getString("carimbo"));
-                values.put("categoria",rs.getString("categoria"));
-                values.put("comprada",rs.getString("comprada"));
-
-                db.insert("informe_detalle", null,values);
-              /*  c++;
-                MainActivity.ProDialogSincro.setProgress(c);*/
-            }
-            connect.close();
-            connect=null;
-            mensaje_registro="ANIMALES SINCRONIZADOS.";
-            db.close();
-            rs.close();
-
-
-        }catch(Exception e){
-            mensaje_registro=e.getMessage();
-        }}
-
     private static  void exportarPotreros(){
-            SQLiteDatabase dbPotrero=conSqlite.getReadableDatabase();
-            SQLiteDatabase dbcab=conSqlite.getReadableDatabase();
-            SQLiteDatabase dbDet=conSqlite.getReadableDatabase();
+        SQLiteDatabase dbPotrero=conSqlite.getReadableDatabase();
+        SQLiteDatabase dbcab=conSqlite.getReadableDatabase();
+        SQLiteDatabase dbDet=conSqlite.getReadableDatabase();
         try {
             int verificador=0;
-
             SQLiteDatabase db=conSqlite.getReadableDatabase();
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
-            connect.setAutoCommit(false);
+
             String id=""; String idEstancia="";String descPotrero="";
             Cursor cursor=db.rawQuery(" select * from potrero where estado='P'" ,null);
 
-            Statement stmt = connect.createStatement();
+
             String idPotreroSqlServer="";
             dbPotrero.beginTransaction();
             dbDet.beginTransaction();
             dbcab.beginTransaction();
+            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
+            connect = conexion.Connections();
+            connect.setAutoCommit(false);
+            Statement stmt = connect.createStatement();
             while (cursor.moveToNext()){
 
                 ResultSet rs = stmt.executeQuery("SELECT NEXT VALUE FOR IdPotrero as idPotrero    ");
@@ -1080,7 +1252,7 @@ public class controles {
                         " values ("+idPotreroSqlServer+",'"+descPotrero+"',"+idEstancia+",'N')");
                 ps.executeUpdate();
 
-                 dbPotrero.execSQL("UPDATE potrero SET estado = 'C', id_potrerosqlite='"+idPotreroSqlServer+"' WHERE id_potrero ='"+ id+"'");
+                dbPotrero.execSQL("UPDATE potrero SET estado = 'C', id_potrerosqlite='"+idPotreroSqlServer+"' WHERE id_potrero ='"+ id+"'");
 
                 dbDet.execSQL("UPDATE det_inv_animales SET  id_potrero='"+idPotreroSqlServer+"' WHERE id_potrero ='"+ id+"'");
 
@@ -1088,7 +1260,7 @@ public class controles {
 
                 mensaje_registro ="REGISTROS EXPORTADOS CON EXITO";
 
-                }
+            }
             dbPotrero.setTransactionSuccessful();
             dbPotrero.endTransaction();
             dbDet.setTransactionSuccessful();
@@ -1096,8 +1268,11 @@ public class controles {
             dbcab.setTransactionSuccessful();
             dbcab.endTransaction();
             connect.commit();
+            connect.close();
         } catch (Exception e){
-            mensaje_registro=e.getMessage();
+            //mensaje_registro=e.getMessage();
+            tipoRegistroExportador=0;
+            mensaje_registro="Error al exportar los registros, verifique la conexion con el servidor.";
             dbDet.endTransaction();
             dbcab.endTransaction();
             dbPotrero.endTransaction();
@@ -1107,5 +1282,5 @@ public class controles {
                 mensaje_registro=ex.toString();
             }
         }
-        }
+    }
 }

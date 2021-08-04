@@ -148,6 +148,7 @@ public class login2 extends AppCompatActivity {
             }
          //   db.close();
         }catch(Exception e){
+            String sdsa=e.getMessage();
         }}
 
 
