@@ -72,7 +72,7 @@ public class ListviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.listview);
-        controles.conexion_sqlite(this);
+      //  controles.conexion_sqlite(this);
         listViewPersonas= (ListView) findViewById(R.id.listViewPersonas);
         txt_fecha=(TextView)findViewById(R.id.txt_fecha);
         btn_buscar=(Button)findViewById(R.id.btn_buscar);
@@ -206,7 +206,7 @@ public class ListviewActivity extends AppCompatActivity {
                 "a.cod_interno,  " +
                 "c.desc_potrero,b.desc_estancia,  " +
                 "a.cantidad " +
-                "from registro_cabecera a " +
+                "from cab_inv_animales a " +
                 "inner join estancia b on a.cab_id_estancia = b.id_estancia " +
                 "inner join potrero c on a.cab_id_potrero = c.id_potrerosqlite " +
                 "and a.fecha='"+txt_fecha.getText().toString().trim()+"' and a.estado='A' ) T ORDER BY 1 ASC" ,null);
@@ -262,8 +262,8 @@ public class ListviewActivity extends AppCompatActivity {
                 "d.categoria , " +
                 "count(*) as CantCat, " +
                 "c.comprada " +
-                "from registro_cabecera a " +
-                "inner join animal_potrero b on a.cod_interno = b.cod_cabecera " +
+                "from cab_inv_animales a " +
+                "inner join det_inv_animales b on a.cod_interno = b.cod_cabecera " +
                 "inner join animales_actualizados c on b.desc_animal = c.id or b.desc_animal = c.nrocaravana " +
                 "inner join categorias d on c.id_categoria = d.id_categoria " +
                 "inner join estancia e on a.cab_id_estancia = e.id_estancia " +

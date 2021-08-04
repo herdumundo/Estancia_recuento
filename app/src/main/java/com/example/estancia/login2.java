@@ -10,7 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import Utilidades.variables;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -126,24 +126,24 @@ public class login2 extends AppCompatActivity {
 
 
     private void sincronizar_usuarios() {
-                  try {
-            String nombre=""; String usuario="";String pass="";
-            SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
-            ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
-            connect = conexion.Connections();
-            String query = "select *  from  usuarios";
-            Statement stmt = connect.createStatement();
-            ResultSet rs = stmt.executeQuery(query);
+        try
+        {
+                SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
+                ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
+                connect = conexion.Connections();
+                Statement stmt = connect.createStatement();
+                ResultSet rs = stmt.executeQuery("select *  from  usuarios");
+                SQLiteDatabase db_estado=controles.conSqlite.getReadableDatabase();
+                db_estado.execSQL("DELETE FROM usuario");
+              //  db_estado.close();
             while ( rs.next())
             {
-                nombre= rs.getString("nombreusuario");
-                usuario= rs.getString("codusuario");
-                pass= rs.getString("pass");
                 ContentValues values=new ContentValues();
-                values.put(Utilidades.CAMPO_NOMBRE,nombre.toString());
-                values.put(Utilidades.CAMPO_USER,usuario.toString());
-                values.put(Utilidades.CAMPO_PASS,pass.toString().trim());
-               db.insert(Utilidades.TABLA_USUARIO, Utilidades.CAMPO_ID_USUARIO,values);
+                values.put("nombre",rs.getString("nombreusuario"));
+                values.put("user_name",rs.getString("codusuario"));
+                values.put("pass",rs.getString("pass"));
+                values.put("idUsuario",rs.getString("idusuario"));
+                db.insert("usuario", null,values);
             }
          //   db.close();
         }catch(Exception e){
@@ -151,46 +151,32 @@ public class login2 extends AppCompatActivity {
 
 
 
-        private void login (){
+        private void login ()
+        {
 
             SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
-            String respuesta="0";
+             Cursor cursor=db.rawQuery("SELECT idusuario,user_name,nombre FROM  usuario where user_name='"+txt_usuario.getText().toString().trim()+"' and pass='"+txt_pass.getText()+"'" ,null);
 
-             Cursor cursor=db.rawQuery("SELECT * FROM  usuario where user_name='"+txt_usuario.getText().toString().trim()+"' and pass='"+txt_pass.getText()+"'" ,null);
-            while (cursor.moveToNext())
-                {
-                respuesta=(cursor.getString(0));
+            if (cursor.moveToNext())
+            {
+                variables.idUsuario=cursor.getString(0);
+                variables.userdb=cursor.getString(1);
+                variables.NOMBRE_LOGIN=cursor.getString(2);
 
-               }
-
-               if (respuesta.equals("0")){
-                   new AlertDialog.Builder(login2.this)
-                           .setTitle("ATENCION!!!")
-                           .setMessage("USUARIO INCORRECTO")
-                           .setNegativeButton("CERRAR", null).show();
-
-
-               }
-               else{
-
-                   Intent i=new Intent(this,MainActivity.class);
-                   startActivity(i);
-                   finish();
-               }
-
-
-
-    }
+                Intent i=new Intent(this,MainActivity.class);
+                startActivity(i);
+                finish();
+            }
+            else {
+                new AlertDialog.Builder(login2.this)
+                        .setTitle("ATENCION!!!")
+                        .setMessage("USUARIO INCORRECTO")
+                        .setNegativeButton("CERRAR", null).show();
+            }
+        }
     @Override
     public void onBackPressed() {
-
-
-
-                        finish();
-
-
+        finish();
         moveTaskToBack(true);
-
-
     }
 }

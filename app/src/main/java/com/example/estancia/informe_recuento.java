@@ -62,7 +62,7 @@ public class informe_recuento extends AppCompatActivity {
         listViewDetalle= (ListView) findViewById(R.id.listViewDet);
         txt_fecha=(TextView)findViewById(R.id.txt_fecha);
         btn_buscar=(Button)findViewById(R.id.btn_buscar);
-        controles.conexion_sqlite(this);
+       // controles.conexion_sqlite(this);
         btn_buscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,9 +167,13 @@ public class informe_recuento extends AppCompatActivity {
 
 
     private void consultarListaregistro() {
+        try {
+
+
         SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         String total_txt="";
-        Cursor cursor2=db.rawQuery("select count(*) from registro_cabecera a inner join animal_potrero b on a.cod_interno=b.cod_cabecera " +
+        Cursor cursor2=db.rawQuery("select count(*) from cab_inv_animales a " +
+                "inner join det_inv_animales b on a.cod_interno=b.cod_cabecera " +
                 "where a.fecha='"+txt_fecha.getText().toString().trim()+"' "   ,null);
         while (cursor2.moveToNext()){
             total_txt=(cursor2.getString(0));
@@ -184,7 +188,7 @@ public class informe_recuento extends AppCompatActivity {
                         "a.cod_interno,  " +
                         "c.desc_potrero,b.desc_estancia,  " +
                         "a.cantidad " +
-                        "from registro_cabecera a " +
+                        "from cab_inv_animales a " +
                         "inner join estancia b on a.cab_id_estancia = b.id_estancia " +
                         "inner join potrero c on a.cab_id_potrero = c.id_potrerosqlite " +
                         "and a.fecha='"+txt_fecha.getText().toString().trim()+"' and a.estado='A' ) T ORDER BY 1 ASC" ,null);
@@ -197,6 +201,9 @@ public class informe_recuento extends AppCompatActivity {
             listaUsuarios.add(usuario);
         }
         obtenerLista();
+        }catch (Exception e){
+            String err=e.getMessage();
+        }
     }
 
     private void obtenerLista() {
@@ -230,23 +237,24 @@ public class informe_recuento extends AppCompatActivity {
 
 
         Cursor cursor_detalle=db.rawQuery("" +
-                "select codinterno,ide,nrocaravana,categoria from informe_detalle where id_cabecera='"+id_registro+"' " +
+                "   select codinterno,ide,nrocaravana,categoria " +
+                "   from informe_detalle where id_cabecera='"+id_registro+"' " +
                 " union all " +
-                "select a.cod_cabecera, b.id,b.nrocaravana,c.categoria  " +
-                "   from animal_potrero a " +
+                "   select a.cod_cabecera, b.id,b.nrocaravana,c.categoria  " +
+                "   from det_inv_animales a " +
                 "      inner join animales_actualizados b on  " +
-                "       (a.desc_animal=b.id or a.desc_animal=b.nrocaravana) inner join categorias c on b.id_categoria=c.id_categoria " +
+                "       (a.desc_animal=b.id or a.desc_animal=b.nrocaravana) " +
+                "   inner join categorias c on b.id_categoria=c.id_categoria " +
                 "       where cod_cabecera='"+id_registro+"' and a.cod_cabecera=b.registro  and b.estado='A'"    ,null);
 
 
-        while (cursor_detalle.moveToNext()){
+        while (cursor_detalle.moveToNext())
+        {
             Detalle_animales_recuento=new Detalle_animales_recuento();
             Detalle_animales_recuento.setIdregistro(cursor_detalle.getString(0));
             Detalle_animales_recuento.setDesc_animal(cursor_detalle.getString(1));
             Detalle_animales_recuento.setCaravana(cursor_detalle.getString(2));
             Detalle_animales_recuento.setCategoria(cursor_detalle.getString(3));
-
-
             listadetallerecuento.add(Detalle_animales_recuento);
         }
         obtenerDetalle_recuento();
@@ -267,7 +275,6 @@ public class informe_recuento extends AppCompatActivity {
                 TextView text1 = (TextView) view.findViewById(R.id.text1);
                 TextView text2 = (TextView) view.findViewById(R.id.text2);
                 TextView text3 = (TextView) view.findViewById(R.id.text3);
-
 
                 text1.setText("IDE:"+listadetallerecuento.get(position).getDesc_animal());
                 text2.setText("NRO CARAVANA:"+listadetallerecuento.get(position).getCaravana());

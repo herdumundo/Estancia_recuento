@@ -20,15 +20,15 @@ public class registrar_estancia extends AppCompatActivity {
         setContentView(R.layout.activity_registrar_estancia);
         campoNombre= (EditText) findViewById(R.id.campoEstancia);
         campoId= (EditText) findViewById(R.id.campoId);
-        controles.conexion_sqlite(this);
+        //controles.conexion_sqlite(this);
 
     }
 
     public void onClick(View view) {
-        registrarEstancia();
+      //  registrarEstancia();
     }
 
-    private void registrarEstancia() {
+   /* private void registrarEstancia() {
 
         SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         ContentValues values=new ContentValues();
@@ -39,6 +39,6 @@ public class registrar_estancia extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),"REGISTRADO CON EXITO.",Toast.LENGTH_LONG).show();
 
         db.close();
-    }
+    }*/
 
 }

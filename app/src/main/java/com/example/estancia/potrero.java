@@ -42,7 +42,7 @@ public class potrero extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_potrero);
-        controles.conexion_sqlite(this);
+       // controles.conexion_sqlite(this);
         desc_potrero= (EditText) findViewById(R.id.txt_desc_potrero);
         Combo_estancia= (Spinner) findViewById(R.id.spinner);
 
@@ -134,7 +134,7 @@ public class potrero extends AppCompatActivity {
         Usuario Estancia=null;
         EstanciaList =new ArrayList<Usuario>();
         //select * from usuarios
-        Cursor cursor=db.rawQuery("SELECT * FROM "+ Utilidades.TABLA_ESTANCIA,null);
+        Cursor cursor=db.rawQuery("SELECT * FROM estancia",null);
 
         while (cursor.moveToNext()){
             Estancia=new Usuario();

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#393837"
+    android:background="#070707 "
     android:minHeight="100dp">
 
 
@@ -70,11 +70,12 @@
 
         <TextView
             android:id="@+id/lblRaza"
-            android:layout_width="93dp"
+            android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:text="RAZA:"
             android:textColor="#F1F1F1"
             android:textSize="18sp"
+            android:gravity="bottom|left"
             android:textStyle="bold|italic"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -82,12 +83,12 @@
             android:id="@+id/TxtDescRazaCuadro"
             android:layout_width="match_parent"
             android:layout_height="35dp"
-            android:layout_marginStart="-3dp"
+            android:layout_marginStart="2dp"
             android:layout_toEndOf="@+id/lblRaza"
             android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
             android:ems="10"
+            android:gravity="bottom|left"
             android:hint="SELECCIONAR"
-            android:textAlignment="textStart"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textStyle="bold"
@@ -190,6 +191,7 @@
             android:layout_height="35dp"
             android:text="CARIMBO:"
             android:textColor="#F1F1F1"
+            android:gravity="bottom|left"
             android:textSize="18sp"
             android:textStyle="bold|italic"
             app:layout_constraintStart_toStartOf="parent" />
@@ -203,7 +205,8 @@
             android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
             android:ems="10"
             android:hint="SELECCIONAR"
-            android:textAlignment="textStart"
+            android:gravity="bottom|left"
+
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textStyle="bold"
@@ -227,23 +230,25 @@
 
         <TextView
             android:id="@+id/lblPelaje"
-            android:layout_width="93dp"
+            android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:text="PELAJE:"
             android:textColor="#F1F1F1"
             android:textSize="18sp"
+            android:gravity="bottom|left"
             android:textStyle="bold|italic"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/TxtDescColorCuadro"
-            android:layout_width="match_parent"
+            android:layout_width="517dp"
             android:layout_height="35dp"
+            android:layout_marginStart="11dp"
             android:layout_toEndOf="@+id/lblPelaje"
             android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
             android:ems="10"
+            android:gravity="bottom|left"
             android:hint="SELECCIONAR"
-            android:textAlignment="textStart"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textStyle="bold"
@@ -270,7 +275,7 @@
             android:id="@+id/lblCategoria"
             android:layout_width="110dp"
             android:layout_height="35dp"
-
+            android:gravity="bottom|left"
             android:text="CATEGORIA:"
             android:textColor="#F1F1F1"
             android:textSize="18sp"
@@ -284,9 +289,9 @@
             android:layout_toEndOf="@+id/lblCategoria"
             android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
             android:ems="10"
+            android:gravity="bottom|left"
             android:hint="SELECCIONAR"
-            android:textAlignment="textStart"
-            android:textColor="@color/white"
+             android:textColor="@color/white"
             android:textColorHint="@color/white"
             android:textStyle="bold"
             app:autoSizeMaxTextSize="20sp"
@@ -420,9 +425,80 @@
         android:layout_height="33dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="127dp"
-        android:layout_marginBottom="254dp"
+        android:layout_marginTop="40dp"
         android:text="TextView"
+        android:textColor="@color/white"
         android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout11"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="68dp" />
+
+    <TextView
+        android:id="@+id/textView23"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="NACIMIENTO"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintTop_toBottomOf="@+id/radio_grupo_compra"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="4dp" />
+
+    <TextView
+        android:id="@+id/txtNacimiento"
+        android:layout_width="174dp"
+        android:layout_height="62dp"
+         android:text=""
+             tools:visibility="gone"
         tools:ignore="MissingConstraints" />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout11"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView23">
+
+
+        <RadioGroup
+            android:id="@+id/radio_grupo_nacimiento"
+            android:layout_width="317dp"
+            android:layout_height="42dp"
+            android:layout_alignParentStart="true"
+            android:background="@color/white"
+            android:orientation="horizontal"
+
+            >
+
+            <!-- In RadioGroup create the 1 Radio Button-->
+            <!-- like this we will add some more Radio Button-->
+
+            <RadioButton
+                android:id="@+id/primavera"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+
+                android:orientation="horizontal"
+                android:text="PRIMAVERA"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <RadioButton
+                android:id="@+id/otono"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+                android:text="OTOÑO"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </RadioGroup>
+
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

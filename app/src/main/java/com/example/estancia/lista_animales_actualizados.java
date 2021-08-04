@@ -53,7 +53,7 @@ public class lista_animales_actualizados extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lista_animales_actualizados);
-        controles.conexion_sqlite(this);
+      //  controles.conexion_sqlite(this);
         listViewAnimales= (ListView) findViewById(R.id.listViewAnimales);
         txt_contenedor=(TextView)findViewById(R.id.txt_contenido);
         btn_buscar=(Button)findViewById(R.id.btn_buscar);

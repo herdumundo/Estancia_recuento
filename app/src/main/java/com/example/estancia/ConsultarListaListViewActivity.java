@@ -18,31 +18,17 @@ import Utilidades.controles;
 public class ConsultarListaListViewActivity extends AppCompatActivity {
     ListView listViewPersonas;
     ArrayList<String> listaInformacion;
-
-   // ConexionSQLiteHelper conn;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consultar_lista_list_view);
-        controles.conexion_sqlite(this);
         listViewPersonas= (ListView) findViewById(R.id.listViewPersonas);
         ArrayAdapter adaptador=new ArrayAdapter(this,android.R.layout.simple_list_item_1,listaInformacion);
         listViewPersonas.setAdapter(adaptador);
-
         listViewPersonas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-
-
-
-
-
-
             }
         });
-
     }
-
-
 }

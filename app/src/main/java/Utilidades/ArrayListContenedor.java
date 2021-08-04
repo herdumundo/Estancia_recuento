@@ -4,15 +4,17 @@ public class ArrayListContenedor {
 	private String id;
 	private String caravana;
 	private String comprada;
+	private String codInterno;
 
 
 	public ArrayListContenedor() {
 	}
 
-	public ArrayListContenedor(String id,  String caravana, String comprada ) {
+	public ArrayListContenedor(String id,  String caravana, String comprada , String codInterno ) {
 		this.id = id;
 		this.caravana = caravana;
 		this.comprada = comprada;
+		this.codInterno = codInterno;
 
  	}
 
@@ -31,6 +33,14 @@ public class ArrayListContenedor {
 	}
 	public void setCaravana(String caravana) {
 		this.caravana = caravana;
+	}
+
+
+	public String getcodInterno() {
+		return codInterno;
+	}
+	public void setcodInterno(String codInterno) {
+		this.codInterno = codInterno;
 	}
 
 

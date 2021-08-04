@@ -38,12 +38,11 @@
         <TextView
             android:id="@+id/textView5"
             android:layout_width="99dp"
-            android:layout_height="31dp"
+            android:layout_height="match_parent"
             android:fontFamily="monospace"
             android:text="POTRERO"
             android:textColor="@color/black"
-
-            android:textAlignment="viewStart"
+            android:gravity="bottom|left"
             app:autoSizeMaxTextSize="19sp"
             app:autoSizeMinTextSize="7sp"
             app:autoSizeStepGranularity="2sp"
@@ -77,9 +76,7 @@
             android:layout_toEndOf="@+id/textView5"
             android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_24"
             android:ems="10"
-
-            android:hint="SELECCIONAR POTRERO"
-            android:textAlignment="textStart"
+            android:gravity="bottom|left"            android:hint="SELECCIONAR POTRERO"
             android:textColor="@color/black"
             app:autoSizeMaxTextSize="20sp"
             app:autoSizeMinTextSize="7sp"
@@ -105,11 +102,9 @@
             android:id="@+id/textView4"
             android:layout_width="99dp"
             android:textColor="@color/black"
-
-            android:layout_height="match_parent"
+            android:gravity="bottom|left"            android:layout_height="match_parent"
             android:fontFamily="monospace"
             android:text="ESTANCIA"
-            android:textAlignment="viewStart"
             app:autoSizeMaxTextSize="19sp"
             app:autoSizeMinTextSize="7sp"
             app:autoSizeStepGranularity="2sp"
@@ -145,8 +140,8 @@
             android:layout_toEndOf="@+id/textView4"
             android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_24"
             android:ems="10"
+            android:gravity="bottom|left"
             android:hint="SELECCIONAR ESTANCIA"
-            android:textAlignment="textStart"
             android:textColor="@color/black"
             app:autoSizeMaxTextSize="20sp"
             app:autoSizeMinTextSize="7sp"
@@ -210,14 +205,14 @@
         android:id="@+id/txt_cod_animal"
         android:layout_width="match_parent"
         android:layout_height="51dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
         android:cursorVisible="true"
         android:ems="10"
         android:focusable="true"
         android:hint="COD ANIMAL"
         android:inputType="textPersonName"
         android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout10"
         tools:layout_editor_absoluteX="0dp"
         tools:text=" " />
 
@@ -325,18 +320,32 @@
         tools:layout_editor_absoluteX="0dp">
 
         <TextView
+            android:layout_width="160dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#0C4A02"
+            android:text="COD"
+            android:textColor="@color/white"
+            android:textStyle="normal|bold"
+            app:autoSizeMaxTextSize="18sp"
+            app:autoSizeMinTextSize="9sp"
+            app:autoSizeStepGranularity="1sp"
+
+
+            app:autoSizeTextType="uniform"></TextView>
+        <TextView
             android:id="@+id/txt_bolo"
 
-            android:layout_width="380dp"
-            android:layout_height="20dp"
+            android:layout_width="360dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="#0C4A02"
             android:text="CODIGO DE BOLO"
             android:textColor="@color/white"
             android:textStyle="bold"
             app:autoSizeMaxTextSize="18sp"
-            app:autoSizeMinTextSize="7sp"
-            app:autoSizeStepGranularity="2sp"
+            app:autoSizeMinTextSize="9sp"
+            app:autoSizeStepGranularity="1sp"
 
 
             app:autoSizeTextType="uniform"></TextView>
@@ -345,11 +354,11 @@
             android:id="@+id/txt_caravana"
 
             android:layout_width="230dp"
-            android:layout_height="29dp"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_weight="1"
             android:background="#0C4A02"
-            android:text="NRO CARAVANA"
+            android:text="CARAVANA"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textStyle="bold"
@@ -362,26 +371,26 @@
         <TextView
             android:id="@+id/txt_comprada"
             android:layout_width="210dp"
-            android:layout_height="20dp"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_weight="1"
             android:background="#0C4A02"
-            android:text="COMPRADA"
+            android:text="COMPRA"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textStyle="bold"
             app:autoSizeMaxTextSize="18sp"
-            app:autoSizeMinTextSize="7sp"
-            app:autoSizeStepGranularity="2sp"
+            app:autoSizeMinTextSize="9sp"
+            app:autoSizeStepGranularity="1sp"
             app:autoSizeTextType="uniform"></TextView>
 
         <TextView
             android:id="@+id/btnEliminar"
 
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
             android:focusable="false"
-            android:text="ACCION"
+            android:text="BORRAR"
             android:textColor="@color/white"
             android:textStyle="bold"
             app:autoSizeMaxTextSize="18sp"
@@ -391,5 +400,46 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/relativeLayout10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout2"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="158dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="1dp"
+            android:fontFamily="monospace"
+            android:gravity="bottom|left"
+            android:text="PESO PROMEDIO"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:autoSizeMaxTextSize="19sp"
+            app:autoSizeMinTextSize="7sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+            tools:layout_editor_absoluteX="4dp"
+            tools:layout_editor_absoluteY="215dp" />
+
+        <EditText
+            android:id="@+id/txtPesaje"
+            android:layout_width="172dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="268dp"
+            android:hint="INGRESE"
+            android:layout_toEndOf="@+id/textView"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            tools:layout_editor_absoluteX="165dp"
+            tools:layout_editor_absoluteY="211dp" />
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

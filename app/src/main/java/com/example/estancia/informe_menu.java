@@ -26,7 +26,7 @@ import maes.tech.intentanim.CustomIntent;
 
 public class informe_menu extends AppCompatActivity {
     Button btn_cant_animales,btn_detalle_registro,btn_pendientes,btn_animales;
-    TextView txt_cant_animales,txt_cant_animales2;
+    TextView txt_cant_animales,txt_cant_animales2,txt_cant_pendientes;
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +36,10 @@ public class informe_menu extends AppCompatActivity {
         btn_detalle_registro= (Button)findViewById(R.id.btn_detalle_registro);
         btn_pendientes= (Button)findViewById(R.id.btn_pendientes);
         btn_animales= (Button)findViewById(R.id.btn_animales);
-        controles.conexion_sqlite(this);
+        //controles.conexion_sqlite(this);
         txt_cant_animales=(TextView)findViewById(R.id.txt_cant_animales);
         txt_cant_animales2=(TextView)findViewById(R.id.txt_cant_animales2);
+        txt_cant_pendientes=(TextView)findViewById(R.id.txt_cant_pendientes);
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //bellow setSupportActionBar(toolbar);
         getSupportActionBar().setCustomView(R.layout.customactionbar);
@@ -49,7 +50,7 @@ public class informe_menu extends AppCompatActivity {
         final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
         this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
-
+        consultaPendientes();
 
 
         btn_cant_animales.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +140,18 @@ public class informe_menu extends AppCompatActivity {
         }
         txt_cant_animales2.setText(contador);
     }
+    private void consultaPendientes(){
+        //Toast.makeText(this, posicion, Toast.LENGTH_SHORT).show();
+        SQLiteDatabase db2=controles.conSqlite.getReadableDatabase();
+        String contador="";
+        Cursor cursor2=db2.rawQuery("SELECT count(*) FROM DET_INV_ANIMALES where estado IN ('A') ",null);
+        while (cursor2.moveToNext()){
 
+            contador=(cursor2.getString(0));
+
+        }
+        txt_cant_pendientes.setText(contador);
+    }
   @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {

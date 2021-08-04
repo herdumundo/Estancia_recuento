@@ -6,7 +6,6 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:orientation="vertical"
     >
 
@@ -16,14 +15,12 @@
         android:layout_height="49dp"
         android:layout_alignParentStart="true"
         android:textColor="@color/white"
-
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="49dp"
         android:drawableLeft="@drawable/ic_action_visual"
         android:onClick="click_visor"
         android:background="@drawable/bordercolor"
-
         android:text="INFORMES VARIOS" />
 
 
@@ -38,7 +35,6 @@
         android:background="@drawable/bordercolor"
         android:onClick="sincronizarEstancia"
         android:drawableLeft="@drawable/ic_action_sincro"
-
         android:text="SINCRONIZAR DATOS"
         android:textColor="@color/white" />
 
@@ -53,7 +49,7 @@
         android:layout_marginTop="23dp"
         android:background="@drawable/bordercolor"
         android:drawableLeft="@drawable/ic_action_ir"
-        android:text="IR A REGISTRO DE ANIMALES-POTREROS"
+        android:text="REGISTRO DE RECUENTO DE ANIMALES"
         android:textColor="@color/white" />
 
     <Button

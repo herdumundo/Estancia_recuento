@@ -37,15 +37,12 @@ public class envios_pendientes extends AppCompatActivity {
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.envios_pendientes);
-        controles.conexion_sqlite(this);
         listViewPendientes=findViewById(R.id.listPendientes);
         txtInforme=findViewById(R.id.txtInforme);
-
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //bellow setSupportActionBar(toolbar);
         getSupportActionBar().setCustomView(R.layout.customactionbar);
         TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
         txtActionbar.setText("REGISTROS PENDIENTES A EXPORTAR");
-       // getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
@@ -65,7 +62,7 @@ public class envios_pendientes extends AppCompatActivity {
                 "a.cod_interno, b.desc_estancia, " +
                 "c.desc_potrero,a.fecha, " +
                 "a.cantidad " +
-                "from registro_cabecera a " +
+                "from cab_inv_animales a " +
                 "inner join estancia b on a.cab_id_estancia = b.id_estancia " +
                 "inner join potrero c on a.cab_id_potrero = c.id_potrerosqlite where a.estado='A' "   ,null);
             int c=0;
@@ -96,21 +93,16 @@ public class envios_pendientes extends AppCompatActivity {
             listaInformacion.add(listaUsuarios.get(i).getNombre()+"- ESTANCIA: "+listaUsuarios.get(i).getPotrero()+" - Potrero: "
                     +listaUsuarios.get(i).getEstancia()+"- Total: "+listaUsuarios.get(i).getCantidad_animales());
         }
-
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item)
     {
         switch (item.getItemId()) {
-
             case android.R.id.home:
                 Utilidades.controles.volver_atras(this,this, informe_menu.class,"",4);
-
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 }

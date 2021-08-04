@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,16 +8,47 @@
 
     <TextView
 
+        android:id="@+id/textView14"
+        android:layout_width="256dp"
+        android:layout_height="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="12dp"
+        android:text="ANIMALES PENDIENTES A EXPORTAR:"
+        android:textColor="@color/azul"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/txt_cant_pendientes"
+        android:layout_width="99dp"
+        android:layout_height="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="12dp"
+        android:text="0"
+        android:textColor="@color/azul"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/textView14"
+        app:layout_constraintTop_toBottomOf="@+id/txt_cant_animales2" />
+
+    <TextView
+
         android:id="@+id/textView3"
         android:layout_width="189dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="45dp"
-        android:text="ANIMALES ACTUALIZADOS"
+        android:layout_marginTop="12dp"
+        android:text="ANIMALES ACTUALIZADOS:"
         android:textColor="@color/colorPrimaryDark"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/textView26"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp" />
 
     <TextView
         android:id="@+id/txt_cant_animales2"
@@ -26,93 +57,124 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="209dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginTop="12dp"
         android:text="0"
         android:textColor="@color/colorPrimaryDark"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/txt_cant_animales" />
 
-    <Button
-        android:id="@+id/btn_cant_animales"
-        android:layout_width="378dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="155dp"
-        android:layout_marginEnd="16dp"
-        android:text="INFORME ANIMALES DETALLE"
+    <RelativeLayout
+        android:id="@+id/relativeLayout14"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout16">
+
+        <Button
+            android:id="@+id/btn_pendientes"
+            android:layout_width="421dp"
+            android:layout_height="wrap_content"
+
+
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="95dp"
+            android:layout_marginEnd="83dp"
+            android:drawableLeft="@drawable/ic_action_nosincro"
+            android:text="REGISTROS ENVIOS PENDIENTES"
+            tools:ignore="MissingConstraints" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout16"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout12">
+
+        <Button
+            android:id="@+id/btn_animales"
+            android:layout_width="421dp"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="95dp"
+            android:layout_marginEnd="83dp"
+            android:drawableLeft="@drawable/ic_action_lista"
+            android:text="LISTADO DE ANIMALES ACTUALIZADOS"
+            tools:ignore="MissingConstraints" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout12"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="165dp"
-        android:drawableLeft="@drawable/ic_action_reporte"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout15"
+        tools:ignore="MissingConstraints">
 
-    <Button
-        android:id="@+id/btn_pendientes"
-        android:layout_width="378dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="224dp"
-        android:layout_marginEnd="16dp"
-        android:text="REGISTROS ENVIOS PENDIENTES"
+        <Button
+            android:id="@+id/btn_cant_animales"
+            android:layout_width="421dp"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="95dp"
+            android:layout_marginEnd="83dp"
+            android:drawableLeft="@drawable/ic_action_reporte"
+            android:text="INFORME ANIMALES DETALLE" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout15"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="60dp"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="165dp"
-        android:drawableLeft="@drawable/ic_action_nosincro"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/textView14"
+        tools:ignore="MissingConstraints">
 
-    <Button
-        android:id="@+id/btn_animales"
-        android:layout_width="378dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="306dp"
-        android:layout_marginEnd="14dp"
-        android:text="LISTADO DE ANIMALES ACTUALIZADOS"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="165dp"
-        android:drawableLeft="@drawable/ic_action_lista"
-        />
-
-    <Button
-        android:id="@+id/btn_detalle_registro"
-        android:layout_width="379dp"
-        android:layout_height="wrap_content"
-
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="17dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginEnd="15dp"
-        android:text="INFORME ANIMALES RECUENTO"
-        tools:ignore="MissingConstraints"
-        android:drawableLeft="@drawable/ic_action_lista_number"
-        />
+        <Button
+            android:id="@+id/btn_detalle_registro"
+            android:layout_width="421dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="95dp"
+            android:layout_marginEnd="85dp"
+            android:drawableLeft="@drawable/ic_action_lista_number"
+            android:text="INFORME ANIMALES RECUENTO" />
+    </RelativeLayout>
 
     <TextView
 
+        android:id="@+id/textView26"
         android:layout_width="189dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="20dp"
-        android:text="ANIMALES EN INVENTARIO"
+        android:layout_marginTop="16dp"
+        android:text="ANIMALES EN INVENTARIO:"
         android:textColor="@color/colorRed"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp" />
 
     <TextView
         android:id="@+id/txt_cant_animales"
@@ -121,10 +183,11 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="208dp"
-        android:layout_marginTop="21dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
         android:text="0"
         android:textColor="@color/colorRed"
-        android:textStyle="bold" />
-</RelativeLayout>
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/textView26"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+</android.support.constraint.ConstraintLayout>

@@ -14,10 +14,6 @@ public class buscar_item extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.buscar_item);
 
-         //txt_codigo=(EditText)findViewById(R.id.txt_codigo);
-
-         //txt_codigo.setEnabled(false);
-
     }
  
 }

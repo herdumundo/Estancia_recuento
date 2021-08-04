@@ -5,7 +5,7 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
-import android.content.DialogInterface;
+import Utilidades.variables;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.sqlite.SQLiteDatabase;
@@ -50,17 +50,13 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         btn_movimiento= (Button)findViewById(R.id.idmovimiento) ;
         id_exportar=findViewById(R.id.id_exportar) ;
+        btn_potrero= (Button)findViewById(R.id.bnt_potrero);
 
-
-         btn_potrero= (Button)findViewById(R.id.bnt_potrero);
-        controles.getMacAddr();
         controles.context_menuPrincipal=this;
-
-
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //bellow setSupportActionBar(toolbar);
         getSupportActionBar().setCustomView(R.layout.customactionbar);
         TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
-        txtActionbar.setText("MENU DE PRINCIPAL");
+        txtActionbar.setText("Usuario: "+variables.NOMBRE_LOGIN);
        // getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getColor(R.color.verde)));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
@@ -68,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
 
-        controles.conexion_sqlite(this);
+       // controles.conexion_sqlite(this);
 
         btn_movimiento.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -207,9 +203,9 @@ public class MainActivity extends AppCompatActivity {
                 id=rs.getString("CODEST");
                 estancia= rs.getString("ESTANCIA");
                 ContentValues values=new ContentValues();
-                values.put(Utilidades.CAMPO_ID_ESTANCIA,id.toString());
-                values.put(Utilidades.CAMPO_DESC_ESTANCIA,estancia.toString());
-               db.insert(Utilidades.TABLA_ESTANCIA, Utilidades.CAMPO_ID_ESTANCIA,values);
+                values.put("id_estancia",id);
+                values.put("desc_estancia",estancia);
+               db.insert("estancia",null,values);
             }
             db.close();
             new AlertDialog.Builder(MainActivity.this)

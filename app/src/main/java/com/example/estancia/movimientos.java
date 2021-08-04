@@ -16,7 +16,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
+import Utilidades.variables;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -69,12 +69,11 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     public static   ArrayList<String> arrIdPotrero         =   new ArrayList<>();
     public static   ArrayList<String> arrDescPotrero =   new ArrayList<>();
 
-
-
     String variable_sexo="";
     String variable_comprada="";
     Spinner Combo_potrero;
     TextView txt_cod_animal,txt_cantidad,txt_fecha,txtCodPotrero,txtDescPotrero,txtDescEstancia,txtCodEstancia;
+    EditText txtPesaje;
     public static   SpinnerDialog  SpEstancia,SpPotrero;
     ArrayList<String> lista_estancia;
     ArrayList<Usuario> EstanciaList;
@@ -94,8 +93,8 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     Button cargar,registrar;
     DatePickerDialog picker;
     private String name;
-     public static  Bluetooth Bluetooth;
-      String posicion_fila_lv2="";
+    public static  Bluetooth Bluetooth;
+    String posicion_fila_lv2="";
     String codigo_text="";//String para almacenar el codigo que recupera del lector
     TextView txt_compra_si,txt_compra_no;
     @Override
@@ -104,8 +103,10 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         controles.volver_atras(this,this, MainActivity.class,"¿Desea volver al menù principal? ",6);
 
     }
+
     @SuppressLint("NewApi")
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//Bloquea el giro de pantalla
         super.onCreate(savedInstanceState);
@@ -119,7 +120,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         txtCodEstancia=(TextView)findViewById(R.id.TxtCodEstancia);
         txtCodPotrero=(TextView)findViewById(R.id.TxtCodPotrero);
         txtDescPotrero=(TextView)findViewById(R.id.TxtDescPotrero);
-
+        txtPesaje=findViewById(R.id.txtPesaje);
         cargar=(Button)findViewById(R.id.btn_cargar);
         registrar=(Button)findViewById(R.id.btn_registrar);
 
@@ -140,7 +141,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         final Drawable upArrow =  ContextCompat.getDrawable(this, R.drawable.abc_ic_ab_back_material);
         upArrow.setColorFilter(ContextCompat.getColor(this, R.color.white), PorterDuff.Mode.SRC_ATOP);
         this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
-        controles.conexion_sqlite(this);
+        //controles.conexion_sqlite(this);
         txt_fecha.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -170,9 +171,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
         consulta_carga_animales_upd();
 
-
         txt_cantidad.setText(String.valueOf(ListView.getCount()));
-       // conn=new ConexionSQLiteHelper(getApplicationContext(),"bd_usuarios",null,1);
         consultarEstancias();
         SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         Cursor cursor1=db.rawQuery("SELECT date('now') as fecha",null);
@@ -228,7 +227,6 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                                         myCustomToast.show();
                                         txt_cod_animal.setText("");
                                     }
-
                                 }
                                 else
                                 {
@@ -352,7 +350,8 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         });
     }
 
-    class hilo_registrar extends Thread {
+    class hilo_registrar extends Thread
+    {
         @Override
         public void run() {
             try {
@@ -410,16 +409,20 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
     public void onConnect(BluetoothDevice device) {
     }
+
     public void onDisconnect(BluetoothDevice device, String message) {
         Bluetooth.connectToDevice(device);
     }
+
     public void onMessage(String message)
     {
         Display( message );
 
     }
+
     public void onError(String message) {
     }
+
     public void onConnectError(final BluetoothDevice device, String message)
     {
         runOnUiThread(new Runnable() {
@@ -440,7 +443,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
         arrDescEstancia.clear();
         arrIdEstancia.clear();
-        Cursor cursor=db.rawQuery("SELECT * FROM "+ Utilidades.TABLA_ESTANCIA,null);
+        Cursor cursor=db.rawQuery("SELECT * FROM estancia ",null);
         while (cursor.moveToNext())
         {
             arrIdEstancia.add(cursor.getString(0));
@@ -539,13 +542,13 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                     final MediaPlayer mp= MediaPlayer.create(this,R.raw.error);
                     mp.start();
 
-                    ir_cuadro(codigo_text,String.valueOf(pos),1);
+                    ir_cuadro(codigo_text.trim(),String.valueOf(pos),1);
                 }
                 pos++;
             }
             if (trigger.equals("1"))
             {
-                ir_cuadro(codigo_text,null,0);
+                ir_cuadro(codigo_text.trim(),null,0);
                 txt_cantidad.setText(String.valueOf(ListView.getCount()+1));
                 final MediaPlayer mp= MediaPlayer.create(this,R.raw.toc);
                 mp.start();
@@ -556,7 +559,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     private void cargar_grilla_boton()
     {
         String trigger="1";
-        String par="";
+        String CaravanaIDE="";
         if (txt_cod_animal.getText().toString().trim().equals(""))
         {
             MyCustomToast myCustomToast = new MyCustomToast(movimientos.this);
@@ -568,21 +571,21 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
             myCustomToast.setCustomMessageBackgroundDrawable(R.drawable.error_message_background);
             myCustomToast.setCustomMessageDuration(MyCustomToast.LENGTH_SHORT);
             myCustomToast.show();
-            txt_cod_animal.requestFocus();
+
         }
         else
         {
             for (int pos = 0; pos < ListView.getCount(); )
             {
-                if(txt_cod_animal.getText().length()>22)
+                if(codigo_text.length()>22)
                 {
-                    par=listInsertAnimal.get(pos).getId();
+                    CaravanaIDE=listInsertAnimal.get(pos).getId();
                 }
                 else
                 {
-                    par=listInsertAnimal.get(pos).getCaravana();
+                    CaravanaIDE=listInsertAnimal.get(pos).getCaravana();
                 }
-                if (par.toUpperCase().equals(txt_cod_animal.getText().toString().toUpperCase()))
+                if (CaravanaIDE.toUpperCase().equals(txt_cod_animal.getText().toString().trim().toUpperCase()))
                 {
                     trigger="0";
                     MyCustomToast myCustomToast = new MyCustomToast(movimientos.this);
@@ -596,23 +599,20 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                     myCustomToast.show();
                     final MediaPlayer mp= MediaPlayer.create(this,R.raw.error);
                     mp.start();
-
-                    ir_cuadro(txt_cod_animal.getText().toString(),String.valueOf(pos),1);
-                    txt_cod_animal.setText("");
-                    txt_cod_animal.requestFocus();
+                    ir_cuadro(txt_cod_animal.getText().toString().trim(),String.valueOf(pos),1);
                 }
                 pos++;
             }
             if (trigger.equals("1"))
             {
-                ir_cuadro(txt_cod_animal.getText().toString(),null,0);
+                ir_cuadro(txt_cod_animal.getText().toString().trim(),null,0);
                 txt_cantidad.setText(String.valueOf(ListView.getCount()+1));
                 final MediaPlayer mp= MediaPlayer.create(this,R.raw.toc);
                 mp.start();
-                txt_cod_animal.requestFocus();
-                txt_cod_animal.setText("");
             }
         }
+
+
         txt_cod_animal.requestFocus();
     }
     private void registrar (){
@@ -620,8 +620,8 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
         SQLiteDatabase db1=controles.conSqlite.getReadableDatabase();
         ContentValues valor_cab=new ContentValues();
-        Cursor cursor1=db1.rawQuery("SELECT  case  when count(*) = 0 then 1 else max(cod_interno) +1  end as d FROM  registro_cabecera " ,null);
-        Cursor cabceraBoleano=db1.rawQuery("SELECT  * FROM  registro_cabecera WHERE estado='A' " ,null);
+        Cursor cursor1=db1.rawQuery("SELECT  case  when count(*) = 0 then 1 else max(cod_interno) +1  end as d FROM  cab_inv_animales " ,null);
+        Cursor cabceraBoleano=db1.rawQuery("SELECT  * FROM  cab_inv_animales WHERE estado='A' " ,null);
         Cursor cabInforme=db1.rawQuery("SELECT  case  when count(*) = 0 then 1 else max(codinterno) +1  end as d FROM  informe_cabecera" ,null);
         String idCabecera= "";
         if(cabceraBoleano.moveToNext()){
@@ -630,13 +630,13 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                 idCabecera=cursor1.getString(0);
             }
         }
-        else {
+        else
+        {
             while (cabInforme.moveToNext())
             {
                 idCabecera=cabInforme.getString(0);
             }
         }
-
 
         valor_cab.put("cod_interno",idCabecera);
         valor_cab.put("fecha",txt_fecha.getText().toString());
@@ -644,7 +644,9 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         valor_cab.put("cab_id_potrero",txtCodPotrero.getText().toString());
         valor_cab.put("cab_id_estancia",txtCodEstancia.getText().toString());
         valor_cab.put("estado","A");
-        db1.insert("registro_cabecera","cod_interno",valor_cab);
+        valor_cab.put("pesaje",txtPesaje.getText().toString());
+        valor_cab.put("idUsuario",variables.idUsuario);
+        db1.insert("cab_inv_animales","cod_interno",valor_cab);
         db1.close();
         String identificadorAnimal="";
         for (int i = 0; i < listInsertAnimal.size();)
@@ -664,7 +666,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
             values.put("desc_animal",identificadorAnimal);
             values.put("id_potrero",txtCodPotrero.getText().toString());
             values.put("estado","A");
-            db.insert("animal_potrero",null,values);
+            db.insert("det_inv_animales",null,values);
             db.close();
 
             if(listInsertAnimal.get(i).getId().length()<1)
@@ -706,53 +708,56 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         contar_compradas();
     }
 
-    private void ir_cuadro(String cod_animal,String pos,final int indicadorModificarInsertar)
+    private void ir_cuadro(String cod_animal, final String pos, final int indicadorModificarInsertar)
     {
         try {
             // SI EL INDICADOR =0(EN UN INSERT DE REGISTRO, =1 (ES UNA MODIFICACION DE LA GRILLA.))
 
-        final android.support.v7.app.AlertDialog.Builder mBuilder = new android.support.v7.app.AlertDialog.Builder(movimientos.this);
-        final View mView = getLayoutInflater().inflate(R.layout.cuadro_movimiento, null);
+                final android.support.v7.app.AlertDialog.Builder mBuilder = new android.support.v7.app.AlertDialog.Builder(movimientos.this);
+                final View mView = getLayoutInflater().inflate(R.layout.cuadro_movimiento, null);
+                final TextView id_animal = (TextView) mView.findViewById(R.id.id_animal);
+                final TextView txt_caravana = (TextView) mView.findViewById(R.id.txt_caravana);
+                final Button btn_guardar_cerrar = (Button) mView.findViewById(R.id.boton_grabar);
+                final RadioGroup radioGroup= (RadioGroup)mView.findViewById(R.id.radio_grupo);
 
-        final TextView id_animal = (TextView) mView.findViewById(R.id.id_animal);
-        final TextView txt_caravana = (TextView) mView.findViewById(R.id.txt_caravana);
-       // final Spinner txt_carimbo = (Spinner) mView.findViewById(R.id.txt_carimbo);
-        final Button btn_guardar_cerrar = (Button) mView.findViewById(R.id.boton_grabar);
-        final RadioGroup radioGroup= (RadioGroup)mView.findViewById(R.id.radio_grupo);
-        final RadioButton radio_macho= (RadioButton)mView.findViewById(R.id.radio_macho);
-        final RadioButton radio_hembra= (RadioButton)mView.findViewById(R.id.radio_hembra);
-        final RadioButton radio_comprada_si= (RadioButton)mView.findViewById(R.id.radio_compra_si);
-        final RadioButton radio_comprada_no= (RadioButton)mView.findViewById(R.id.radio_compra_no);
-   //     final Spinner combo_categoria=(Spinner)mView.findViewById(R.id.spinner_categoria);
-        final TextView TxtCodColorCuadro=mView.findViewById(R.id.TxtCodColorCuadro);
-        final TextView TxtDescColorCuadro=mView.findViewById(R.id.TxtDescColorCuadro);
-            final TextView TxtCodRazaCuadro=mView.findViewById(R.id.TxtCodRazaCuadro);
-            final TextView TxtDescRazaCuadro=mView.findViewById(R.id.TxtDescRazaCuadro);
-            final TextView TxtDescCarimboCuadro=mView.findViewById(R.id.TxtDescCarimboCuadro);
-            final TextView TxtCodCategoriaCuadro=mView.findViewById(R.id.TxtCodCategoriaCuadro);
-            final TextView TxtDescCategoriaCuadro=mView.findViewById(R.id.TxtDescCategoriaCuadro);
+                final RadioButton radio_macho= (RadioButton)mView.findViewById(R.id.radio_macho);
+                final RadioButton radio_hembra= (RadioButton)mView.findViewById(R.id.radio_hembra);
+                final RadioButton radio_comprada_si= (RadioButton)mView.findViewById(R.id.radio_compra_si);
+                final RadioButton radio_comprada_no= (RadioButton)mView.findViewById(R.id.radio_compra_no);
+                final RadioGroup GrupComprada= (RadioGroup)mView.findViewById(R.id.radio_grupo_compra);
 
-        final SpinnerDialog SpColor,SpRaza,SpCategoria,SpCarimbo;
-       // final Spinner combo_raza=(Spinner)mView.findViewById(R.id.spinner_raza);
-        final TextView txt_posicion = (TextView) mView.findViewById(R.id.txt_posicion);
-        final TextView txt_compra = (TextView) mView.findViewById(R.id.txt_compra);
-        txt_posicion.setText(pos);
-        final   String cont_text_codigo ;
-        final String  cont_text_nrocaravana;
-        final String cont_text_sexo;
-        final String  cont_text_carimbo;
-        radio_hembra.setEnabled(true);
-        radio_macho.setEnabled(true);
-        radio_comprada_no.setEnabled(true);
-        radio_comprada_si.setEnabled(true);
-       // combo_categoria.setEnabled(true);
-        //combo_raza.setEnabled(true);
-        String codinterno="";  String nrocaravana=""; String sexo=""; String color=""; String raza=""; String carimbo="";  String id_bolo="";
-        String id_categoria="";String comprada="";
-        SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
-        String contenido_lv="";
-        SQLiteDatabase db_consulta_lv=controles.conSqlite.getReadableDatabase();
-        final Cursor cursor_consulta=db_consulta_lv.rawQuery(
+                final RadioGroup radioGroupNacimiento= (RadioGroup)mView.findViewById(R.id.radio_grupo_nacimiento);
+                final RadioButton radioPrimavera=  mView.findViewById(R.id.primavera);
+                final RadioButton radioOtono= mView.findViewById(R.id.otono);
+
+                final TextView TxtCodColorCuadro=mView.findViewById(R.id.TxtCodColorCuadro);
+                final TextView TxtDescColorCuadro=mView.findViewById(R.id.TxtDescColorCuadro);
+                final TextView TxtCodRazaCuadro=mView.findViewById(R.id.TxtCodRazaCuadro);
+                final TextView TxtDescRazaCuadro=mView.findViewById(R.id.TxtDescRazaCuadro);
+                final TextView TxtDescCarimboCuadro=mView.findViewById(R.id.TxtDescCarimboCuadro);
+                final TextView TxtCodCategoriaCuadro=mView.findViewById(R.id.TxtCodCategoriaCuadro);
+                final TextView TxtDescCategoriaCuadro=mView.findViewById(R.id.TxtDescCategoriaCuadro);
+                final TextView txtNacimiento=mView.findViewById(R.id.txtNacimiento);
+
+                final SpinnerDialog SpColor,SpRaza,SpCategoria,SpCarimbo;
+                final TextView txt_posicion = (TextView) mView.findViewById(R.id.txt_posicion);
+                final TextView txt_compra = (TextView) mView.findViewById(R.id.txt_compra);
+                txt_posicion.setText(pos);
+                //dcfinal   String cont_text_codigo ;
+                final String  cont_text_nrocaravana;
+                final String cont_text_sexo;
+               // final String  cont_text_carimbo;
+                radio_hembra.setEnabled(true);
+                radio_macho.setEnabled(true);
+                radio_comprada_no.setEnabled(true);
+                radio_comprada_si.setEnabled(true);
+                String nacimiento="";
+                String codinterno="";  String nrocaravana=""; String sexo=""; String color=""; String raza=""; String carimbo="";  String id_bolo="";
+                String id_categoria="";String comprada="";
+                SQLiteDatabase db=controles.conSqlite.getReadableDatabase();
+                String contenido_lv="";
+                SQLiteDatabase db_consulta_lv=controles.conSqlite.getReadableDatabase();
+                final Cursor cursor_consulta=db_consulta_lv.rawQuery(
                 "SELECT count(*) from animales_actualizados  where id='" + cod_animal + "' " +
                 "and id not in ('') or UPPER(nrocaravana)=UPPER('" + cod_animal + "') " +
                         "and nrocaravana not in ('') and estado not in ('A','C') "    ,null);
@@ -796,8 +801,9 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         }
         else {
             Cursor cursor = db.rawQuery("SELECT  a.codinterno ,a.nrocaravana , a.sexo ,a.color , a.raza , " +
-                    " a.carimbo ,a.id,a.id_categoria,a.comprada, b.color as descColor,c.raza as descRaza,d.categoria" +
-                    " from animales_actualizados a inner join color b on a.color=b.id_color  inner join categorias d on a.id_categoria=d.id_categoria" +
+                    " a.carimbo ,a.id,a.id_categoria,a.comprada, b.color as descColor,c.raza as descRaza,d.categoria,a.nacimiento" +
+                    "   from animales_actualizados a " +
+                    "   inner join color b on a.color=b.id_color  inner join categorias d on a.id_categoria=d.id_categoria" +
                     " inner join razas c on a.raza=c.id_raza  where a.id='" + cod_animal + "' or UPPER(a.nrocaravana)=UPPER('" + cod_animal + "')", null);
             while (cursor.moveToNext()) {
                 codinterno = (cursor.getString(0));
@@ -809,7 +815,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                 id_categoria = (cursor.getString(7));
                 comprada=(cursor.getString(8));
                 id_bolo=(cursor.getString(6));
-
+                nacimiento=(cursor.getString(12));
                 TxtCodColorCuadro.setText(cursor.getString(3));
                 TxtDescColorCuadro.setText(cursor.getString(9));
 
@@ -820,42 +826,52 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                 TxtDescCategoriaCuadro.setText(cursor.getString(11));
             }
         }
-        radio_comprada_si.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-                if (radio_comprada_si.isChecked()==true) {
-                    variable_comprada="SI";
-                    txt_compra.setText("SI");
-                }
-            }
-        });
-        radio_comprada_no.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-                if (radio_comprada_no.isChecked()==true) {
-                    variable_comprada="NO";
-                    txt_compra.setText("NO");
-                }
-            }
-        });
 
-        radio_hembra.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-                if (radio_hembra.isChecked()==true) {
-                    variable_sexo="H";
+        GrupComprada.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                    switch(i) {
+                        case R.id.radio_compra_si:
+                            variable_comprada="SI";
+                            txt_compra.setText("SI");
+                            break;
+                        case R.id.radio_compra_no:
+                            variable_comprada="NO";
+                            txt_compra.setText("NO");
+                            break;
+                    }
                 }
-            }
-        });
-        radio_macho.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-                if (radio_macho.isChecked()==true) {
-                    variable_sexo="M";
+            });
+
+
+        radioGroupNacimiento.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                    switch(i) {
+                        case R.id.primavera:
+                            txtNacimiento.setText("PRIMAVERA");
+                            break;
+                        case R.id.otono:
+                            txtNacimiento.setText("OTONO");
+                            break;
+                    }
                 }
-            }
-        });
+            });
+
+        switch (nacimiento){
+            case "PRIMAVERA":
+                radioPrimavera.setChecked(true);
+                txtNacimiento.setText("PRIMAVERA");
+                break;
+            case "OTONO":
+                radioOtono.setChecked(true);
+                txtNacimiento.setText("OTONO");
+                break;
+        }
+
         mBuilder.setView(mView);
-        cont_text_codigo=codinterno;
         cont_text_nrocaravana=nrocaravana;
         cont_text_sexo=sexo;
-        cont_text_carimbo= carimbo;
         if (cod_animal.length()>=23){
             id_animal.setText(cod_animal);
             txt_caravana.setText(nrocaravana);
@@ -866,52 +882,51 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         }
         id_animal.setEnabled(false);
         txt_caravana.setEnabled(true);
-       // txt_carimbo.setEnabled(true);
         if (radio_hembra.isChecked()==true) {
             variable_sexo="H";
         }
         else if(radio_macho.isChecked()==true){
             variable_sexo="M";
         }
-        if(cont_text_sexo.trim().equals("H")){
-            radio_hembra.setChecked(true);
-            variable_sexo="H";
-        }
-        else if  (cont_text_sexo.trim().equals("M")){
-            radio_macho.setChecked(true);
-            variable_sexo="M";
-        }
-        else {
-            radio_hembra.setChecked(false);
-            radio_macho.setChecked(false);
+
+        switch (cont_text_sexo.trim()){
+            case "H":
+                radio_hembra.setChecked(true);
+                variable_sexo="H";
+                break;
+            case "M":
+                radio_macho.setChecked(true);
+                variable_sexo="M";
+                break;
         }
 
-        if(comprada.trim().equals("SI")){
-            radio_comprada_si.setChecked(true);
-        }
-        else if(comprada.trim().equals("NO") ){
-            radio_comprada_no.setChecked(true);
-        }
-        else {
-            radio_comprada_si.setChecked(false);
-            radio_comprada_no.setChecked(true);
-            variable_comprada="NO";
-            txt_compra.setText("NO");
-        }
-        consultarCategorias(id_categoria);
-        consultarColor(color.trim());
-        consultarRaza(raza.trim());
+            switch (comprada.trim()){
+                case "SI":
+                    variable_comprada="SI";
+                    txt_compra.setText("SI");
+                    radio_comprada_si.setChecked(true);
+                    break;
+                case "NO":
+                default:
+                    radio_comprada_no.setChecked(true);
+                    variable_comprada="NO";
+                    txt_compra.setText("NO");
+                    break;
 
-            final ArrayList<String> arrCodColor         =   new ArrayList<>();
-            final ArrayList<String> arrDescColor =   new ArrayList<>();
+            }
 
+            consultarCategorias(id_categoria);
+            consultarColor(color.trim());
+            consultarRaza(raza.trim());
+
+            final ArrayList<String> arrCodColor     =   new ArrayList<>();
+            final ArrayList<String> arrDescColor    =   new ArrayList<>();
 
             SQLiteDatabase dbColor=controles.conSqlite.getReadableDatabase();
             arrCodColor.clear();
             arrDescColor.clear();
 
             Cursor cursorColor=dbColor.rawQuery("SELECT * FROM color  ",null);
-
             while (cursorColor.moveToNext())
             {
                 arrCodColor.add(cursorColor.getString(0));
@@ -929,11 +944,10 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                 {
                     TxtCodColorCuadro.setText(arrCodColor.get(i));
                     TxtDescColorCuadro.setText(arrDescColor.get(i));
-
                 }
             });
-            final ArrayList<String> arrCodRaza         =   new ArrayList<>();
-            final ArrayList<String> arrDescRaza =   new ArrayList<>();
+            final ArrayList<String> arrCodRaza      =   new ArrayList<>();
+            final ArrayList<String> arrDescRaza     =   new ArrayList<>();
             SQLiteDatabase dbRaza=controles.conSqlite.getReadableDatabase();
             arrCodRaza.clear();
             arrDescRaza.clear();
@@ -982,9 +996,6 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                 }
             });
 
-
-
-
             final ArrayList<String> arrCodCategoria         =   new ArrayList<>();
             final ArrayList<String> arrDescCategoria =   new ArrayList<>();
             SQLiteDatabase dbCategoria=controles.conSqlite.getReadableDatabase();
@@ -1011,55 +1022,27 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                     TxtCodCategoriaCuadro.setText(arrCodCategoria.get(i));
                     TxtDescCategoriaCuadro.setText(arrDescCategoria.get(i));
 
-
-                    if(TxtCodCategoriaCuadro.getText().toString().trim().equals("1")){
-
-                        radio_hembra.setChecked(true);
-                        variable_sexo="H";
+                    switch (TxtCodCategoriaCuadro.getText().toString().trim())
+                    {
+                        case "1":
+                        case "3":
+                        case "5":
+                        case "8":
+                            radio_hembra.setChecked(true);
+                            variable_sexo="H";
+                            break;
+                        case "2":
+                        case "4":
+                        case "6":
+                        case "7":
+                            radio_macho.setChecked(true);
+                            variable_sexo="M";
+                            break;
                     }
-                    else   if(TxtCodCategoriaCuadro.getText().toString().trim().equals("2")){
-
-                        radio_macho.setChecked(true);
-                        variable_sexo="M";
-                    }
-                    else   if(TxtCodCategoriaCuadro.getText().toString().trim().equals("3")){
-
-                        radio_hembra.setChecked(true);
-                        variable_sexo="H";
-                    }
-                    else   if(TxtCodCategoriaCuadro.getText().toString().trim().equals("4")){
-
-                        radio_macho.setChecked(true);
-                        variable_sexo="M";
-                    }
-                    else   if(TxtCodCategoriaCuadro.getText().toString().trim().equals("5")){
-
-                        radio_hembra.setChecked(true);
-                        variable_sexo="H";
-                    }
-                    else   if(TxtCodCategoriaCuadro.getText().toString().trim().equals("6")){
-
-                        radio_macho.setChecked(true);
-                        variable_sexo="M";
-                    }
-                    else   if(TxtCodCategoriaCuadro.getText().toString().trim().equals("7")){
-
-                        radio_macho.setChecked(true);
-                        variable_sexo="M";
-                    }
-                    else   if(TxtCodCategoriaCuadro.getText().toString().trim().equals("8")){
-
-                        radio_hembra.setChecked(true);
-                        variable_sexo="H";
-                    }
-
                 }
             });
 
-        if(TxtCodCategoriaCuadro.getText().length()==0)
-        {
 
-        }
         final android.support.v7.app.AlertDialog dialog = mBuilder.create();
         dialog.show();
         dialog.setCanceledOnTouchOutside(false);
@@ -1105,30 +1088,31 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                                     "(UPPER(nrocaravana)=UPPER('" +txt_caravana.getText().toString().trim()+"') " +
                                     "and nrocaravana not in ('')))   " ,null);
 
-                    if(id_animal.getText().toString().trim().equals(""))
-                    {
-
-                        if(cont_text_nrocaravana.trim().equals(txt_caravana.getText().toString().trim())){
-                            // Toast.makeText(movimientos.this,"caravana igual",Toast.LENGTH_LONG).show();
-                        }
-                        else {
-                            SQLiteDatabase db_estado=controles.conSqlite.getReadableDatabase();
-                            String strSQL_estado = "UPDATE animales_actualizados SET  estado='P' WHERE " +
-                                    " nrocaravana='"+cont_text_nrocaravana.toString().trim()+"' and estado = 'O'";
-                            db_estado.execSQL(strSQL_estado);
-                            // Toast.makeText(movimientos.this,"caravana distinta",Toast.LENGTH_LONG).show();
-                        }  //Toast.makeText(movimientos.this,"ide vacio",Toast.LENGTH_LONG).show();
-                    }
-
-                    else
-                        {
-                        //Toast.makeText(movimientos.this,"ide vacio else",Toast.LENGTH_LONG).show();
-                    }
-
+                    //SI EL ANIMAL YA EXISTE, ENTONCES ENTRA SOLO PARA MODIFICAR DATOS.
                     if(cursor_consulta_contar.moveToFirst())
                     {
-                        if(id_animal.getText().toString().trim().length()>1)
-                        {
+                       try
+                       { //REVISAR EL DUPLICADO, AL COLOCAR CUALQUIER NRO CARAVANA , Y LUEGO AL CAMBIAR EL NUMERO DE CARVANA POR UNO EXISTENTE PERMITE LA MODIFICACION.
+                           String fila= txt_posicion.getText().toString().trim();
+                           int caravanaDuplicado=0;
+                           for (int pos = 0; pos < listInsertAnimal.size(); )
+                           {
+                               if(listInsertAnimal.get(pos).getCaravana().trim().equals(txt_caravana.getText().toString().trim())
+                                       && Integer.parseInt(txt_posicion.getText().toString())!=pos)
+                               {
+                                   caravanaDuplicado++;
+                                }
+                               pos++;
+                           }
+
+                           if(caravanaDuplicado>0){
+                               Toast.makeText(movimientos.this,"CARAVANA EXISTENTE",Toast.LENGTH_LONG).show();
+                           }
+
+                            else if(id_animal.getText().toString().trim().length()>1)
+                            {
+
+                            //MODIFICA POR NRO DE IDENTIFICADOR
                             SQLiteDatabase db_UPDATE=controles.conSqlite.getReadableDatabase();
                             db_UPDATE.execSQL(" UPDATE " +
                                     "               animales_actualizados " +
@@ -1139,61 +1123,67 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                                     "               raza='"+TxtCodRazaCuadro.getText().toString()+"'," +
                             "                       carimbo='"+TxtDescCarimboCuadro.getText().toString()+"', " +
                                     "               id_categoria='"+TxtCodCategoriaCuadro.getText().toString()+"'," +
-                                    "               comprada='"+variable_comprada+"', " +
+                                    "               comprada='"+variable_comprada+"', nacimiento='"+txtNacimiento.getText().toString()+"', " +
                                     "               estado='O'" +
                             "                   WHERE  " +
                                     "               id ='"+ id_animal.getText()+"' and estado not in ('A','C','P')");
                             db_UPDATE.close();
-                        }
+                                String codInternoAnimalBorrado=listInsertAnimal.get(Integer.parseInt(txt_posicion.getText().toString().trim())).getcodInterno();
+
+                                listInsertAnimal.remove(Integer.parseInt(txt_posicion.getText().toString().trim()));
+
+                                ArrayListContenedor insAnim = new ArrayListContenedor();
+                                insAnim.setId(id_animal.getText().toString());
+                                insAnim.setCaravana(txt_caravana.getText().toString());
+                                insAnim.setComprada(txt_compra.getText().toString());
+                                insAnim.setcodInterno(codInternoAnimalBorrado);
+                                 listInsertAnimal.add(Integer.parseInt(txt_posicion.getText().toString().trim()),insAnim);
+                                addRow();
+
+                                dialog.dismiss();
+                                Toast.makeText(movimientos.this,"MODIFICADO POR IDE",Toast.LENGTH_LONG).show();
+
+
+                            }
                         else
                         {
-                            SQLiteDatabase db_UPDATE=controles.conSqlite.getReadableDatabase();
-                            db_UPDATE.execSQL(" UPDATE " +
-                                    "               animales_actualizados " +
-                                    "           SET  " +
-                                    "               nrocaravana='"+txt_caravana.getText()+"'," +
-                                    "               sexo='"+variable_sexo+"'," +
-                                    "               color='"+TxtCodColorCuadro.getText().toString()+"', " +
-                                    "               raza='"+TxtCodRazaCuadro.getText().toString()+"'," +
-                            "                       carimbo='"+TxtDescCarimboCuadro.getText().toString()+"', " +
-                                    "               id_categoria='"+TxtCodCategoriaCuadro.getText().toString()+"'," +
-                                    "               comprada='"+variable_comprada+"', " +
-                                    "               estado='O'" +
-                            "                   WHERE  " +
-                                    "               nrocaravana ='"+ txt_caravana.getText()+"' and estado not in ('A','C','P')");
-                            db_UPDATE.close();
+
+                                // MODIFICA POR NRO DE CARAVANA
+                                SQLiteDatabase db_UPDATE=controles.conSqlite.getReadableDatabase();
+                                db_UPDATE.execSQL(" UPDATE " +
+                                        "               animales_actualizados " +
+                                        "           SET  " +
+                                        "               nrocaravana='"+txt_caravana.getText().toString().trim()+"'," +
+                                        "               sexo='"+variable_sexo+"'," +
+                                        "               color='"+TxtCodColorCuadro.getText().toString()+"', " +
+                                        "               raza='"+TxtCodRazaCuadro.getText().toString()+"'," +
+                                        "                       carimbo='"+TxtDescCarimboCuadro.getText().toString() .trim()+"', " +
+                                        "               id_categoria='"+TxtCodCategoriaCuadro.getText().toString(). trim()+"'," +
+                                        "               comprada='"+variable_comprada+"', " +
+                                        "               estado='O' ,nacimiento='"+txtNacimiento.getText().toString().trim()+"' "  +
+                                        "                   WHERE  " +
+                                        "               nrocaravana ='"+ txt_caravana.getText().toString().trim()+"' and estado not in ('A','C','P')");
+                                db_UPDATE.close();
+                                String codInternoAnimalBorrado=listInsertAnimal.get(Integer.parseInt(txt_posicion.getText().toString().trim())).getcodInterno();
+                                listInsertAnimal.remove(Integer.parseInt(txt_posicion.getText().toString().trim()));
+
+                                ArrayListContenedor insAnim = new ArrayListContenedor();
+                                insAnim.setId(id_animal.getText().toString());
+                                insAnim.setCaravana(txt_caravana.getText().toString());
+                                insAnim.setComprada(txt_compra.getText().toString());
+                                insAnim.setcodInterno(codInternoAnimalBorrado);
+
+                            listInsertAnimal.add(Integer.parseInt(txt_posicion.getText().toString().trim()),insAnim);
+                                addRow();
+
+                                dialog.dismiss();
+                            Toast.makeText(movimientos.this,"MODIFICADO POR CARAVANA",Toast.LENGTH_LONG).show();
+
                         }
-
-                        SQLiteDatabase db_UPDATE=controles.conSqlite.getReadableDatabase();
-                        String strSQL = "   UPDATE " +
-                                "               animales_actualizados " +
-                                "           SET  " +
-                                "               nrocaravana='"+txt_caravana.getText()+"'," +
-                                "               sexo='"+variable_sexo+"'," +
-                                "               color='"+TxtCodColorCuadro.getText().toString()+"', " +
-                                "               raza='"+TxtCodRazaCuadro.getText().toString()+"'," +
-                        "                       carimbo='"+TxtDescCarimboCuadro.getText().toString()+"', " +
-                                "               id_categoria='"+TxtCodCategoriaCuadro.getText().toString()+"'," +
-                                "               comprada='"+variable_comprada+"', " +
-                                "               estado='O'" +
-                        "                   WHERE " +
-                                "               (id ='"+ id_animal.getText()+"' and id not in('') ) or (nrocaravana='"+txt_caravana.getText()+"' and nrocaravana not in('')) and estado not in ('A','C','P')";
-                        db_UPDATE.execSQL(strSQL);
-                        db_UPDATE.close();
-
-                        listInsertAnimal.remove(Integer.parseInt(txt_posicion.getText().toString().trim()));
-                        //   listInsertAnimal.add(Integer.parseInt(txt_posicion.getText().toString().trim()),id_animal.getText()+"- "+txt_caravana.getText()+"-"+txt_compra.getText());
-
-
-                        ArrayListContenedor insAnim = new ArrayListContenedor();
-                        insAnim.setId(id_animal.getText().toString());
-                        insAnim.setCaravana(txt_caravana.getText().toString());
-                        insAnim.setComprada(txt_compra.getText().toString());
-                        listInsertAnimal.add(Integer.parseInt(txt_posicion.getText().toString().trim()),insAnim);
-                        addRow();
-
-                        dialog.dismiss();
-                        Toast.makeText(movimientos.this,"MODIFICADO ",Toast.LENGTH_LONG).show();
+                        // Toast.makeText(movimientos.this,"MODIFICADO ",Toast.LENGTH_LONG).show();
+                       } catch (Exception e){
+                           Toast.makeText(movimientos.this,e.getMessage(),Toast.LENGTH_LONG).show();
+                       }
 
                     }
                     else
@@ -1211,10 +1201,15 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                         valores_ani_actual.put("id_categoria",TxtCodCategoriaCuadro.getText().toString().toString());
                         valores_ani_actual.put("comprada",variable_comprada.toString());
                         valores_ani_actual.put("estado","O");
-                        db_INSERT.insert("animales_actualizados","id",valores_ani_actual);
+                        valores_ani_actual.put("nacimiento",txtNacimiento.getText().toString());
+                        long id= db_INSERT.insert("animales_actualizados","codinterno",valores_ani_actual);
 
                         db_INSERT.close();
+                        // SI indicadorModificarInsertar  ES IGUAL A 1 ENTONCES ES UNA MODIFICACION.
                         if(indicadorModificarInsertar==1){
+                            SQLiteDatabase dbControl=controles.conSqlite.getReadableDatabase();
+                            dbControl.execSQL("DELETE FROM animales_actualizados where codinterno="+listInsertAnimal.get(Integer.parseInt(txt_posicion.getText().toString().trim())).getcodInterno());
+                            dbControl.close();
                             listInsertAnimal.remove(Integer.parseInt(txt_posicion.getText().toString().trim()));
                         }
 
@@ -1222,6 +1217,8 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                         insAnim.setId(id_animal.getText().toString());
                         insAnim.setCaravana(txt_caravana.getText().toString());
                         insAnim.setComprada(txt_compra.getText().toString());
+                        insAnim.setcodInterno(String.valueOf(id));
+
                         if(indicadorModificarInsertar==1){
                             listInsertAnimal.add(Integer.parseInt(txt_posicion.getText().toString().trim()),insAnim);
 
@@ -1234,10 +1231,6 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
                         dialog.dismiss();
                         Toast.makeText(movimientos.this,"REGISTRADO",Toast.LENGTH_LONG).show();
-
-
-
-
 
                     }
                     contar_compradas();
@@ -1465,7 +1458,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
        // ConexionSQLiteHelper conn=new ConexionSQLiteHelper(this,"bd_usuarios",null,1);
         SQLiteDatabase db1=controles.conSqlite.getReadableDatabase();
-        Cursor cursor_grilla=db1.rawQuery("SELECT id,nrocaravana,comprada from animales_actualizados where estado='O'" ,null);
+        Cursor cursor_grilla=db1.rawQuery("SELECT id,nrocaravana,comprada,codinterno from animales_actualizados where estado='O'" ,null);
 
         listInsertAnimal.clear(); //CADA VEZ QUE SELECCIONAMOS SUB-GRUPO, DEBE LIMPIAR EL ARRAY DE LOS ARTICULOS SELECCIONADOS EN EL SPINNER ARTICULOS.
 
@@ -1475,6 +1468,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
             insAnim.setId(cursor_grilla.getString(0));
             insAnim.setCaravana(cursor_grilla.getString(1));
             insAnim.setComprada(cursor_grilla.getString(2));
+            insAnim.setcodInterno(cursor_grilla.getString(3));
             listInsertAnimal.add(insAnim);
 
         }
@@ -1482,15 +1476,38 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
          ArrayAdapter adapter = new ArrayAdapter(this, R.layout.fila_columnas, R.id.txt_bolo, listInsertAnimal) {
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(final int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 TextView txt_bolo =  view.findViewById(R.id.txt_bolo);
                 TextView txt_caravana =   view.findViewById(R.id.txt_caravana);
                 TextView txt_comprada =   view.findViewById(R.id.txt_comprada);
+                TextView txtCodInterno =   view.findViewById(R.id.txtCodInterno);
+                TextView btnEliminar = (TextView) view.findViewById(R.id.btnEliminar);
 
                 txt_bolo.setText(""+listInsertAnimal.get(position).getId());
                 txt_caravana.setText(""+listInsertAnimal.get(position).getCaravana());
                 txt_comprada.setText(""+listInsertAnimal.get(position).getComprada());
+                txtCodInterno.setText(""+listInsertAnimal.get(position).getcodInterno());
+
+                btnEliminar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        new AlertDialog.Builder(movimientos.this)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setTitle("ELIMINAR.")
+                                .setMessage("DESEA QUITAR DE LA FILA?." )
+                                .setPositiveButton("SI", new DialogInterface.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        eliminar_fila(position);
+                                        txt_cantidad.setText(String.valueOf(ListView.getCount()));
+                                    }
+                                })
+                                .setNegativeButton("NO", null)
+                                .show();
+                    }
+                });
 
                 return view;
             }
@@ -1522,7 +1539,6 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         }
     }
 
-
     private void addRow (){
 
 
@@ -1531,6 +1547,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
             public View getView(final int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 TextView txt_bolo = (TextView) view.findViewById(R.id.txt_bolo);
+                TextView txtCodInterno= (TextView) view.findViewById(R.id.txtCodInterno);
                 TextView txt_caravana = (TextView) view.findViewById(R.id.txt_caravana);
                 TextView txt_comprada = (TextView) view.findViewById(R.id.txt_comprada);
                 TextView btnEliminar = (TextView) view.findViewById(R.id.btnEliminar);
@@ -1538,6 +1555,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                 txt_bolo.setText(""+listInsertAnimal.get(position).getId());
                 txt_caravana.setText(""+listInsertAnimal.get(position).getCaravana());
                 txt_comprada.setText(""+listInsertAnimal.get(position).getComprada());
+                txtCodInterno.setText(""+listInsertAnimal.get(position).getcodInterno());
 
                 btnEliminar.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1566,7 +1584,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
     }
 
-   @Override
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
 

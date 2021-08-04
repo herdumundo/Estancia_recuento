@@ -165,8 +165,8 @@ public class SpinnerDialog {
                 closeSpinerDialog();
             }
         });
-        alertDialog.setCancelable(isCancellable());
-        alertDialog.setCanceledOnTouchOutside(isCancellable());
+      alertDialog.setCancelable(isCancellable());
+        alertDialog.setCanceledOnTouchOutside(true);
         alertDialog.show();
     }
 
