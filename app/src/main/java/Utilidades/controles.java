@@ -39,10 +39,19 @@ public class controles {
     public static   ConexionSQLiteHelper  conSqlite;
     public static   String macAddress="";
     public static   String mensaje_registro="";
-    public static   Connection connect;
+    public static   Connection connect=null;
     public static   Context context_menuPrincipal;
     public static   int contadorProgress=0;
 
+    public static void desconectarBD(){
+        try {
+            connect.close();
+            System.exit(0);
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
     public static void conexion_sqlite(Context context) {
         conSqlite=      new ConexionSQLiteHelper(context,ConexionSQLiteHelper.DATABASE_NAME,null,ConexionSQLiteHelper.DATABASE_VERSION);
     }
@@ -59,11 +68,15 @@ public class controles {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    Intent intent = new Intent(context, clase_destino);
+                    /*Intent intent = new Intent(context, clase_destino);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     context.startActivity(intent);
-                    activity.finish();
-                    CustomIntent.customType(context,"right-to-left");
+                    activity.finish();*/
+                   // CustomIntent.customType(context,"right-to-left");
+                    System.exit(0);
+                    if(connect!=null){
+                        desconectarBD();
+                    }
 
                 }
             });
@@ -398,6 +411,8 @@ public class controles {
                 contadorProgress=rs2.getInt("contador");
 
             }
+            connect.close();
+            connect=null;
             builder = new AlertDialog.Builder(context_menuPrincipal);
             builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
             builder.setTitle("Sincronizacion de datos.");
@@ -720,6 +735,8 @@ public class controles {
                 c++;
                 MainActivity.ProDialogSincro.setProgress(c);
             }
+            connect.close();
+            connect=null;
             mensaje_registro="ANIMALES SINCRONIZADOS.";
             db.close();
             rs.close();
@@ -741,6 +758,7 @@ public class controles {
             }
             rs3.close();
             connect.close();
+            connect=null;
 
             MainActivity.ProDialogSincro =  new ProgressDialog(context_menuPrincipal);
             MainActivity.ProDialogSincro.setMax(contadorProgress);
@@ -807,7 +825,8 @@ public class controles {
                 c++;
                 MainActivity.ProDialogSincro.setProgress(c);
             }
-
+            connect.close();
+            connect=null;
             db.close();
             rs.close();
             // conn.close();
@@ -837,6 +856,8 @@ public class controles {
             }
             db.close();
             rs.close();
+            connect.close();
+            connect=null;
             mensaje_registro="COLORES SINCRONIZADOS.";
         }catch(Exception e){
             mensaje_registro=e.getMessage();
@@ -860,6 +881,8 @@ public class controles {
                 values.put("raza",rs.getString("raza"));
                 db.insert("razas", "id_raza",values);
             }
+            connect.close();
+            connect=null;
             db.close();
             rs.close();
             mensaje_registro="RAZAS SINCRONIZADAS.";
@@ -880,6 +903,8 @@ public class controles {
                 values.put("categoria",rs.getString("categoria"));
                 db.insert("categorias", "id_categoria",values);
             }
+            connect.close();
+            connect=null;
             db.close();
             rs.close();
             mensaje_registro="CATEGORIAS SINCRONIZADAS.";
@@ -910,6 +935,8 @@ public class controles {
 
                 db.insert("potrero", "id_potrero",values);
             }
+            connect.close();
+            connect=null;
             db.close();
             mensaje_registro="POTREROS SINCRONIZADOS.";
         }catch(Exception e){
@@ -932,6 +959,8 @@ public class controles {
                 values.put("desc_estancia",rs.getString("ESTANCIA"));
                 db.insert("estancia", null,values);
             }
+            connect.close();
+            connect=null;
             db.close();
             mensaje_registro="ESTANCIAS SINCRONIZADAS.";
 
@@ -961,6 +990,8 @@ public class controles {
                 "'"+rs.getString("descEstancia")+"','"+rs.getString("nombrePotrero")+"','"+rs.getString("cantidad")+"','"+rs.getString("mac")+"')");
              }
             mensaje_registro="INFORMES SINCRONIZADOS.";
+            connect.close();
+            connect=null;
             db.close();
             rs.close();
 
@@ -1001,6 +1032,8 @@ public class controles {
               /*  c++;
                 MainActivity.ProDialogSincro.setProgress(c);*/
             }
+            connect.close();
+            connect=null;
             mensaje_registro="ANIMALES SINCRONIZADOS.";
             db.close();
             rs.close();

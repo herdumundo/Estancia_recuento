@@ -17,7 +17,7 @@ public class ConnectionHelperGanBOne {
     @SuppressLint("NewaApi")
     public Connection Connections(){
         //  IP="192.168.1.230";
-        IP="172.16.1.202";
+        IP="192.168.20.151";
         DB="GanBOne";
         DBUsername="sa";
         //DBPassword="sugral";

@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -176,7 +177,14 @@ public class login2 extends AppCompatActivity {
         }
     @Override
     public void onBackPressed() {
-        finish();
-        moveTaskToBack(true);
+
+        try {
+            finish();
+            connect.close();
+            System.exit(0);
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

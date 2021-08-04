@@ -64,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
         this.getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
 
-       // controles.conexion_sqlite(this);
-
         btn_movimiento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
