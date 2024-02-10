@@ -7,155 +7,80 @@
     android:minHeight="100dp">
 
 
-    <RelativeLayout
-
-        android:id="@+id/relativeLayout7"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout8"
-        tools:ignore="MissingConstraints">
-
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CARAVANA:"
-            android:textAllCaps="true"
-            android:textColor="#F1F1F1"
-            android:textSize="18sp"
-            android:textStyle="bold|italic"
-            tools:ignore="MissingConstraints" />
-
-        <EditText
-            android:id="@+id/txt_caravana"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="1dp"
-            android:layout_marginEnd="52dp"
-            android:layout_toEndOf="@+id/textView7"
-            android:background="@color/white"
-            android:hint="NRO. CARAVANA"
-            android:textColor="#000000"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
-
     <Button
         android:id="@+id/boton_grabar"
         android:layout_width="match_parent"
         android:layout_height="59dp"
         android:drawableLeft="@drawable/ic_action_guardar"
         android:text="GUARDAR Y CERRAR"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/frameLayout"
+        app:layout_constraintVertical_bias="0.917"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <TextView
+        android:id="@+id/lblRaza"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:gravity="bottom|left"
+        android:text="RAZA:"
+        android:textColor="#F1F1F1"
+        android:textSize="18sp"
+        android:textStyle="bold|italic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="113dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="24dp"
+        android:text="ORIGEN"
+        android:textAlignment="textStart"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblCategoria"
         tools:ignore="MissingConstraints" />
 
-    <RelativeLayout
+    <TextView
+        android:id="@+id/txt_compra"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="56dp"
+        android:layout_marginBottom="133dp"
+        android:text="TextView"
+        android:visibility="gone"
+        tools:ignore="MissingConstraints" />
 
-        android:id="@+id/relativeLayout6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout7"
-        tools:ignore="MissingConstraints">
-
-        <TextView
-            android:id="@+id/lblRaza"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:text="RAZA:"
-            android:textColor="#F1F1F1"
-            android:textSize="18sp"
-            android:gravity="bottom|left"
-            android:textStyle="bold|italic"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/TxtDescRazaCuadro"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_marginStart="2dp"
-            android:layout_toEndOf="@+id/lblRaza"
-            android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
-            android:ems="10"
-            android:gravity="bottom|left"
-            android:hint="SELECCIONAR"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:textStyle="bold"
-            app:autoSizeMaxTextSize="20sp"
-            app:autoSizeMinTextSize="12sp"
-            app:autoSizeStepGranularity="2sp"
-            tools:ignore="MissingConstraints" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-
-        android:id="@+id/relativeLayout9"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout3"
-        tools:ignore="MissingConstraints">
-
-        <TextView
-            android:id="@+id/textView15"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="COMPRADA"
-            android:textAlignment="textStart"
-            android:textColor="@color/white"
-            android:textSize="18sp"
-            android:textStyle="bold|italic"
-            tools:ignore="MissingConstraints" />
-
-
-        <TextView
-            android:id="@+id/txt_compra"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="56dp"
-            android:layout_marginBottom="133dp"
-            android:text="TextView"
-            android:visibility="gone"
-            tools:ignore="MissingConstraints" />
-    </RelativeLayout>
 
     <RadioGroup
         android:id="@+id/radio_grupo_compra"
-        android:layout_width="151dp"
-        android:layout_height="35dp"
+        android:layout_width="265dp"
+        android:layout_height="36dp"
         android:layout_alignParentEnd="true"
+        android:layout_marginStart="20dp"
         android:background="@color/white"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout9">
+        app:layout_constraintTop_toBottomOf="@+id/textView15">
 
         <!-- In RadioGroup create the 1 Radio Button-->
         <!-- like this we will add some more Radio Button-->
 
         <RadioButton
             android:id="@+id/radio_compra_si"
-            android:layout_width="75dp"
+            android:layout_width="125dp"
             android:layout_height="wrap_content"
 
             android:orientation="horizontal"
-            android:text="SI"
+            android:text="COMPRA"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -163,179 +88,140 @@
 
         <RadioButton
             android:id="@+id/radio_compra_no"
-            android:layout_width="69dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
 
-            android:text="NO"
+            android:text="CRIOLLO"
             android:textColor="#000000"
             android:textSize="18sp"
             android:textStyle="bold" />
 
     </RadioGroup>
 
-    <RelativeLayout
-
-        android:id="@+id/relativeLayout5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal"
+    <TextView
+        android:id="@+id/lblCarimbo"
+        android:layout_width="93dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="bottom|left"
+        android:text="CARIMBO:"
+        android:textColor="#F1F1F1"
+        android:textSize="18sp"
+        android:textStyle="bold|italic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout6"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintTop_toBottomOf="@+id/lblRaza" />
 
-        <TextView
-            android:id="@+id/lblCarimbo"
-            android:layout_width="93dp"
-            android:layout_height="35dp"
-            android:text="CARIMBO:"
-            android:textColor="#F1F1F1"
-            android:gravity="bottom|left"
-            android:textSize="18sp"
-            android:textStyle="bold|italic"
-            app:layout_constraintStart_toStartOf="parent" />
+    <TextView
+        android:id="@+id/TxtDescCarimboCuadro"
+        android:layout_width="221dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_toEndOf="@+id/lblCarimbo"
 
-        <TextView
-            android:id="@+id/TxtDescCarimboCuadro"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_marginStart="-1dp"
-            android:layout_toEndOf="@+id/lblCarimbo"
-            android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
-            android:ems="10"
-            android:hint="SELECCIONAR"
-            android:gravity="bottom|left"
+        android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
+        android:ems="10"
+        android:gravity="bottom|left"
+        android:hint="SELECCIONAR"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textStyle="bold"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TxtDescRazaCuadro"
+        tools:ignore="MissingConstraints" />
 
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:textStyle="bold"
-            app:autoSizeMaxTextSize="20sp"
-            app:autoSizeMinTextSize="12sp"
-            app:autoSizeStepGranularity="2sp"
-            tools:ignore="MissingConstraints" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal"
+    <TextView
+        android:id="@+id/lblPelaje"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="bottom|left"
+        android:text="PELAJE:"
+        android:textColor="#F1F1F1"
+        android:textSize="18sp"
+        android:textStyle="bold|italic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout4"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintTop_toBottomOf="@+id/lblCarimbo" />
 
-        <TextView
-            android:id="@+id/lblPelaje"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:text="PELAJE:"
-            android:textColor="#F1F1F1"
-            android:textSize="18sp"
-            android:gravity="bottom|left"
-            android:textStyle="bold|italic"
-            app:layout_constraintStart_toStartOf="parent" />
+    <TextView
+        android:id="@+id/TxtDescColorCuadro"
+        android:layout_width="223dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_toEndOf="@+id/lblPelaje"
+        android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
+        android:ems="10"
+        android:gravity="bottom|left"
+        android:hint="SELECCIONAR"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textStyle="bold"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TxtDescCarimboCuadro"
+        tools:ignore="MissingConstraints" />
 
-        <TextView
-            android:id="@+id/TxtDescColorCuadro"
-            android:layout_width="517dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="11dp"
-            android:layout_toEndOf="@+id/lblPelaje"
-            android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
-            android:ems="10"
-            android:gravity="bottom|left"
-            android:hint="SELECCIONAR"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:textStyle="bold"
-            app:autoSizeMaxTextSize="20sp"
-            app:autoSizeMinTextSize="12sp"
-            app:autoSizeStepGranularity="2sp"
-            tools:ignore="MissingConstraints" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-
-        android:id="@+id/relativeLayout4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal"
+    <TextView
+        android:id="@+id/lblCategoria"
+        android:layout_width="110dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:gravity="bottom|left"
+        android:text="CATEGORIA:"
+        android:textColor="#F1F1F1"
+        android:textSize="18sp"
+        android:textStyle="bold|italic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout5"
-        tools:ignore="MissingConstraints">
+        app:layout_constraintTop_toBottomOf="@+id/lblPelaje" />
 
-        <TextView
-            android:id="@+id/lblCategoria"
-            android:layout_width="110dp"
-            android:layout_height="35dp"
-            android:gravity="bottom|left"
-            android:text="CATEGORIA:"
-            android:textColor="#F1F1F1"
-            android:textSize="18sp"
-            android:textStyle="bold|italic"
-            app:layout_constraintStart_toStartOf="parent" />
+    <TextView
+        android:id="@+id/TxtDescCategoriaCuadro"
+        android:layout_width="220dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
+        android:layout_toEndOf="@+id/lblCategoria"
+        android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
+        android:ems="10"
+        android:gravity="bottom|left"
+        android:hint="SELECCIONAR"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textStyle="bold"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TxtDescColorCuadro"
+        tools:ignore="MissingConstraints" />
 
-        <TextView
-            android:id="@+id/TxtDescCategoriaCuadro"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_toEndOf="@+id/lblCategoria"
-            android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
-            android:ems="10"
-            android:gravity="bottom|left"
-            android:hint="SELECCIONAR"
-             android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:textStyle="bold"
-            app:autoSizeMaxTextSize="20sp"
-            app:autoSizeMinTextSize="12sp"
-            app:autoSizeStepGranularity="2sp"
-            tools:ignore="MissingConstraints" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-
-        android:id="@+id/relativeLayout8"
+    <EditText
+        android:id="@+id/id_animal"
         android:layout_width="match_parent"
-        android:layout_height="57dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/boton_grabar"
-        tools:ignore="MissingConstraints">
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="1dp"
+        android:background="@color/white"
+        android:hint="IDE ELECTRONICO"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="#000000"
+        android:textColorHint="@color/black"
+        android:textSize="18sp"
 
-        <EditText
-            android:id="@+id/id_animal"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="12dp"
-            android:background="@color/white"
-            android:hint="IDE ELECTRONICO"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="#000000"
-            android:textColorHint="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.481"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:ignore="MissingConstraints" />
-
-
-    </RelativeLayout>
-
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp" />
 
     <RadioGroup
         android:id="@+id/radio_grupo"
@@ -429,76 +315,104 @@
         android:text="TextView"
         android:textColor="@color/white"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout11"
-        tools:ignore="MissingConstraints"
+         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteX="68dp" />
 
     <TextView
-        android:id="@+id/textView23"
+        android:id="@+id/textView12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="NACIMIENTO"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="44dp"
+        android:text="PESO"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold|italic"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radio_grupo_compra"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="4dp" />
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/txtNacimiento"
         android:layout_width="174dp"
         android:layout_height="62dp"
-         android:text=""
-             tools:visibility="gone"
+        android:text=""
+        tools:ignore="MissingConstraints"
+        tools:visibility="gone" />
+
+
+    <TextView
+        android:id="@+id/TxtDescRazaCuadro"
+        android:layout_width="225dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:drawableEnd="@drawable/ic_baseline_arrow_drop_down_circle_white"
+        android:ems="10"
+        android:gravity="bottom|left"
+        android:hint="SELECCIONAR"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:textStyle="bold"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeStepGranularity="2sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_caravana"
         tools:ignore="MissingConstraints" />
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout11"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="28dp"
+        android:text="CARAVANA:"
+        android:textAllCaps="true"
+        android:textColor="#F1F1F1"
+        android:textSize="18sp"
+        android:textStyle="bold|italic"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView23">
+        app:layout_constraintTop_toBottomOf="@+id/id_animal"
+        tools:ignore="MissingConstraints" />
 
+    <EditText
+        android:id="@+id/txt_caravana"
+        android:layout_width="223dp"
+        android:layout_height="46dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/white"
+        android:hint="NRO. CARAVANA"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/id_animal" />
 
-        <RadioGroup
-            android:id="@+id/radio_grupo_nacimiento"
-            android:layout_width="317dp"
-            android:layout_height="42dp"
-            android:layout_alignParentStart="true"
-            android:background="@color/white"
-            android:orientation="horizontal"
+    <EditText
+        android:id="@+id/txtPesoAnimal"
+        android:layout_width="223dp"
+        android:layout_height="46dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="28dp"
+        android:background="@color/white"
+        android:hint="INGRESE"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:inputType="number"
+        app:layout_constraintStart_toEndOf="@+id/textView12"
+        app:layout_constraintTop_toBottomOf="@+id/radio_grupo_compra" />
 
-            >
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="409dp"
+        android:layout_height="176dp"
+        app:layout_constraintTop_toBottomOf="@+id/txtPesoAnimal"
+        tools:layout_editor_absoluteX="1dp">
 
-            <!-- In RadioGroup create the 1 Radio Button-->
-            <!-- like this we will add some more Radio Button-->
+    </FrameLayout>
 
-            <RadioButton
-                android:id="@+id/primavera"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-
-                android:orientation="horizontal"
-                android:text="PRIMAVERA"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <RadioButton
-                android:id="@+id/otono"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                android:text="OTOÑO"
-                android:textColor="#000000"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-        </RadioGroup>
-
-    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

@@ -31,7 +31,7 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE razas (id_raza INTEGER PRIMARY KEY  ,raza TEXT)");
         db.execSQL("CREATE TABLE categorias (id_categoria INTEGER PRIMARY KEY  ,categoria TEXT)");
         db.execSQL("CREATE TABLE animales_actualizados (id TEXT ,codinterno INTEGER PRIMARY KEY AUTOINCREMENT   ,nrocaravana TEXT, sexo TEXT,color TEXT, raza TEXT, carimbo TEXT, id_categoria TEXT," +
-                "comprada TEXT,estado TEXT, registro INTEGER ,id_sincro INTEGER , nacimiento TEXT)");
+                "comprada TEXT,estado TEXT, registro INTEGER ,id_sincro INTEGER , nacimiento TEXT,peso TEXT)");
         db.execSQL("CREATE TABLE informe_cabecera (id INTEGER ,codinterno INTEGER,fecha TEXT, estancia TEXT,potrero TEXT, cantidad TEXT, mac TEXT)");
         db.execSQL("CREATE TABLE informe_detalle (codInterno INTEGER ,id_cabecera INTEGER,nrocaravana TEXT, ide TEXT,color TEXT, raza TEXT, carimbo TEXT, categoria TEXT,comprada TEXT)");
 

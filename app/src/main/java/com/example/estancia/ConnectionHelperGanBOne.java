@@ -16,13 +16,12 @@ public class ConnectionHelperGanBOne {
     String IP,DB,DBUsername,DBPassword;
     @SuppressLint("NewaApi")
     public Connection Connections(){
-        //  IP="192.168.1.230";
-        IP="192.168.20.151";
+         IP="192.168.55.140";
+        //  IP="192.168.20.151";
         DB="GanBOne";
         DBUsername="sa";
         //DBPassword="sugral";
         DBPassword="Paraguay2017";
-
 
         StrictMode.ThreadPolicy policy= new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -32,7 +31,7 @@ public class ConnectionHelperGanBOne {
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver");
             ConnectionURL = "jdbc:jtds:sqlserver://" + IP +";databaseName="+ DB + ";user=" + DBUsername+ ";password=" + DBPassword + ";";
-connection= DriverManager.getConnection(ConnectionURL);
+            connection= DriverManager.getConnection(ConnectionURL);
         } catch (SQLException se) {
             Log.e("error here 1 : ", se.getMessage());
         }
@@ -45,9 +44,5 @@ connection= DriverManager.getConnection(ConnectionURL);
         }
         return connection;
     }
-
-
-
-
 }
 
