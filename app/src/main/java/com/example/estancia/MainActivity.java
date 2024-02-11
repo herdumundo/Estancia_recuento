@@ -159,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
             Statement stmt = connect.createStatement();
             ResultSet rs = stmt.executeQuery("select *  from  animales");
             int c=0;
+            db.beginTransaction();
             while (rs.next()) {
 
                 ContentValues values=new ContentValues();
@@ -172,10 +173,14 @@ public class MainActivity extends AppCompatActivity {
                 values.put("ncmadre",rs.getString("ncmadre"));
                 values.put("ncpadre",rs.getString("ncpadre"));
                 values.put("id_categoria",rs.getString("categoria"));
-                db.insert("animales", "id",values);
+              //  db.insert("animales", "id",values);
+                db.insertWithOnConflict("animales", "id", values, SQLiteDatabase.CONFLICT_REPLACE);
+
                 c++;
                 prodialog.setProgress(c);
             }
+            db.setTransactionSuccessful();
+            db.endTransaction();
 
             db.close();
             rs.close();

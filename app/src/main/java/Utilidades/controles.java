@@ -735,7 +735,7 @@ public class controles {
             ResultSet rs = stmt.executeQuery("select *  from  animales");
 
             int c=0;
-
+            db.beginTransaction();
             while (rs.next()) {
 
            ContentValues values=new ContentValues();
@@ -749,11 +749,16 @@ public class controles {
                 values.put("ncmadre",rs.getString("ncmadre"));
                 values.put("ncpadre",rs.getString("ncpadre"));
                 values.put("id_categoria",rs.getString("categoria"));
-                db.insert("animales", "id",values);
+                db.insertWithOnConflict("animales", "id", values, SQLiteDatabase.CONFLICT_REPLACE);
                 c++;
                 MainActivity.ProDialogSincro.setProgress(c);
             }
+            tipoRegistroImportador=1;
             mensaje_registro="ANIMALES SINCRONIZADOS.";
+            db.setTransactionSuccessful();
+            db.endTransaction();
+
+
             db.close();
             rs.close();
 
@@ -802,7 +807,7 @@ public class controles {
             builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
             builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
             builder.setTitle("¡Atención!");
-            builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+            builder.setMessage("Error:"+ e.getMessage());
 
             builder.setNegativeButton("Cerrar",null);
             ad = builder.show();
@@ -1077,7 +1082,8 @@ public class controles {
             String id_categoria="";
             String comprada="";
             String registro="";
-            Cursor cursor=db.rawQuery("SELECT id,codinterno  ,nrocaravana  , sexo  ,color  , raza  , carimbo  , id_categoria  ,comprada,registro FROM animales_actualizados where estado='A'" ,null);
+            String peso="";
+            Cursor cursor=db.rawQuery("SELECT id,codinterno  ,nrocaravana  , sexo  ,color  , raza  , carimbo  , id_categoria  ,comprada,registro,peso FROM animales_actualizados where estado='A'" ,null);
 
             while (cursor.moveToNext())
 
@@ -1093,9 +1099,10 @@ public class controles {
                 id_categoria=cursor.getString(7);
                 comprada=cursor.getString(8);
                 registro=cursor.getString(9);
+                peso=cursor.getString(10);
 
-                String insertar = "insert into animales_upd(nrocaravana,ide,sexo,color,raza,carimbo,estado,categoria,comprada,registro) values  " +
-                        "('"+nrocaravana+"','"+id+"','"+sexo+"','"+color+"','"+raza+"','"+carimbo+"','C','"+id_categoria+"','"+comprada+"','"+registro+"')";
+                String insertar = "insert into animales_upd(nrocaravana,ide,sexo,color,raza,carimbo,estado,categoria,comprada,registro,peso) values  " +
+                        "('"+nrocaravana+"','"+id+"','"+sexo+"','"+color+"','"+raza+"','"+carimbo+"','C','"+id_categoria+"','"+comprada+"','"+registro+"','"+peso+"')";
                 PreparedStatement ps = connect.prepareStatement(insertar);
                 ps.executeUpdate();
                 String strSQL = "UPDATE animales_actualizados SET estado='C' WHERE codinterno='"+codinterno+"'";
@@ -1170,8 +1177,9 @@ public class controles {
                     String comprada="";
                     String registro="";
                     String nacimiento="";
-                    Cursor cursor_animal=db.rawQuery("SELECT id,codinterno  ,nrocaravana  , sexo  ,color  , raza  , carimbo  , id_categoria  ," +
-                            "comprada,registro,nacimiento FROM animales_actualizados where estado='A' and (nrocaravana='"+desc_animal+"' and " +
+                    Cursor cursor_animal=db.rawQuery("SELECT id,codinterno  ,nrocaravana  , sexo  ," +
+                            "color  , raza  , carimbo  , id_categoria  ," +
+                            "comprada,registro,nacimiento,peso FROM animales_actualizados where estado='A' and (nrocaravana='"+desc_animal+"' and " +
                             " nrocaravana not in ('') or id='"+desc_animal+"' and id not in('')) and registro='"+cod_cabecera+"'  " ,null);
                     while (cursor_animal.moveToNext())
                     {
@@ -1189,9 +1197,11 @@ public class controles {
                         nacimiento=cursor_animal.getString(10);
 
                         String insertar_animal = "insert into animales_upd(nrocaravana,ide,sexo,color,raza,carimbo,estado," +
-                                "categoria,comprada,registro,id_cabecera,nacimiento) values  " +
+                                "categoria,comprada,registro,id_cabecera,nacimiento,peso) values  " +
                                 "('"+nrocaravana+"','"+id_animal+"','"+sexo+"','"+color+"','"+raza+"','"+carimbo+"','C','"+id_categoria+"'," +
-                                "'"+comprada+"','"+registro+"','"+codigo_max+"','"+nacimiento+"')";
+                                "'"+comprada+"','"+registro+"','"+codigo_max+"','"+nacimiento+"','"+cursor_animal.getString(11)+"')";
+
+
                         PreparedStatement ps3 = connect.prepareStatement(insertar_animal);
                         ps3.executeUpdate();
                         String sql = "UPDATE animales_actualizados SET estado='C' WHERE codinterno='"+codinterno+"'";

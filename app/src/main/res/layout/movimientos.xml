@@ -166,13 +166,6 @@
         app:layout_constraintTop_toBottomOf="@+id/txt_cantidad" />
 
 
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="356dp"
-        android:background="@color/colorPrimary"
-        android:backgroundTint="@color/colorAccent"
-        app:layout_constraintTop_toBottomOf="@+id/relative" />
 
     <TextView
         android:id="@+id/textView2"
@@ -301,104 +294,6 @@
         tools:ignore="MissingConstraints" />
 
 
-    <LinearLayout
-        android:id="@+id/relative"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#0C4A02"
-
-        android:divider="@drawable/divider"
-        android:dividerPadding="0dip"
-
-        android:orientation="horizontal"
-        android:padding="0dp"
-        android:showDividers="middle"
-        app:layout_constraintTop_toBottomOf="@+id/btn_cargar"
-
-        tools:ignore="MissingConstraints"
-
-        tools:layout_editor_absoluteX="0dp">
-
-        <TextView
-            android:layout_width="160dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#0C4A02"
-            android:text="COD"
-            android:textColor="@color/white"
-            android:textStyle="normal|bold"
-            app:autoSizeMaxTextSize="18sp"
-            app:autoSizeMinTextSize="9sp"
-            app:autoSizeStepGranularity="1sp"
-
-
-            app:autoSizeTextType="uniform"></TextView>
-        <TextView
-            android:id="@+id/txt_bolo"
-
-            android:layout_width="360dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="#0C4A02"
-            android:text="CODIGO DE BOLO"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:autoSizeMaxTextSize="18sp"
-            app:autoSizeMinTextSize="9sp"
-            app:autoSizeStepGranularity="1sp"
-
-
-            app:autoSizeTextType="uniform"></TextView>
-
-        <TextView
-            android:id="@+id/txt_caravana"
-
-            android:layout_width="230dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_weight="1"
-            android:background="#0C4A02"
-            android:text="CARAVANA"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:autoSizeMaxTextSize="18sp"
-            app:autoSizeMinTextSize="9sp"
-            app:autoSizeStepGranularity="1sp"
-
-            app:autoSizeTextType="uniform"></TextView>
-
-        <TextView
-            android:id="@+id/txt_comprada"
-            android:layout_width="210dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_weight="1"
-            android:background="#0C4A02"
-            android:text="COMPRA"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:autoSizeMaxTextSize="18sp"
-            app:autoSizeMinTextSize="9sp"
-            app:autoSizeStepGranularity="1sp"
-            app:autoSizeTextType="uniform"></TextView>
-
-        <TextView
-            android:id="@+id/btnEliminar"
-
-            android:layout_width="70dp"
-            android:layout_height="match_parent"
-            android:focusable="false"
-            android:text="BORRAR"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:autoSizeMaxTextSize="18sp"
-            app:autoSizeMinTextSize="7sp"
-            app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform" />
-
-    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/relativeLayout10"
@@ -427,6 +322,23 @@
             tools:layout_editor_absoluteX="4dp"
             tools:layout_editor_absoluteY="215dp" />
 
+        <TextView
+            android:id="@+id/txtPesoPromedio"
+            android:layout_width="158dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="180dp"
+            android:fontFamily="monospace"
+            android:gravity="bottom|left"
+             android:textColor="@color/black"
+            android:textStyle="bold"
+            app:autoSizeMaxTextSize="19sp"
+            app:autoSizeMinTextSize="7sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+            tools:layout_editor_absoluteX="4dp"
+            tools:layout_editor_absoluteY="215dp" />
+
         <EditText
             android:id="@+id/txtPesaje"
             android:layout_width="172dp"
@@ -437,9 +349,123 @@
             android:hint="INGRESE"
             android:layout_toEndOf="@+id/textView"
             android:ems="10"
+            android:visibility="gone"
             android:inputType="numberDecimal"
             tools:layout_editor_absoluteX="165dp"
             tools:layout_editor_absoluteY="211dp" />
     </RelativeLayout>
 
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="229dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_cargar"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp">
+
+        <LinearLayout
+            android:id="@+id/relative"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorDarkGray"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/verde"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="160dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#0C4A02"
+                    android:text="RAZA"
+                    android:textColor="@color/white"
+                    android:textStyle="normal|bold"
+                    app:autoSizeMaxTextSize="18sp"
+                    app:autoSizeMinTextSize="9sp"
+                    app:autoSizeStepGranularity="1sp"
+
+                    android:id="@+id/txtRaza"
+                    app:autoSizeTextType="uniform"></TextView>
+
+                <TextView
+                    android:id="@+id/txt_bolo"
+
+                    android:layout_width="360dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#0C4A02"
+                    android:text="CODIGO DE BOLO"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:autoSizeMaxTextSize="18sp"
+                    app:autoSizeMinTextSize="9sp"
+                    app:autoSizeStepGranularity="1sp"
+
+
+                    app:autoSizeTextType="uniform"></TextView>
+
+                <TextView
+                    android:id="@+id/txt_caravana"
+
+                    android:layout_width="230dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_weight="1"
+                    android:background="#0C4A02"
+                    android:text="CARAVANA"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:autoSizeMaxTextSize="18sp"
+                    app:autoSizeMinTextSize="9sp"
+                    app:autoSizeStepGranularity="1sp"
+
+                    app:autoSizeTextType="uniform"></TextView>
+
+                <TextView
+                    android:id="@+id/txt_pelaje"
+                    android:layout_width="210dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_weight="1"
+                    android:background="#0C4A02"
+                    android:text="PELAJE"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:autoSizeMaxTextSize="18sp"
+                    app:autoSizeMinTextSize="9sp"
+                    app:autoSizeStepGranularity="1sp"
+                    app:autoSizeTextType="uniform"></TextView>
+
+                <TextView
+                    android:id="@+id/btnEliminar"
+
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:focusable="false"
+                    android:text="BORRAR"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:autoSizeMaxTextSize="18sp"
+                    app:autoSizeMinTextSize="7sp"
+                    app:autoSizeStepGranularity="2sp"
+                    app:autoSizeTextType="uniform" />
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/listView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/colorAccent"
+                android:scrollbars="horizontal|vertical" />
+        </LinearLayout>
+    </HorizontalScrollView>
 </android.support.constraint.ConstraintLayout>

@@ -72,7 +72,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
     String variable_sexo="";
     String variable_comprada="";
     Spinner Combo_potrero;
-    TextView txt_cod_animal,txt_cantidad,txt_fecha,txtCodPotrero,txtDescPotrero,txtDescEstancia,txtCodEstancia;
+    TextView txt_cod_animal,txt_cantidad,txt_fecha,txtCodPotrero,txtDescPotrero,txtDescEstancia,txtCodEstancia,txtPesoPromedio;
     EditText txtPesaje;
     public static   SpinnerDialog  SpEstancia,SpPotrero;
     ArrayList<String> lista_estancia;
@@ -121,17 +121,20 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         txtCodPotrero=(TextView)findViewById(R.id.TxtCodPotrero);
         txtDescPotrero=(TextView)findViewById(R.id.TxtDescPotrero);
         txtPesaje=findViewById(R.id.txtPesaje);
-        cargar=(Button)findViewById(R.id.btn_cargar);
+        txtPesoPromedio=findViewById(R.id.txtPesoPromedio);
+
+
+                cargar=(Button)findViewById(R.id.btn_cargar);
         registrar=(Button)findViewById(R.id.btn_registrar);
 
         ListView = (ListView) findViewById(R.id.listView);
-      /*  Bluetooth = new Bluetooth(this);
+       Bluetooth = new Bluetooth(this);
         Bluetooth.enableBluetooth();
         Bluetooth.setCommunicationCallback(this);
         int pos = getIntent().getExtras().getInt("pos");
         name = Bluetooth.getPairedDevices().get(pos).getName();
         Bluetooth.connectToDevice(Bluetooth.getPairedDevices().get(pos));
-*/
+
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM); //bellow setSupportActionBar(toolbar);
         getSupportActionBar().setCustomView(R.layout.customactionbar);
         TextView txtActionbar = (TextView) getSupportActionBar().getCustomView().findViewById( R.id.action_bar_title);
@@ -706,6 +709,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
         listInsertAnimal.remove(pos);
         ((BaseAdapter) ListView.getAdapter()).notifyDataSetChanged();
         contar_compradas();
+        promediarPeso();
     }
 
     private void ir_cuadro(String cod_animal, final String pos, final int indicadorModificarInsertar)
@@ -1081,14 +1085,17 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
                     SQLiteDatabase db_consulta=controles.conSqlite.getReadableDatabase();
                     Cursor cursor_consulta_contar=db_consulta.rawQuery(
-                            "SELECT * " +
-                                    "from animales_actualizados  " +
+                            "SELECT a.id,a.nrocaravana,a.comprada, a.codinterno,a.peso,c.color,b.raza " +
+                                    "from animales_actualizados a  " +
+                                    "inner join razas b on a.raza=b.id_raza " +
+                                    " inner join color c on a.color=c.id_color " +
                                     "where estado  in ('O') and " +
                                     // "where estado  in ('O','P') and " +
                                     "(id='" + id_animal.getText().toString().trim() + "' and id not in ('') " +
                                     "or " +
                                     "(UPPER(nrocaravana)=UPPER('" +txt_caravana.getText().toString().trim()+"') " +
                                     "and nrocaravana not in ('')))   " ,null);
+
 
                     //SI EL ANIMAL YA EXISTE, ENTONCES ENTRA SOLO PARA MODIFICAR DATOS.
                     if(cursor_consulta_contar.moveToFirst())
@@ -1137,9 +1144,14 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
                                 ArrayListContenedor insAnim = new ArrayListContenedor();
                                 insAnim.setId(id_animal.getText().toString());
-                                insAnim.setCaravana(txt_caravana.getText().toString());
                                 insAnim.setComprada(txt_compra.getText().toString());
+                                insAnim.setCaravana(txt_caravana.getText().toString());
                                 insAnim.setcodInterno(codInternoAnimalBorrado);
+                                insAnim.setPesoAnimal(txtPesoAnimal.getText().toString());
+
+                                insAnim.setRaza(TxtDescRazaCuadro.getText().toString());
+                                insAnim.setPelaje(TxtDescColorCuadro.getText().toString());
+
                                  listInsertAnimal.add(Integer.parseInt(txt_posicion.getText().toString().trim()),insAnim);
                                 addRow();
 
@@ -1176,7 +1188,10 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                                 insAnim.setId(id_animal.getText().toString());
                                 insAnim.setCaravana(txt_caravana.getText().toString());
                                 insAnim.setComprada(txt_compra.getText().toString());
+                                insAnim.setPesoAnimal(txtPesoAnimal.getText().toString());
                                 insAnim.setcodInterno(codInternoAnimalBorrado);
+                                insAnim.setRaza(TxtDescRazaCuadro.getText().toString());
+                                insAnim.setPelaje(TxtDescColorCuadro.getText().toString());
 
                             listInsertAnimal.add(Integer.parseInt(txt_posicion.getText().toString().trim()),insAnim);
                                 addRow();
@@ -1223,11 +1238,13 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                         insAnim.setId(id_animal.getText().toString());
                         insAnim.setCaravana(txt_caravana.getText().toString());
                         insAnim.setComprada(txt_compra.getText().toString());
+                        insAnim.setPesoAnimal(txtPesoAnimal.getText().toString());
                         insAnim.setcodInterno(String.valueOf(id));
+                        insAnim.setRaza(TxtDescRazaCuadro.getText().toString());
+                        insAnim.setPelaje(TxtDescColorCuadro.getText().toString());
 
                         if(indicadorModificarInsertar==1){
                             listInsertAnimal.add(Integer.parseInt(txt_posicion.getText().toString().trim()),insAnim);
-
                         }
                         else {
                             listInsertAnimal.add(insAnim);
@@ -1240,6 +1257,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
                     }
                     contar_compradas();
+                    promediarPeso();
                 }
             }
         });
@@ -1457,6 +1475,36 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
     }
 
+    private void promediarPeso()
+    {
+        try {
+            int animales=0;
+            int peso=0;
+             txtPesoPromedio.setText("0");
+             for (int i = 0; i < listInsertAnimal.size(); )
+            {
+                if (listInsertAnimal.get(i).getPesoAnimal() != null && !listInsertAnimal.get(i).getPesoAnimal().equals(""))
+                {
+                    animales++;
+                    peso=peso+Integer.parseInt(listInsertAnimal.get(i).getPesoAnimal());
+                }
+
+                i++;
+            }
+             if(peso!=0){
+                 peso=peso/animales;
+             }
+             txtPesoPromedio.setText(String.valueOf(peso));
+         }
+        catch (Exception e){
+            Toast.makeText(this,e.getMessage(),Toast.LENGTH_LONG).show();
+        }
+
+
+
+    }
+
+
     private void consulta_carga_animales_upd()
     {
         try {
@@ -1464,7 +1512,12 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
 
        // ConexionSQLiteHelper conn=new ConexionSQLiteHelper(this,"bd_usuarios",null,1);
         SQLiteDatabase db1=controles.conSqlite.getReadableDatabase();
-        Cursor cursor_grilla=db1.rawQuery("SELECT id,nrocaravana,comprada,codinterno from animales_actualizados where estado='O'" ,null);
+        Cursor cursor_grilla=db1.rawQuery("SELECT a.id,a.nrocaravana,a.comprada," +
+                "a.codinterno,a.peso,c.color,b.raza " +
+                "from animales_actualizados a " +
+                "inner join razas b on a.raza=b.id_raza " +
+                "inner join color c on a.color=c.id_color " +
+                "where estado='O'" ,null);
 
         listInsertAnimal.clear(); //CADA VEZ QUE SELECCIONAMOS SUB-GRUPO, DEBE LIMPIAR EL ARRAY DE LOS ARTICULOS SELECCIONADOS EN EL SPINNER ARTICULOS.
 
@@ -1475,6 +1528,9 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
             insAnim.setCaravana(cursor_grilla.getString(1));
             insAnim.setComprada(cursor_grilla.getString(2));
             insAnim.setcodInterno(cursor_grilla.getString(3));
+            insAnim.setcodInterno(cursor_grilla.getString(4));
+            insAnim.setPelaje(cursor_grilla.getString(5));
+            insAnim.setRaza(cursor_grilla.getString(6));
             listInsertAnimal.add(insAnim);
 
         }
@@ -1486,14 +1542,13 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                 View view = super.getView(position, convertView, parent);
                 TextView txt_bolo =  view.findViewById(R.id.txt_bolo);
                 TextView txt_caravana =   view.findViewById(R.id.txt_caravana);
-                TextView txt_comprada =   view.findViewById(R.id.txt_comprada);
-                TextView txtCodInterno =   view.findViewById(R.id.txtCodInterno);
+                TextView txt_pelaje =   view.findViewById(R.id.txt_pelaje);
+                TextView txtRaza =   view.findViewById(R.id.txtRaza);
                 TextView btnEliminar = (TextView) view.findViewById(R.id.btnEliminar);
-
+                txtRaza.setText(""+listInsertAnimal.get(position).getRaza());
                 txt_bolo.setText(""+listInsertAnimal.get(position).getId());
                 txt_caravana.setText(""+listInsertAnimal.get(position).getCaravana());
-                txt_comprada.setText(""+listInsertAnimal.get(position).getComprada());
-                txtCodInterno.setText(""+listInsertAnimal.get(position).getcodInterno());
+                txt_pelaje.setText(""+listInsertAnimal.get(position).getPelaje());
 
                 btnEliminar.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1540,6 +1595,7 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
                 }
             });
             contar_compradas();
+            promediarPeso();
         } catch (Exception e) {
             String asd=e.getMessage();
         }
@@ -1553,15 +1609,15 @@ public class movimientos extends AppCompatActivity implements Bluetooth.Communic
             public View getView(final int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
                 TextView txt_bolo = (TextView) view.findViewById(R.id.txt_bolo);
-                TextView txtCodInterno= (TextView) view.findViewById(R.id.txtCodInterno);
+                TextView txtRaza= (TextView) view.findViewById(R.id.txtRaza);
                 TextView txt_caravana = (TextView) view.findViewById(R.id.txt_caravana);
-                TextView txt_comprada = (TextView) view.findViewById(R.id.txt_comprada);
+                TextView txt_pelaje = (TextView) view.findViewById(R.id.txt_pelaje);
                 TextView btnEliminar = (TextView) view.findViewById(R.id.btnEliminar);
 
                 txt_bolo.setText(""+listInsertAnimal.get(position).getId());
                 txt_caravana.setText(""+listInsertAnimal.get(position).getCaravana());
-                txt_comprada.setText(""+listInsertAnimal.get(position).getComprada());
-                txtCodInterno.setText(""+listInsertAnimal.get(position).getcodInterno());
+                txtRaza.setText(""+listInsertAnimal.get(position).getRaza());
+                txt_pelaje.setText(""+listInsertAnimal.get(position).getPelaje());
 
                 btnEliminar.setOnClickListener(new View.OnClickListener() {
                     @Override
