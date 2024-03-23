@@ -102,8 +102,8 @@ public class ListviewActivity extends AppCompatActivity {
                         TextView text3 = (TextView) view.findViewById(R.id.text3);
                         TextView text4 = (TextView) view.findViewById(R.id.text4);
                         text4.setText("REGISTRO NRO.:"+listaUsuarios.get(position).getNombre());
-                        text1.setText("ESTANCIA:"+listaUsuarios.get(position).getPotrero());
-                        text2.setText("POTRERO:"+listaUsuarios.get(position).getEstancia());
+                        text1.setText("ESTANCIA:"+listaUsuarios.get(position).getEstancia());
+                        text2.setText("POTRERO:"+listaUsuarios.get(position).getPotrero());
                         text3.setText("CANTIDAD TOTAL"+listaUsuarios.get(position).getCantidad_animales());
                         return view;
                     }
@@ -216,21 +216,21 @@ public class ListviewActivity extends AppCompatActivity {
             usuario.setNombre(cursor.getString(0));
             usuario.setPotrero(cursor.getString(1));
             usuario.setEstancia(cursor.getString(2));
-            usuario.setCantidad_animales(cursor.getString(3));
-           // usuario.setFecha(cursor.getString(4));
+        usuario.setCantidad_animales(cursor.getString(3));
+        // usuario.setFecha(cursor.getString(4));
 
 
-            listaUsuarios.add(usuario);
-        }
-        obtenerLista();
+        listaUsuarios.add(usuario);
     }
+    obtenerLista();
+}
 
     private void obtenerLista()             {
         listaInformacion=new ArrayList<String>();
 
         for (int i=0; i<listaUsuarios.size();i++){
-            listaInformacion.add(listaUsuarios.get(i).getNombre()+"- ESTANCIA: "+listaUsuarios.get(i).getPotrero()+" - Potrero: "
-                    +listaUsuarios.get(i).getEstancia()+"- Total: "+listaUsuarios.get(i).getCantidad_animales());
+            listaInformacion.add(listaUsuarios.get(i).getNombre()+"- ESTANCIA: "+listaUsuarios.get(i).getEstancia()+" - Potrero: "
+                    +listaUsuarios.get(i).getPotrero()+"- Total: "+listaUsuarios.get(i).getCantidad_animales());
         }
 
     }

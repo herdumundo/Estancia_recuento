@@ -373,7 +373,7 @@ public class controles {
                 builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
                 builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
                 builder.setTitle("¡Atención!");
-                builder.setMessage("Error al exportar los registros, verifique la conexion con el servidor.er");
+                builder.setMessage("Error: "+mensaje_registro);
 
                 builder.setNegativeButton("Cerrar",null);
                 ad = builder.show();
@@ -462,7 +462,7 @@ public class controles {
                 builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
                 builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
                 builder.setTitle("¡Atención!");
-                builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+                builder.setMessage("Error."+mensaje_registro);
 
                 builder.setNegativeButton("Cerrar",null);
                 ad = builder.show();
@@ -498,7 +498,7 @@ public class controles {
                 builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
                 builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
                 builder.setTitle("¡Atención!");
-                builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+                builder.setMessage("Error."+mensaje_registro);
 
                 builder.setNegativeButton("Cerrar",null);
                 ad = builder.show();
@@ -536,7 +536,7 @@ public class controles {
                 builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
                 builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
                 builder.setTitle("¡Atención!");
-                builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+                builder.setMessage("Error."+mensaje_registro);
 
                 builder.setNegativeButton("Cerrar",null);
                 ad = builder.show();
@@ -573,7 +573,7 @@ public class controles {
                 builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
                 builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
                 builder.setTitle("¡Atención!");
-                builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+                builder.setMessage("Error."+mensaje_registro);
 
                 builder.setNegativeButton("Cerrar",null);
                 ad = builder.show();
@@ -610,7 +610,7 @@ public class controles {
                 builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
                 builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
                 builder.setTitle("¡Atención!");
-                builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+                builder.setMessage("Error."+mensaje_registro);
 
                 builder.setNegativeButton("Cerrar",null);
                 ad = builder.show();
@@ -649,7 +649,7 @@ public class controles {
                 builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
                 builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
                 builder.setTitle("¡Atención!");
-                builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+                builder.setMessage("Error."+mensaje_registro);
 
                 builder.setNegativeButton("Cerrar",null);
                 ad = builder.show();
@@ -686,7 +686,7 @@ public class controles {
                 builder = new android.app.AlertDialog.Builder(context_menuPrincipal);
                 builder.setIcon(context_menuPrincipal.getResources().getDrawable(R.drawable.ic_warning));
                 builder.setTitle("¡Atención!");
-                builder.setMessage("La sincronizacion no ha sido completada, favor intente de nuevo.");
+                builder.setMessage("Error."+mensaje_registro);
 
                 builder.setNegativeButton("Cerrar",null);
                 ad = builder.show();
@@ -829,12 +829,12 @@ public class controles {
             ResultSet rs = stmt.executeQuery("select *  from  animales_upd");
 
             int c=0;
-
+            db.beginTransaction();
             while (rs.next())
             {
                 ContentValues values=new ContentValues();
                 values.put("id",rs.getString("ide"));
-                values.put("id_sincro",rs.getString("codinterno"));
+                values.put("id_sincro",rs.getString("codInterno"));
                 values.put("nrocaravana",rs.getString("nrocaravana"));
                 values.put("sexo",rs.getString("sexo"));
                 values.put("color",rs.getString("color"));
@@ -843,8 +843,7 @@ public class controles {
                 values.put("id_categoria",rs.getString("categoria"));
                 values.put("comprada",rs.getString("comprada"));
                 values.put("estado","C");
-                db.insert("animales_actualizados", "id",values);
-
+                 db.insertWithOnConflict("animales_actualizados", "id", values, SQLiteDatabase.CONFLICT_REPLACE);
                 /*db.execSQL("insert into animales_actualizados (id ,id_sincro ,nrocaravana , sexo ,color , raza , carimbo,id_categoria,comprada,estado) " +
                         " values ('"+rs.getString("ide")+"','"+rs.getString("codinterno")+"','"+rs.getString("nrocaravana")+"'," +
                         "'"+rs.getString("sexo")+"','"+rs.getString("color")+"','"+rs.getString("raza")+
@@ -853,6 +852,8 @@ public class controles {
                 c++;
                 MainActivity.ProDialogSincro.setProgress(c);
             }
+            db.setTransactionSuccessful();
+            db.endTransaction();
 
             db.close();
             rs.close();
@@ -949,6 +950,8 @@ public class controles {
             String query = "select *  from  app_v_potreros";
             Statement stmt = connect.createStatement();
             ResultSet rs = stmt.executeQuery(query);
+            db.beginTransaction();
+
             while ( rs.next()){
                 ContentValues values=new ContentValues();
                 values.put("id_potrero",rs.getString("CODPOT"));
@@ -956,9 +959,11 @@ public class controles {
                 values.put("desc_potrero",rs.getString("POTRERO"));
                 values.put("id_potrerosqlite",rs.getString("CODPOT"));
                 values.put("estado","C");
+                db.insertWithOnConflict("potrero", "id_potrero", values, SQLiteDatabase.CONFLICT_REPLACE);
 
-                db.insert("potrero", "id_potrero",values);
-            }
+             }
+            db.setTransactionSuccessful();
+            db.endTransaction();
 
             db.close();
             mensaje_registro="POTREROS SINCRONIZADOS.";
@@ -1035,6 +1040,7 @@ public class controles {
             ResultSet rs = stmt.executeQuery("select *  from  app_v_detalle_recuento where mac='"+macAddress+"'");
 
             int c=0;
+            db.beginTransaction();
 
             while (rs.next()) {
 
@@ -1049,11 +1055,11 @@ public class controles {
                 values.put("categoria",rs.getString("categoria"));
                 values.put("comprada",rs.getString("comprada"));
 
-                db.insert("informe_detalle", null,values);
-              /*  c++;
-                MainActivity.ProDialogSincro.setProgress(c);*/
-            }
+                 db.insertWithOnConflict("informe_detalle", null, values, SQLiteDatabase.CONFLICT_REPLACE);
 
+            }
+            db.setTransactionSuccessful();
+            db.endTransaction();
             mensaje_registro="ANIMALES SINCRONIZADOS.";
             db.close();
             rs.close();
@@ -1083,10 +1089,13 @@ public class controles {
             String comprada="";
             String registro="";
             String peso="";
-            Cursor cursor=db.rawQuery("SELECT id,codinterno  ,nrocaravana  , sexo  ,color  , raza  , carimbo  , id_categoria  ,comprada,registro,peso FROM animales_actualizados where estado='A'" ,null);
+            String registrada="";
+            String obs="";
+            Cursor cursor=db.rawQuery("SELECT id,codinterno  ,nrocaravana  , sexo  ,color  , raza  , " +
+                    "carimbo  , id_categoria  ,comprada,registro,peso,registrada,obs FROM animales_actualizados " +
+                    "where estado='A'" ,null);
 
             while (cursor.moveToNext())
-
             {
                 SQLiteDatabase db1=conSqlite.getReadableDatabase();
                 id=cursor.getString(0);
@@ -1100,20 +1109,24 @@ public class controles {
                 comprada=cursor.getString(8);
                 registro=cursor.getString(9);
                 peso=cursor.getString(10);
+                registrada=cursor.getString(11);
+                obs=cursor.getString(12);
 
-                String insertar = "insert into animales_upd(nrocaravana,ide,sexo,color,raza,carimbo,estado,categoria,comprada,registro,peso) values  " +
-                        "('"+nrocaravana+"','"+id+"','"+sexo+"','"+color+"','"+raza+"','"+carimbo+"','C','"+id_categoria+"','"+comprada+"','"+registro+"','"+peso+"')";
+                String insertar = "insert into animales_upd(nrocaravana,ide,sexo,color,raza," +
+                        "carimbo,estado,categoria,comprada,registro,peso,registrada,obs) values  " +
+                        "('"+nrocaravana+"','"+id+"','"+sexo+"','"+color+"','"+raza+"','"+carimbo+"','C'" +
+                        "   ,'"+id_categoria+"','"+comprada+"','"+registro+"','"+peso+"','"+registrada+"','"+obs+"')";
                 PreparedStatement ps = connect.prepareStatement(insertar);
                 ps.executeUpdate();
                 String strSQL = "UPDATE animales_actualizados SET estado='C' WHERE codinterno='"+codinterno+"'";
                 db1.execSQL(strSQL);
             }
-           // connect.close();
+            // connect.close();
             mensaje_registro="DATOS EXPORTADOS CON EXITO.";
 
         }catch(Exception e){
             tipoRegistroExportador=0;
-            mensaje_registro="Error al exportar los registros, verifique la conexion con el servidor.";
+            mensaje_registro="Error: "+e.getMessage();
 
         }  }
 
@@ -1123,8 +1136,9 @@ public class controles {
             SQLiteDatabase db=conSqlite.getReadableDatabase();
             ConnectionHelperGanBOne conexion = new ConnectionHelperGanBOne();
             connect = conexion.Connections();
-            String id=""; String cantidad="";String fecha="";String cod_potrero_cab="";String cod_estancia_cab="";
-            Cursor cursor=db.rawQuery("SELECT  cod_interno,cantidad,fecha,cab_id_potrero,cab_id_estancia,pesaje,idUsuario FROM cab_inv_animales where   estado not in('C')  " ,null);
+            String id=""; String cantidad="";String obsCab="";String fecha="";String cod_potrero_cab="";String cod_estancia_cab="";
+            Cursor cursor=db.rawQuery("SELECT  cod_interno,cantidad,fecha," +
+                    "cab_id_potrero,cab_id_estancia,pesaje,idUsuario,obs FROM cab_inv_animales where   estado not in('C')  " ,null);
 
             int c=0;
             Statement stmt = connect.createStatement();
@@ -1143,9 +1157,10 @@ public class controles {
                 fecha=cursor.getString(2);
                 cod_potrero_cab=cursor.getString(3);
                 cod_estancia_cab=cursor.getString(4);
-                String insertar = "insert into cab_inv_animales(cod_interno,fecha,cantidad,idpotrero,idestancia,estado,id,mac,pesaje,idUsuario) values  " +
+                obsCab=cursor.getString(7);
+                String insertar = "insert into cab_inv_animales(cod_interno,fecha,cantidad,idpotrero,idestancia,estado,id,mac,pesaje,idUsuario,obs) values  " +
                         "('"+id+"','"+fecha+"','"+cantidad+"','"+cod_potrero_cab+"','"+cod_estancia_cab+"','C','"+codigo_max.trim()+"'," +
-                        "'"+macAddress+"','"+cursor.getString(5)+"','"+variables.idUsuario+"')";
+                        "'"+macAddress+"','"+cursor.getString(5)+"','"+variables.idUsuario+"','"+obsCab+"')";
                 PreparedStatement ps = connect.prepareStatement(insertar);
                 ps.executeUpdate();
                 String strSQL = "UPDATE cab_inv_animales SET estado = 'C' WHERE cod_interno ='"+ id+"'";
@@ -1177,9 +1192,13 @@ public class controles {
                     String comprada="";
                     String registro="";
                     String nacimiento="";
+                    String registrada="";
+                    String obs="";
                     Cursor cursor_animal=db.rawQuery("SELECT id,codinterno  ,nrocaravana  , sexo  ," +
                             "color  , raza  , carimbo  , id_categoria  ," +
-                            "comprada,registro,nacimiento,peso FROM animales_actualizados where estado='A' and (nrocaravana='"+desc_animal+"' and " +
+                            "comprada,registro,nacimiento,peso,registrada,obs" +
+                            " FROM animales_actualizados" +
+                            " where estado='A' and (nrocaravana='"+desc_animal+"' and " +
                             " nrocaravana not in ('') or id='"+desc_animal+"' and id not in('')) and registro='"+cod_cabecera+"'  " ,null);
                     while (cursor_animal.moveToNext())
                     {
@@ -1195,11 +1214,15 @@ public class controles {
                         comprada=cursor_animal.getString(8);
                         registro=cursor_animal.getString(9);
                         nacimiento=cursor_animal.getString(10);
+                        registrada=cursor_animal.getString(12);
+                        obs=cursor_animal.getString(13);
 
-                        String insertar_animal = "insert into animales_upd(nrocaravana,ide,sexo,color,raza,carimbo,estado," +
-                                "categoria,comprada,registro,id_cabecera,nacimiento,peso) values  " +
+                        String insertar_animal = "insert into animales_upd(nrocaravana,ide,sexo,color," +
+                                "raza,carimbo,estado," +
+                                "categoria,comprada,registro,id_cabecera,nacimiento,peso,registrada,obs) values  " +
                                 "('"+nrocaravana+"','"+id_animal+"','"+sexo+"','"+color+"','"+raza+"','"+carimbo+"','C','"+id_categoria+"'," +
-                                "'"+comprada+"','"+registro+"','"+codigo_max+"','"+nacimiento+"','"+cursor_animal.getString(11)+"')";
+                                "'"+comprada+"','"+registro+"','"+codigo_max+"','"+nacimiento+"'" +
+                                ",'"+cursor_animal.getString(11)+"','"+registrada+"','"+obs+"')";
 
 
                         PreparedStatement ps3 = connect.prepareStatement(insertar_animal);
@@ -1218,7 +1241,7 @@ public class controles {
             connect.close();
         }catch(Exception e){
             tipoRegistroExportador=0;
-            mensaje_registro="Error al exportar los registros, verifique la conexion con el servidor.";
+            mensaje_registro="Error: "+e.getMessage();
 
             // mensaje_registro=e.getMessage();
             // Toast.makeText( this,e.toString(),Toast.LENGTH_LONG).show();
@@ -1282,7 +1305,7 @@ public class controles {
         } catch (Exception e){
             //mensaje_registro=e.getMessage();
             tipoRegistroExportador=0;
-            mensaje_registro="Error al exportar los registros, verifique la conexion con el servidor.";
+            mensaje_registro="Error: "+e.getMessage();
             dbDet.endTransaction();
             dbcab.endTransaction();
             dbPotrero.endTransaction();

@@ -27,7 +27,7 @@
         <TextView
             android:id="@+id/txtRaza"
 
-            android:layout_width="160dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/colorPrimaryDark"
@@ -41,26 +41,9 @@
 
             ></TextView>
         <TextView
-            android:id="@+id/txt_bolo"
-
-            android:layout_width="360dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/colorPrimaryDark"
-            android:text="CODIGO DE BOLO"
-            android:textColor="@color/white"
-            app:autoSizeMaxTextSize="18sp"
-            app:autoSizeMinTextSize="7sp"
-            app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"
-
-
-            ></TextView>
-
-        <TextView
             android:id="@+id/txt_caravana"
 
-            android:layout_width="230dp"
+            android:layout_width="100dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_weight="1"
@@ -74,6 +57,24 @@
             app:autoSizeTextType="uniform"
 
             ></TextView>
+        <TextView
+            android:id="@+id/txt_bolo"
+
+            android:layout_width="250dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryDark"
+            android:text="CODIGO DE BOLO"
+            android:textColor="@color/white"
+            app:autoSizeMaxTextSize="18sp"
+            app:autoSizeMinTextSize="7sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+
+
+            ></TextView>
+
+
 
         <TextView
             android:id="@+id/txt_pelaje"
@@ -95,7 +96,7 @@
             android:textAlignment="center"
             android:background="@color/colorGray"
 
-            android:layout_width="70dp"
+            android:layout_width="35dp"
             android:layout_height="match_parent"
             android:drawableStart="@drawable/ic_action_delete"
             android:focusable="false" />

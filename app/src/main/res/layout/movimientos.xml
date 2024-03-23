@@ -198,14 +198,13 @@
         android:id="@+id/txt_cod_animal"
         android:layout_width="match_parent"
         android:layout_height="51dp"
-        android:layout_marginTop="20dp"
         android:cursorVisible="true"
         android:ems="10"
         android:focusable="true"
         android:hint="COD ANIMAL"
         android:inputType="textPersonName"
         android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayout10"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutObs"
         tools:layout_editor_absoluteX="0dp"
         tools:text=" " />
 
@@ -323,6 +322,24 @@
             tools:layout_editor_absoluteY="215dp" />
 
         <TextView
+            android:id="@+id/textView23"
+            android:layout_width="158dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="1dp"
+            android:fontFamily="monospace"
+            android:gravity="bottom|left"
+            android:text="PESO PROMEDIO"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:autoSizeMaxTextSize="19sp"
+            app:autoSizeMinTextSize="7sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+            tools:layout_editor_absoluteX="4dp"
+            tools:layout_editor_absoluteY="215dp" />
+
+        <TextView
             android:id="@+id/txtPesoPromedio"
             android:layout_width="158dp"
             android:layout_height="40dp"
@@ -339,21 +356,7 @@
             tools:layout_editor_absoluteX="4dp"
             tools:layout_editor_absoluteY="215dp" />
 
-        <EditText
-            android:id="@+id/txtPesaje"
-            android:layout_width="172dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="2dp"
-            android:layout_marginEnd="268dp"
-            android:hint="INGRESE"
-            android:layout_toEndOf="@+id/textView"
-            android:ems="10"
-            android:visibility="gone"
-            android:inputType="numberDecimal"
-            tools:layout_editor_absoluteX="165dp"
-            tools:layout_editor_absoluteY="211dp" />
-    </RelativeLayout>
+             </RelativeLayout>
 
 
     <HorizontalScrollView
@@ -380,7 +383,8 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="160dp"
+                    android:id="@+id/txtRaza"
+                    android:layout_width="100dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="#0C4A02"
@@ -390,31 +394,12 @@
                     app:autoSizeMaxTextSize="18sp"
                     app:autoSizeMinTextSize="9sp"
                     app:autoSizeStepGranularity="1sp"
-
-                    android:id="@+id/txtRaza"
-                    app:autoSizeTextType="uniform"></TextView>
-
-                <TextView
-                    android:id="@+id/txt_bolo"
-
-                    android:layout_width="360dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="#0C4A02"
-                    android:text="CODIGO DE BOLO"
-                    android:textColor="@color/white"
-                    android:textStyle="bold"
-                    app:autoSizeMaxTextSize="18sp"
-                    app:autoSizeMinTextSize="9sp"
-                    app:autoSizeStepGranularity="1sp"
-
-
                     app:autoSizeTextType="uniform"></TextView>
 
                 <TextView
                     android:id="@+id/txt_caravana"
 
-                    android:layout_width="230dp"
+                    android:layout_width="100dp"
                     android:layout_height="match_parent"
                     android:layout_alignParentLeft="true"
                     android:layout_weight="1"
@@ -428,6 +413,21 @@
                     app:autoSizeStepGranularity="1sp"
 
                     app:autoSizeTextType="uniform"></TextView>
+
+                <TextView
+                    android:id="@+id/txt_bolo"
+                    android:layout_width="250dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#0C4A02"
+                    android:text="CODIGO DE BOLO"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    app:autoSizeMaxTextSize="18sp"
+                    app:autoSizeMinTextSize="9sp"
+                    app:autoSizeStepGranularity="1sp"
+                    app:autoSizeTextType="uniform"></TextView>
+
 
                 <TextView
                     android:id="@+id/txt_pelaje"
@@ -448,10 +448,10 @@
                 <TextView
                     android:id="@+id/btnEliminar"
 
-                    android:layout_width="70dp"
+                    android:layout_width="35dp"
                     android:layout_height="match_parent"
                     android:focusable="false"
-                    android:text="BORRAR"
+                    android:text=""
                     android:textColor="@color/white"
                     android:textStyle="bold"
                     app:autoSizeMaxTextSize="18sp"
@@ -468,4 +468,51 @@
                 android:scrollbars="horizontal|vertical" />
         </LinearLayout>
     </HorizontalScrollView>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutObs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout10"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp">
+
+        <TextView
+            android:id="@+id/textView28"
+            android:layout_width="141dp"
+            android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="1dp"
+            android:fontFamily="monospace"
+            android:gravity="bottom|left"
+            android:text="OBSERVACION"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:autoSizeMaxTextSize="19sp"
+            app:autoSizeMinTextSize="7sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+            tools:layout_editor_absoluteX="4dp"
+            tools:layout_editor_absoluteY="215dp" />
+
+        <EditText
+            android:id="@+id/txtObs"
+            android:layout_width="158dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_toEndOf="@+id/textView28"
+            android:fontFamily="monospace"
+            android:gravity="bottom|left"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:autoSizeMaxTextSize="19sp"
+            app:autoSizeMinTextSize="7sp"
+            app:autoSizeStepGranularity="2sp"
+            app:autoSizeTextType="uniform"
+            tools:layout_editor_absoluteX="4dp"
+            tools:layout_editor_absoluteY="215dp" />
+
+    </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

@@ -73,9 +73,9 @@ public class Select_blu extends Activity implements PullToRefresh.OnRefreshListe
 
     public void test (View v){
         //ESTO HAY QUE ELIMINAR DESPUES,
-        Intent i = new Intent(Select_blu.this, movimientos.class);
+       /* Intent i = new Intent(Select_blu.this, movimientos.class);
         startActivity(i);
-        finish();
+        finish();*/
     }
     @Override
     public void onRefresh() {

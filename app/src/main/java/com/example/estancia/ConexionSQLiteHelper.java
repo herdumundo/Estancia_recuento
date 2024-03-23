@@ -25,13 +25,14 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL("CREATE TABLE potrero (id_potrero  INTEGER PRIMARY KEY AUTOINCREMENT, id_estancia TEXT,desc_potrero TEXT,estado TEXT,id_potrerosqlite integer )");
         db.execSQL("CREATE TABLE det_inv_animales (id_potrero  TEXT, desc_animal TEXT , cod_cabecera TEXT , estado TEXT )");
         db.execSQL("CREATE TABLE cab_inv_animales (cod_interno  INTEGER ,fecha TEXT , cantidad TEXT , " +
-                "cab_id_potrero TEXT , cab_id_estancia TEXT ,estado TEXT, pesaje TEXT,idUsuario INTEGER)");
+                "cab_id_potrero TEXT , cab_id_estancia TEXT ,estado TEXT, pesaje TEXT,idUsuario INTEGER,obs TEXT)");
         db.execSQL("CREATE TABLE animales (id TEXT ,codinterno INTEGER PRIMARY KEY ,nrocaravana TEXT, sexo TEXT,color TEXT, raza TEXT, carimbo TEXT,ncmadre TEXT, ncpadre TEXT,id_categoria TEXT)");
         db.execSQL("CREATE TABLE color (id_color INTEGER PRIMARY KEY  ,color TEXT)");
         db.execSQL("CREATE TABLE razas (id_raza INTEGER PRIMARY KEY  ,raza TEXT)");
         db.execSQL("CREATE TABLE categorias (id_categoria INTEGER PRIMARY KEY  ,categoria TEXT)");
         db.execSQL("CREATE TABLE animales_actualizados (id TEXT ,codinterno INTEGER PRIMARY KEY AUTOINCREMENT   ,nrocaravana TEXT, sexo TEXT,color TEXT, raza TEXT, carimbo TEXT, id_categoria TEXT," +
-                "comprada TEXT,estado TEXT, registro INTEGER ,id_sincro INTEGER , nacimiento TEXT,peso TEXT)");
+                "comprada TEXT,estado TEXT, registro INTEGER ," +
+                "id_sincro INTEGER , nacimiento TEXT,peso TEXT,registrada TEXT,obs TEXT)");
         db.execSQL("CREATE TABLE informe_cabecera (id INTEGER ,codinterno INTEGER,fecha TEXT, estancia TEXT,potrero TEXT, cantidad TEXT, mac TEXT)");
         db.execSQL("CREATE TABLE informe_detalle (codInterno INTEGER ,id_cabecera INTEGER,nrocaravana TEXT, ide TEXT,color TEXT, raza TEXT, carimbo TEXT, categoria TEXT,comprada TEXT)");
 
